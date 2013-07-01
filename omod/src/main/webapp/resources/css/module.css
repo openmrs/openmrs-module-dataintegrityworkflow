@@ -1,0 +1,20 @@
+.boxed {
+    border: 1px solid green ;
+}
+.dataTables_wrapper
+{
+    min-height:0px ;
+}
+.slidingDiv {
+    height:10px;
+    width: 450px;
+    background-color: #34BE9E;
+    padding-bottom:20px;
+    margin-left: 5px;
+    border-bottom:5px solid #1c8020;
+
+}
+
+.show_hide {
+    display:none;
+}

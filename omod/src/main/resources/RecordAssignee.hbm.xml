@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.openmrs.module.dataintegrityworkflow">
+    <class name="org.openmrs.module.dataintegrityworkflow.RecordAssignee" table="workflow_record_assignee">
+        <id name="recordAssigneeId" type="java.lang.Integer">
+            <column name="assignee_id"/>
+            <generator class="native"/>
+        </id>
+        <many-to-one class="org.openmrs.User" column="assignee" name="assignee" not-null="true" lazy="false"/>
+
+        <property name="uuid" type="string">
+            <column length="38" name="uuid"/>
+        </property>
+
+        <set name="integrityRecordAssignmentList" lazy="false" cascade="all-delete-orphan"
+             table="workflow_record_assignment" inverse="true" sort="unsorted"
+            >
+            <key column="workflow_record_assignee_id" not-null="true"/>
+            <one-to-many class="IntegrityRecordAssignment"/>
+        </set>
+
+        <many-to-one name="integrityWorkflowRecord" class="IntegrityWorkflowRecord" column="workflow_record_id"/>
+
+        <many-to-one name="currentIntegrityRecordAssignment" class="IntegrityRecordAssignment" column="current_assignment_id" lazy="false"/>
+
+    </class>
+</hibernate-mapping>
