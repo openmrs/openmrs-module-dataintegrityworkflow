@@ -13,20 +13,50 @@
  */
 package org.openmrs.module.dataintegrityworkflow.web.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openmrs.User;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService;
+import org.openmrs.module.dataintegrityworkflow.IntegrityWorkflowRecord;
 import org.springframework.web.servlet.mvc.SimpleFormController;
-
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author: harsz89
  */
 public class ViewAssignedRecordsFormController extends SimpleFormController {
-    protected Boolean formBackingObject(HttpServletRequest request) throws Exception {
-        return null;
+
+    protected final Log log = LogFactory.getLog(getClass());
+
+    private DataIntegrityWorkflowService getDataIntegrityWorkflowService() {
+        return (DataIntegrityWorkflowService) Context.getService(DataIntegrityWorkflowService.class);
+    }
+
+    protected Object formBackingObject(HttpServletRequest request) throws Exception {
+        String text = "Not used";
+        log.debug("Returning hello world text: " + text);
+        return text;
     }
 
     protected Map referenceData(HttpServletRequest req) throws Exception {
-        return null;
+        String assignee=req.getParameter("assignee");
+        Map<String,Object> modelMap=new HashMap<String, Object>();
+        User user;
+        List<IntegrityWorkflowRecord> records;
+        if(assignee!=null) {
+            user=Context.getUserService().getUserByUsername(assignee);
+            modelMap.put("assignedUser",user);
+        } else {
+            user=Context.getAuthenticatedUser();
+        }
+        DataIntegrityWorkflowService dataIntegrityWorkflowService=getDataIntegrityWorkflowService();
+        records=dataIntegrityWorkflowService.getAssignedIntegrityWorkflowRecordsOfCurrentUser(user);
+        modelMap.put("records",records);
+        return modelMap;
     }
 }

@@ -59,7 +59,7 @@ public class AdminList extends AdministrationSectionExt {
         if (Context.hasPrivilege(IntegrityWorkflowConstants.VIEW_RECORD_ASSIGNMENTS)) {
             map.put("/module/dataintegrityworkflow/viewAssignedRecords.form", "dataintegrityworkflow.view.link");
         }
-        if (Context.hasPrivilege(IntegrityWorkflowConstants.VIEW_RECORD_ASSIGNMENTS)) {
+        if (Context.hasPrivilege(IntegrityWorkflowConstants.MANAGE_RECORD_ASSIGNEES)) {
             map.put("/module/dataintegrityworkflow/addWorkflowStage.form", "dataintegrityworkflow.stage.link");
         }
         return map;

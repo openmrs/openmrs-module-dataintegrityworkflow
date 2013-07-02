@@ -44,16 +44,6 @@ public interface DataIntegrityWorkflowService {
 
     public IntegrityCheck getIntegrityCheck(Integer checkId);
 
-    public void saveIntegrityWorkflowRecord(IntegrityWorkflowRecord integrityWorkflowRecord);
-
-    public void saveWorkflowStage(WorkflowStage workflowStage);
-
-    public int saveWorkflowAssignee(RecordAssignee recordAssignee);
-
-    public void saveIntegrityRecordStageChange(IntegrityRecordStageChange integrityRecordStageChange);
-
-    public void saveIntegrityRecordComment(IntegrityRecordComment integrityRecordComment);
-
     public RecordAssignee getRecordAssigneeById(int assigneeId);
 
     public IntegrityWorkflowRecord getIntegrityWorkflowRecord(int integrityRecordId);
@@ -72,9 +62,21 @@ public interface DataIntegrityWorkflowService {
 
     public WorkflowStage getWorkflowStage(int stageId);
 
-    public RecordAssignee getWorkflowRecordAssigneeByUserAndWorkflowRecord(IntegrityWorkflowRecord integrityWorkflowRecord,User assignUser);
+    public RecordAssignee getWorkflowRecordAssigneeByUserAndWorkflowRecord(IntegrityWorkflowRecord integrityWorkflowRecord, User assignUser);
 
     public List<IntegrityWorkflowRecordWithCheckResult> getAllIntegrityWorkflowRecordWithCheckResult(int checkId);
+
+    public List<IntegrityWorkflowRecord> getAllIntegrityWorkflowRecordsForCheck(int checkId);
+
+    public void saveIntegrityWorkflowRecord(IntegrityWorkflowRecord integrityWorkflowRecord);
+
+    public void saveWorkflowStage(WorkflowStage workflowStage);
+
+    public int saveWorkflowAssignee(RecordAssignee recordAssignee);
+
+    public void saveIntegrityRecordStageChange(IntegrityRecordStageChange integrityRecordStageChange);
+
+    public void saveIntegrityRecordComment(IntegrityRecordComment integrityRecordComment);
 
     public List<IntegrityRecordComment> getIntegrityRecordComments(int integrityWorkflowRecordId);
 
@@ -84,21 +86,17 @@ public interface DataIntegrityWorkflowService {
 
     public void updateWorkflowAssignee(RecordAssignee recordAssignee);
 
-
     public void deleteIntegrityRecordComment(IntegrityRecordComment integrityRecordComment);
 
-    public List<IntegrityWorkflowRecord> getAllIntegrityWorkflowRecordsForCheck(int checkId);
+    public void assignRecords(String[] recordList, int checkId, String user);
 
-    public void assignRecords(String[] recordList,int checkId,String user);
-
-    public void removeRecords(String[] recordList,int checkId);
+    public void removeRecords(String[] recordList, int checkId);
 
     public int saveIntegrityRecordAssignment(IntegrityRecordAssignment integrityRecordAssignment);
 
+    public void createWorkflowRecordsIfNotExists(String[] recordIdList, int checkId);
 
-    public void createWorkflowRecordsIfNotExists(String[] recordIdList,int checkId);
-
-    public IntegrityRecordAssignment getIntegrityRecordAssignmentByAssigneeAndId(RecordAssignee recordAssignee,int assignmentId);
+    public IntegrityRecordAssignment getIntegrityRecordAssignmentByAssigneeAndId(RecordAssignee recordAssignee, int assignmentId);
 
     public void updateIntegrityRecordAssignment(IntegrityRecordAssignment integrityRecordAssignment);
 }

@@ -64,7 +64,7 @@ public class ManageIntegrityRecordsFormController extends SimpleFormController {
             integrityWorkflowService.assignRecords(recordIdList,checkId,user);
         }
 
-        if("remove".equals(action))
+        if("Unassign".equals(action))
         {
             String removeAssignmentType=request.getParameter("removeOptions");
             if("all".equals(removeAssignmentType))
@@ -91,12 +91,15 @@ public class ManageIntegrityRecordsFormController extends SimpleFormController {
     protected Map referenceData(HttpServletRequest req) throws Exception {
         Map<String,Object> modelMap=new HashMap<String,Object>();
         int checkId=Integer.parseInt(req.getParameter("checkId"));
+        String filter=req.getParameter("filter");
         List<IntegrityWorkflowRecordWithCheckResult> records=new ArrayList<IntegrityWorkflowRecordWithCheckResult>();
         IntegrityCheck integrityCheck = null;
         if(Context.isAuthenticated())
         {
+            if("all".equals(filter)) {
             records=getDataIntegrityWorkflowService().getAllIntegrityWorkflowRecordWithCheckResult(checkId);
             integrityCheck=getDataIntegrityWorkflowService().getIntegrityCheck(checkId);
+            }
         }
         modelMap.put("records",records);
         modelMap.put("check",integrityCheck);
@@ -105,6 +108,7 @@ public class ManageIntegrityRecordsFormController extends SimpleFormController {
         Context.addProxyPrivilege("View Users");
         modelMap.put("users", Context.getUserService().getAllUsers());
         Context.removeProxyPrivilege("View Users");
+        modelMap.put("filter",filter);
         return modelMap;
     }
 }
