@@ -42,13 +42,13 @@ public class ManageIntegrityRecordsFormController extends SimpleFormController {
 
     protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command,
                                     BindException errors) throws Exception {
-        String action=request.getParameter("action");
+        String action=request.getParameter("operation");
         int checkId=Integer.parseInt(request.getParameter("checkId"));
         String[] recordIdList=request.getParameterValues("recordId");
         DataIntegrityWorkflowService integrityWorkflowService=getDataIntegrityWorkflowService();
         IntegrityCheck integrityCheck=integrityWorkflowService.getIntegrityCheck(checkId);
         if("assign".equals(action)) {
-            String user=request.getParameter("selectUser");
+            String user=request.getParameter("assigneeId");
             String assignmentType=request.getParameter("assignmentOptions");
             if("all".equals(assignmentType))
             {
@@ -67,8 +67,7 @@ public class ManageIntegrityRecordsFormController extends SimpleFormController {
         if("Unassign".equals(action))
         {
             String removeAssignmentType=request.getParameter("removeOptions");
-            if("all".equals(removeAssignmentType))
-            {
+            /*if("all".equals(removeAssignmentType)) {
                 int i=0;
                 recordIdList=new String[integrityCheck.getIntegrityCheckResults().size()];
                 for(IntegrityCheckResult integrityCheckResult:integrityCheck.getIntegrityCheckResults())
@@ -76,7 +75,7 @@ public class ManageIntegrityRecordsFormController extends SimpleFormController {
                     recordIdList[i]=integrityCheckResult.getIntegrityCheckResultId().toString();
                     i++;
                 }
-            }
+            }*/
             integrityWorkflowService.removeRecords(recordIdList,checkId);
         }
         return new ModelAndView(new RedirectView(getSuccessView()+"?filter=all&checkId="+checkId));
