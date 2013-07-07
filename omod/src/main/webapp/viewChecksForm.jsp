@@ -1,9 +1,6 @@
-<%@ include file="/WEB-INF/template/include.jsp" %>
+<%@ include file="localHeader.jsp"%>
 
 <openmrs:require privilege="Manage Record Assignees" otherwise="/login.htm" redirect="/module/dataintegrityworkflow/viewChecks.form" />
-
-<%@ include file="/WEB-INF/template/header.jsp" %>
-<%@ include file="localHeader.jsp" %>
 
 <openmrs:htmlInclude file="/moduleResources/dataintegrityworkflow/css/smoothness/jquery-ui-1.8.16.custom.css" />
 

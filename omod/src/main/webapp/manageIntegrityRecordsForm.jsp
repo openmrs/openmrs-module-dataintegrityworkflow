@@ -1,8 +1,7 @@
-<%@ include file="/WEB-INF/template/include.jsp" %>
+<%@ include file="localHeader.jsp"%>
 
 <openmrs:require privilege="Manage Record Assignees" otherwise="/login.htm" redirect="/module/dataintegrityworkflow/viewChecks.form" />
 
-<%@ include file="/WEB-INF/template/header.jsp" %>
 
 <openmrs:htmlInclude file="/moduleResources/dataintegrityworkflow/demo_table_jui.css" />
 <openmrs:htmlInclude file="/moduleResources/dataintegrityworkflow/jquery.dataTables.min.js" />
@@ -245,7 +244,7 @@
                         <td>
                             <input type="checkbox" size="3" name="recordId" class="checkboxRow" value="${record.integrityCheckResult.integrityCheckResultId}" />
                         </td>
-                        <td><a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecord.form?recordId=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>&checkId="${check.id}">RECORD-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/></a> </td>
+                        <td><a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecord.form?resultId=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>&checkId=<c:out value="${check.id}"/>">RECORD-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/></a> </td>
                         <td class="status"><c:out value="${record.integrityCheckResult.status}"/></td>
                         <td>
                             <c:if test="${not empty record.integrityWorkflowRecord.currentAssignee}">

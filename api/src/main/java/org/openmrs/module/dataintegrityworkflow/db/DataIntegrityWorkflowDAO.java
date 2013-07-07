@@ -16,6 +16,7 @@ package org.openmrs.module.dataintegrityworkflow.db;
 import org.hibernate.SessionFactory;
 import org.openmrs.User;
 import org.openmrs.api.db.DAOException;
+import org.openmrs.module.dataintegrity.IntegrityCheck;
 import org.openmrs.module.dataintegrity.IntegrityCheckResult;
 import org.openmrs.module.dataintegrityworkflow.*;
 
@@ -65,11 +66,15 @@ public interface DataIntegrityWorkflowDAO {
 
     public WorkflowStage getWorkflowStage(int stageId) throws DAOException;
 
+    public List<WorkflowStage> getWorkflowStages();
+
     public RecordAssignee getWorkflowRecordAssigneeByUserAndWorkflowRecord(IntegrityWorkflowRecord integrityWorkflowRecord, User assignUser) throws DAOException;
 
-    public List<IntegrityRecordComment> getIntegrityRecordComments(int integrityWorkflowRecordId) throws DAOException;
+    public List<IntegrityRecordComment> getIntegrityRecordComments(IntegrityWorkflowRecord integrityWorkflowRecord) throws DAOException;
 
     public IntegrityWorkflowRecord getIntegrityWorkflowRecordByResult(IntegrityCheckResult integrityCheckResult) throws DAOException;
+
+    public IntegrityWorkflowRecord getIntegrityWorkflowRecordByResultId(int resultId) throws DAOException;
 
     public IntegrityWorkflowRecord getAssignedIntegrityWorkflowRecordByAssignee(RecordAssignee recordAssignee);
 
@@ -83,4 +88,5 @@ public interface DataIntegrityWorkflowDAO {
 
     public void deleteIntegrityRecordComment(IntegrityRecordComment integrityRecordComment) throws DAOException;
 
+    public IntegrityWorkflowRecord getIntegrityWorkflowRecordByRecordId(int recordId);
 }

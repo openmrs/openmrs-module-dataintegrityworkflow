@@ -1,3 +1,8 @@
+<%@ include file="/WEB-INF/template/include.jsp" %>
+
+<%@ include file="/WEB-INF/template/header.jsp" %>
+
+<!-- Include taglibs from core -->
 <%@ taglib prefix="fn" uri="/WEB-INF/taglibs/fn.tld" %>
 <ul id="menu">
 	<li class="first">

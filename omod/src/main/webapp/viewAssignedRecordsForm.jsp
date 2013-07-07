@@ -1,8 +1,6 @@
-<%@ include file="/WEB-INF/template/include.jsp" %>
+<%@ include file="localHeader.jsp"%>
 
 <openmrs:require privilege="View Record Assignments" otherwise="/login.htm" redirect="/module/dataintegrityworkflow/viewChecks.form" />
-
-<%@ include file="/WEB-INF/template/header.jsp" %>
 
 <openmrs:htmlInclude file="/moduleResources/dataintegrityworkflow/demo_table_jui.css" />
 <openmrs:htmlInclude file="/moduleResources/dataintegrityworkflow/jquery.dataTables.min.js" />

@@ -22,11 +22,12 @@ import java.util.Map;
  * @author: harsz89
  */
 public class ViewCheckSummaryFormController extends SimpleFormController {
+
     protected Boolean formBackingObject(HttpServletRequest request) throws Exception {
         return null;
     }
 
     protected Map referenceData(HttpServletRequest req) throws Exception {
-        return null;
+    return  null;
     }
 }

@@ -14,6 +14,7 @@
 package org.openmrs.module.dataintegrityworkflow;
 
 import org.openmrs.User;
+import org.openmrs.api.db.DAOException;
 import org.openmrs.module.dataintegrity.IntegrityCheck;
 import org.openmrs.module.dataintegrity.IntegrityCheckResult;
 import org.openmrs.module.dataintegrityworkflow.db.DataIntegrityWorkflowDAO;
@@ -54,15 +55,9 @@ public interface DataIntegrityWorkflowService {
 
     public List<IntegrityWorkflowRecord> getAssignedIntegrityWorkflowRecordsOfCurrentUser(User assignedUser);
 
-    public List<IntegrityWorkflowRecord> getAllAssignedIntegrityWorkflowRecordsOfCurrentUser(User assigneduser);
-
-    public List<RecordAssignee> getAllAssignmentsOfUser(User user);
-
-    public RecordAssignee getCurrentAssignmentOfUser(User user);
-
     public WorkflowStage getWorkflowStage(int stageId);
 
-    public RecordAssignee getWorkflowRecordAssigneeByUserAndWorkflowRecord(IntegrityWorkflowRecord integrityWorkflowRecord, User assignUser);
+    public List<WorkflowStage> getWorkflowStages();
 
     public List<IntegrityWorkflowRecordWithCheckResult> getAllIntegrityWorkflowRecordWithCheckResult(int checkId);
 
@@ -78,7 +73,7 @@ public interface DataIntegrityWorkflowService {
 
     public void saveIntegrityRecordComment(IntegrityRecordComment integrityRecordComment);
 
-    public List<IntegrityRecordComment> getIntegrityRecordComments(int integrityWorkflowRecordId);
+    public List<IntegrityRecordComment> getIntegrityRecordComments(IntegrityWorkflowRecord integrityWorkflowRecord);
 
     public void updateIntegrityRecordComment(IntegrityRecordComment integrityRecordComment);
 
@@ -94,9 +89,14 @@ public interface DataIntegrityWorkflowService {
 
     public int saveIntegrityRecordAssignment(IntegrityRecordAssignment integrityRecordAssignment);
 
-    public void createWorkflowRecordsIfNotExists(String[] recordIdList, int checkId);
+    public void createWorkflowRecordsIfNotExists(String[] resultIdList, int checkId);
 
     public IntegrityRecordAssignment getIntegrityRecordAssignmentByAssigneeAndId(RecordAssignee recordAssignee, int assignmentId);
 
     public void updateIntegrityRecordAssignment(IntegrityRecordAssignment integrityRecordAssignment);
+
+    public IntegrityWorkflowRecord getIntegrityWorkflowRecordByRecordId(int recordId);
+
+    public IntegrityWorkflowRecord getIntegrityWorkflowRecordByResultId(int resultId);
+
 }

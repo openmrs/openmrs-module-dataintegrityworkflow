@@ -26,7 +26,7 @@ import java.util.Set;
  * @author: harsz89
  */
 public class IntegrityWorkflowRecord extends BaseOpenmrsObject{
-    private int integrityRecordWorkflowDetailId;
+    private int recordId;
     private RecordAssignee currentAssignee;
     private Set<RecordAssignee> previousRecordAssignees;
     private Set<IntegrityRecordComment> integrityRecordComments;
@@ -35,20 +35,11 @@ public class IntegrityWorkflowRecord extends BaseOpenmrsObject{
     private Date lastUpdated;
 
     public Integer getId() {
-        return getIntegrityRecordWorkflowDetailId();
+        return getRecordId();
     }
 
-    public void setId(Integer integrityRecordWorkflowDetailId) {
-        this.setIntegrityRecordWorkflowDetailId(integrityRecordWorkflowDetailId);
-    }
-
-
-    public int getIntegrityRecordWorkflowDetailId() {
-        return integrityRecordWorkflowDetailId;
-    }
-
-    public void setIntegrityRecordWorkflowDetailId(int integrityRecordWorkflowDetailId) {
-        this.integrityRecordWorkflowDetailId = integrityRecordWorkflowDetailId;
+    public void setId(Integer recordId) {
+        this.setRecordId(recordId);
     }
 
     public RecordAssignee getCurrentAssignee() {
@@ -103,5 +94,13 @@ public class IntegrityWorkflowRecord extends BaseOpenmrsObject{
 
     public void setLastUpdated(Date lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public int getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(int recordId) {
+        this.recordId = recordId;
     }
 }

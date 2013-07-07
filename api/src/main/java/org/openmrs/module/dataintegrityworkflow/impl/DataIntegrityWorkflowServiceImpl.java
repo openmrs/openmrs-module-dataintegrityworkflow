@@ -93,20 +93,12 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         return integrityWorkflowRecords;
     }
 
-    public List<IntegrityWorkflowRecord> getAllAssignedIntegrityWorkflowRecordsOfCurrentUser(User assigneduser) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public List<RecordAssignee> getAllAssignmentsOfUser(User user) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public RecordAssignee getCurrentAssignmentOfUser(User user) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
     public WorkflowStage getWorkflowStage(int stageId) {
         return dao.getWorkflowStage(stageId);
+    }
+
+    public List<WorkflowStage> getWorkflowStages() {
+        return dao.getWorkflowStages();
     }
 
     public RecordAssignee getWorkflowRecordAssigneeByUserAndWorkflowRecord(IntegrityWorkflowRecord integrityWorkflowRecord, User assignUser) {
@@ -145,8 +137,8 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         return integrityWorkflowRecordWithCheckResultList;
     }
 
-    public List<IntegrityRecordComment> getIntegrityRecordComments(int integrityWorkflowRecordId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public List<IntegrityRecordComment> getIntegrityRecordComments(IntegrityWorkflowRecord integrityWorkflowRecord) {
+        return dao.getIntegrityRecordComments(integrityWorkflowRecord);
     }
 
     public List<IntegrityWorkflowRecord> getAllIntegrityWorkflowRecordsForCheck(int checkId) {
@@ -195,6 +187,18 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
 
     public void updateIntegrityRecordAssignment(IntegrityRecordAssignment integrityRecordAssignment) {
         dao.saveIntegrityRecordAssignment(integrityRecordAssignment);
+    }
+
+    public IntegrityWorkflowRecord getIntegrityWorkflowRecordByRecordId(int recordId) {
+        return dao.getIntegrityWorkflowRecordByRecordId(recordId);
+    }
+
+    public IntegrityWorkflowRecord getIntegrityWorkflowRecordByResultId(int resultId) {
+        return dao.getIntegrityWorkflowRecordByResultId(resultId);
+    }
+
+    public void createRecordIfNotExistis(int resultId) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void deleteIntegrityRecordComment(IntegrityRecordComment integrityRecordComment) {
@@ -324,13 +328,13 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         }
     }
 
-    public void createWorkflowRecordsIfNotExists(String[] recordIdList,int checkId) {
+    public void createWorkflowRecordsIfNotExists(String[] resultIdList,int checkId) {
         DataIntegrityWorkflowService integrityWorkflowService=Context.getService(DataIntegrityWorkflowService.class);
         int checkResultId;
         IntegrityCheck integrityCheck=integrityWorkflowService.getIntegrityCheck(checkId);
         for(IntegrityCheckResult integrityCheckResult:integrityCheck.getIntegrityCheckResults())
         {
-            for(String recordId:recordIdList)
+            for(String recordId:resultIdList)
             {
                 checkResultId=Integer.parseInt(recordId);
                 if(checkResultId==integrityCheckResult.getIntegrityCheckResultId())

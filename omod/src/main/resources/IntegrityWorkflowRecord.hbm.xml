@@ -2,24 +2,21 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="org.openmrs.module.dataintegrityworkflow">
     <class name="IntegrityWorkflowRecord" table="workflow_record">
-        <id column="workflow_record_id" name="id" type="int">
+        <id name="recordId" type="java.lang.Integer">
+            <column name="workflow_record_id"/>
             <generator class="native"/>
         </id>
-
         <property name="integrityCheckId" type="int">
             <column name="integrity_check_id" not-null="true"/>
         </property>
-
         <!-- associated data -->
         <many-to-one class="RecordAssignee" column="current_assignee_id" name="currentAssignee" lazy="false" />
-
         <set name="previousRecordAssignees" lazy="false" cascade="all-delete-orphan"
              table="workflow_record_assignee" inverse="true" sort="unsorted"
              >
             <key column="workflow_record_id" not-null="false"/>
             <one-to-many class="RecordAssignee" not-found="ignore"/>
         </set>
-
         <set name="integrityRecordComments" lazy="false" cascade="all-delete-orphan"
              table="workflow_record_comment" inverse="true" sort="unsorted"
             >
