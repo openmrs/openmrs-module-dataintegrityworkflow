@@ -40,11 +40,11 @@ public class WorkflowStage extends BaseOpenmrsData implements Serializable {
         this.status = status;
     }
 
-    public Integer getworkflowStageId() {
+    public Integer getWorkflowStageId() {
         return this.workflowStageId;
     }
 
-    public void setworkflowStageId(Integer workflowStageId) {
+    public void setWorkflowStageId(Integer workflowStageId) {
         this.workflowStageId = workflowStageId;
     }
 

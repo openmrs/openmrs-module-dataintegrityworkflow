@@ -15,7 +15,6 @@ package org.openmrs.module.dataintegrityworkflow.web.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dataintegrity.IntegrityCheck;
 import org.openmrs.module.dataintegrity.IntegrityCheckResult;
@@ -76,7 +75,7 @@ public class ManageIntegrityRecordsFormController extends SimpleFormController {
                     i++;
                 }
             }*/
-            integrityWorkflowService.removeRecords(recordIdList,checkId);
+            integrityWorkflowService.removeRecordsAssignees(recordIdList, checkId);
         }
         return new ModelAndView(new RedirectView(getSuccessView()+"?filter=all&checkId="+checkId));
     }
@@ -88,20 +87,24 @@ public class ManageIntegrityRecordsFormController extends SimpleFormController {
     }
 
     protected Map referenceData(HttpServletRequest req) throws Exception {
+        DataIntegrityWorkflowService integrityWorkflowService=getDataIntegrityWorkflowService();
         Map<String,Object> modelMap=new HashMap<String,Object>();
         int checkId=Integer.parseInt(req.getParameter("checkId"));
+        integrityWorkflowService.createIntegrityCheckupdateIfNotExists(checkId);
+        integrityWorkflowService.updateWorkflowRecords(checkId);
         String filter=req.getParameter("filter");
         List<IntegrityWorkflowRecordWithCheckResult> records=new ArrayList<IntegrityWorkflowRecordWithCheckResult>();
         IntegrityCheck integrityCheck = null;
         if(Context.isAuthenticated())
         {
             if("all".equals(filter)) {
-            records=getDataIntegrityWorkflowService().getAllIntegrityWorkflowRecordWithCheckResult(checkId);
+            records=integrityWorkflowService.getAllIntegrityWorkflowRecordWithCheckResult(checkId);
             integrityCheck=getDataIntegrityWorkflowService().getIntegrityCheck(checkId);
             }
         }
         modelMap.put("records",records);
         modelMap.put("check",integrityCheck);
+        modelMap.put("stages", integrityWorkflowService.getWorkflowStages());
         /* Normal Users haven't got the privilege to "View All Users" in the System,
                   So need  to use Proxy privileges to overcome the issue. */
         Context.addProxyPrivilege("View Users");

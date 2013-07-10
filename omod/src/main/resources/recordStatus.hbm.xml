@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.openmrs.module.dataintegrityworkflow">
+    <class name="org.openmrs.module.dataintegrityworkflow.RecordStatus" table="workflow_record_status">
+        <id name="statusId" type="java.lang.Integer">
+            <column name="workflow_status_id"/>
+            <generator class="native"/>
+        </id>
+        <property length="38" name="uuid" not-null="true" type="string"/>
+        <property name="status" type="string">
+            <column length="50" name="status"/>
+        </property>
+    </class>
+</hibernate-mapping>

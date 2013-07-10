@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.openmrs.module.dataintegrityworkflow">
+    <class name="org.openmrs.module.dataintegrityworkflow.IntegrityCheckUpdate" table="workflow_check_updated">
+
+        <id name="integrityCheckUpdateId" type="java.lang.Integer">
+            <column name="check_update_id"/>
+            <generator class="native"/>
+        </id>
+        <property name="integrityCheckId" type="int">
+            <column name="integrity_check_id" not-null="true"/>
+        </property>
+        <property column="last_run_date" length="19" name="lastRun" not-null="true" type="timestamp"/>
+    </class>
+</hibernate-mapping>

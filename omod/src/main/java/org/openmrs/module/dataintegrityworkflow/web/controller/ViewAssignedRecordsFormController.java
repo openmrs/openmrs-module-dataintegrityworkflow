@@ -55,6 +55,7 @@ public class ViewAssignedRecordsFormController extends SimpleFormController {
             user=Context.getAuthenticatedUser();
         }
         DataIntegrityWorkflowService dataIntegrityWorkflowService=getDataIntegrityWorkflowService();
+        dataIntegrityWorkflowService.updateWorkflowRecordsOfAllChecks();
         records=dataIntegrityWorkflowService.getAssignedIntegrityWorkflowRecordsOfCurrentUser(user);
         modelMap.put("records",records);
         return modelMap;

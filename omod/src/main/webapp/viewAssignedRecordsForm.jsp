@@ -58,7 +58,9 @@
                 <tr class="row">
                     <td><c:out value="${record.integrityCheckResult.integrityCheck.name}"/></td>
                     <td><a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecord.form?recordId=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>&checkId="${check.id}">RECORD-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/></a> </td>
-                    <td class="status"><c:out value="${record.integrityCheckResult.status}"/></td>
+                    <td class="status">
+                            <c:out value="${record.integrityWorkflowRecord.recordStatus.status}" />
+                    </td>
                     <td>
                             <c:out value="${record.currentAssignee.currentIntegrityRecordAssignment.assignBy.personName}"/>
                     </td>

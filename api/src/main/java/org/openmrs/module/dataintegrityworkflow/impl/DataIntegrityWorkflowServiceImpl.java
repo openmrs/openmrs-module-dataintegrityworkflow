@@ -17,6 +17,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.db.DAOException;
 import org.openmrs.module.dataintegrity.DataIntegrityService;
 import org.openmrs.module.dataintegrity.IntegrityCheck;
 import org.openmrs.module.dataintegrity.IntegrityCheckResult;
@@ -66,10 +67,6 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         return dao.getRecordAssigneeById(assigneeId);
     }
 
-    public IntegrityWorkflowRecord getIntegrityWorkflowRecord(int integrityCheckResultId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
     public IntegrityWorkflowRecord getIntegrityWorkflowRecordByResult(IntegrityCheckResult integrityCheckResult) {
         return dao.getIntegrityWorkflowRecordByResult(integrityCheckResult);
     }
@@ -99,6 +96,18 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
 
     public List<WorkflowStage> getWorkflowStages() {
         return dao.getWorkflowStages();
+    }
+
+    public IntegrityCheckUpdate getIntegrityCheckUpdate(int checkId) {
+        return dao.getIntegrityCheckUpdate(checkId);
+    }
+
+    public RecordStatus getRecordStatus(int stageId) {
+        return dao.getRecordStatus(stageId);
+    }
+
+    public List<RecordStatus> getAllRecordStatus() {
+        return dao.getAllRecordStatus();
     }
 
     public RecordAssignee getWorkflowRecordAssigneeByUserAndWorkflowRecord(IntegrityWorkflowRecord integrityWorkflowRecord, User assignUser) {
@@ -161,16 +170,24 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         return dao.saveWorkflowAssignee(recordAssignee);
     }
 
+    public void saveIntegrityCheckUpdate(IntegrityCheckUpdate integrityCheckUpdate) throws DAOException {
+        dao.saveIntegrityCheckUpdate(integrityCheckUpdate);
+    }
+
     public void saveIntegrityRecordStageChange(IntegrityRecordStageChange integrityRecordStageChange) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        dao.saveIntegrityRecordStageChange(integrityRecordStageChange);
     }
 
     public void saveIntegrityRecordComment(IntegrityRecordComment integrityRecordComment) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        dao.saveIntegrityRecordComment(integrityRecordComment);
     }
 
     public int saveIntegrityRecordAssignment(IntegrityRecordAssignment integrityRecordAssignment) {
         return dao.saveIntegrityRecordAssignment(integrityRecordAssignment);
+    }
+
+    public void saveIntegrityRecordStatusChange(RecordStatusChange recordStatusChange) {
+        dao.saveIntegrityRecordStatusChange(recordStatusChange);
     }
 
     public void updateIntegrityRecordComment(IntegrityRecordComment integrityRecordComment) {
@@ -197,8 +214,56 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         return dao.getIntegrityWorkflowRecordByResultId(resultId);
     }
 
-    public void createRecordIfNotExistis(int resultId) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void updateWorkflowRecords(int checkId) {
+        DataIntegrityWorkflowService integrityWorkflowService=Context.getService(DataIntegrityWorkflowService.class);
+        IntegrityCheck integrityCheck=integrityWorkflowService.getIntegrityCheck(checkId);
+        IntegrityCheckUpdate integrityCheckUpdate=integrityWorkflowService.getIntegrityCheckUpdate(checkId);
+        if(!integrityCheckUpdate.getLastRun().equals(integrityCheck.getMostRecentRun().getDateCreated()))
+        {
+            for(IntegrityCheckResult integrityCheckResult:integrityCheck.getIntegrityCheckResults())
+            {
+                IntegrityWorkflowRecord integrityWorkflowRecord=integrityWorkflowService.getIntegrityWorkflowRecordByResult(integrityCheckResult);
+                if(integrityWorkflowRecord!=null)
+                {
+                    if(integrityCheckResult.getStatus()!=(integrityWorkflowRecord.getRecordStatus().getStatusId()-1))
+                    {
+                        integrityWorkflowRecord.setRecordStatus(integrityWorkflowService.getRecordStatus(integrityCheckResult.getStatus()+1));
+                        integrityWorkflowRecord.setLastUpdated(new Date());
+                        integrityWorkflowService.saveIntegrityWorkflowRecord(integrityWorkflowRecord);
+                    }
+                }
+            }
+            integrityCheckUpdate.setLastRun(integrityCheck.getMostRecentRun().getDateCreated());
+            integrityWorkflowService.updateCheckUpdate(integrityCheckUpdate);
+        }
+    }
+
+    public void updateWorkflowRecordsOfAllChecks() {
+        DataIntegrityWorkflowService integrityWorkflowService=Context.getService(DataIntegrityWorkflowService.class);
+        List<IntegrityCheck> integrityChecks=integrityWorkflowService.getAllIntegrityChecks();
+        for(IntegrityCheck integrityCheck:integrityChecks) {
+            IntegrityCheckUpdate integrityCheckUpdate=integrityWorkflowService.getIntegrityCheckUpdate(integrityCheck.getIntegrityCheckId());
+            if(integrityCheckUpdate!=null){
+                if(!integrityCheckUpdate.getLastRun().equals(integrityCheck.getMostRecentRun().getDateCreated()))
+                {
+                    for(IntegrityCheckResult integrityCheckResult:integrityCheck.getIntegrityCheckResults())
+                    {
+                        IntegrityWorkflowRecord integrityWorkflowRecord=integrityWorkflowService.getIntegrityWorkflowRecordByResult(integrityCheckResult);
+                        if(integrityWorkflowRecord!=null)
+                        {
+                            if(integrityCheckResult.getStatus()!=(integrityWorkflowRecord.getRecordStatus().getStatusId()-1))
+                            {
+                                integrityWorkflowRecord.setRecordStatus(integrityWorkflowService.getRecordStatus(integrityCheckResult.getStatus()+1));
+                                integrityWorkflowRecord.setLastUpdated(new Date());
+                                integrityWorkflowService.saveIntegrityWorkflowRecord(integrityWorkflowRecord);
+                            }
+                        }
+                    }
+                    integrityCheckUpdate.setLastRun(integrityCheck.getMostRecentRun().getDateCreated());
+                    integrityWorkflowService.updateCheckUpdate(integrityCheckUpdate);
+                }
+            }
+        }
     }
 
     public void deleteIntegrityRecordComment(IntegrityRecordComment integrityRecordComment) {
@@ -206,7 +271,6 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
     }
 
     public void assignRecords(String[] recordIdList,int checkId,String user) {
-
         DataIntegrityWorkflowService integrityWorkflowService=Context.getService(DataIntegrityWorkflowService.class);
         User assignUser=Context.getUserService().getUserByUsername(user);
         List<IntegrityWorkflowRecord> integrityWorkflowRecords=integrityWorkflowService.getAllIntegrityWorkflowRecordsForCheck(checkId);
@@ -305,7 +369,7 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
 
     }
 
-    public void removeRecords(String[] recordIdList, int checkId) {
+    public void removeRecordsAssignees(String[] recordIdList, int checkId) {
         DataIntegrityWorkflowService integrityWorkflowService=Context.getService(DataIntegrityWorkflowService.class);
         List<IntegrityWorkflowRecord> integrityWorkflowRecords=integrityWorkflowService.getAllIntegrityWorkflowRecordsForCheck(checkId);
         for(String recordId:recordIdList)
@@ -346,10 +410,28 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
                         integrityWorkflowRecord.setIntegrityCheckId(checkId);
                         integrityWorkflowRecord.setLastUpdated(new Date());
                         integrityWorkflowService.saveIntegrityWorkflowRecord(integrityWorkflowRecord);
+                        integrityWorkflowRecord.setRecordStatus(integrityWorkflowService.getRecordStatus(integrityCheckResult.getStatus()+1));
                     }
                 }
             }
         }
     }
 
+    public void createIntegrityCheckupdateIfNotExists(int checkId)
+    {
+        DataIntegrityWorkflowService integrityWorkflowService=Context.getService(DataIntegrityWorkflowService.class);
+        IntegrityCheckUpdate integrityCheckUpdate=integrityWorkflowService.getIntegrityCheckUpdate(checkId);
+        IntegrityCheck integrityCheck=integrityWorkflowService.getIntegrityCheck(checkId);
+        if(integrityCheckUpdate==null) {
+            integrityCheckUpdate=new IntegrityCheckUpdate();
+            integrityCheckUpdate.setIntegrityCheckId(checkId);
+            integrityCheckUpdate.setLastRun(integrityCheck.getMostRecentRun().getDateCreated());
+            integrityWorkflowService.saveIntegrityCheckUpdate(integrityCheckUpdate);
+        }
+    }
+
+    public void updateCheckUpdate(IntegrityCheckUpdate integrityCheckUpdate)
+    {
+        dao.updateCheckUpdate(integrityCheckUpdate);
+    }
 }

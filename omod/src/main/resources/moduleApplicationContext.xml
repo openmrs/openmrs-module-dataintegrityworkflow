@@ -87,5 +87,10 @@
         </property>
     </bean>
 
+    <!--<bean class="org.openmrs.event.Event">
+        <property name="subscription">
+            <bean class="org.openmrs.module.dataintegrityworkflow.IntegrityCheckListener"/>
+        </property>
+    </bean>-->
 
 </beans>

@@ -18,12 +18,15 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dataintegrity.IntegrityCheck;
 import org.openmrs.module.dataintegrity.IntegrityCheckResult;
-import org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService;
-import org.openmrs.module.dataintegrityworkflow.IntegrityRecordComment;
-import org.openmrs.module.dataintegrityworkflow.IntegrityWorkflowRecord;
+import org.openmrs.module.dataintegrityworkflow.*;
+import org.springframework.validation.BindException;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,11 +39,71 @@ public class ViewRecordFormController extends SimpleFormController {
     protected final Log log = LogFactory.getLog(getClass());
 
     private DataIntegrityWorkflowService getDataIntegrityWorkflowService() {
-        return (DataIntegrityWorkflowService) Context.getService(DataIntegrityWorkflowService.class);
+        return (DataIntegrityWorkflowService)    Context.getService(DataIntegrityWorkflowService.class);
     }
 
+    protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command,
+                                    BindException errors) throws Exception {
+        String checkId=request.getParameter("checkId");
+        String recordId=request.getParameter("recordId");
+        String resultId=request.getParameter("resultId");
+        String statusChange=request.getParameter("statusChange");
+        String stageChange=request.getParameter("changeStage");
+        String addComment=request.getParameter("addComment");
+        String addChangeUser=request.getParameter("changeAssigned");
+        String deleteAssignee=request.getParameter("delAssigned");
+        DataIntegrityWorkflowService integrityWorkflowService=getDataIntegrityWorkflowService();
+        IntegrityWorkflowRecord integrityWorkflowRecord;
+        if(recordId!=null) {
+            integrityWorkflowRecord=integrityWorkflowService.getIntegrityWorkflowRecordByRecordId(Integer.parseInt(recordId));
+            if(stageChange!=null) {
+                String stage=request.getParameter("stage");
+                IntegrityRecordStageChange integrityWorkflowStageChange=new IntegrityRecordStageChange();
+                integrityWorkflowStageChange.setChangeDate(new Date());
+                integrityWorkflowStageChange.setChangeBy(Context.getAuthenticatedUser());
+                integrityWorkflowStageChange.setFromWorkflowStage(integrityWorkflowRecord.getCurrentAssignee().getCurrentIntegrityRecordAssignment().getCurrentStage());
+                integrityWorkflowStageChange.setToWorkflowStage(integrityWorkflowService.getWorkflowStage(Integer.parseInt(stage)));
+                integrityWorkflowStageChange.setIntegrityRecordAssignment(integrityWorkflowRecord.getCurrentAssignee().getCurrentIntegrityRecordAssignment());
+                integrityWorkflowService.saveIntegrityRecordStageChange(integrityWorkflowStageChange);
+                integrityWorkflowRecord.getCurrentAssignee().getCurrentIntegrityRecordAssignment().setCurrentStage(integrityWorkflowService.getWorkflowStage(Integer.parseInt(stage)));
+                integrityWorkflowService.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
+            } else if (addComment!=null) {
+                String comment=request.getParameter("comment");
+                if(!"".equals(comment) && comment!=null) {
+                    IntegrityRecordComment integrityRecordComment=new IntegrityRecordComment();
+                    integrityRecordComment.setComment(comment);
+                    integrityRecordComment.setIntegrityWorkflowRecord(integrityWorkflowRecord);
+                    integrityWorkflowService.saveIntegrityRecordComment(integrityRecordComment);
+                }
+            } else if (deleteAssignee!=null) {
+                String[] record=new String[1];
+                record[0]=recordId;
+                integrityWorkflowService.removeRecordsAssignees(record,Integer.parseInt(checkId));
+            } else if (addChangeUser!=null) {
+                String[] record=new String[1];
+                record[0]=recordId;
+                String user=request.getParameter("assigneeId");
+                integrityWorkflowService.assignRecords(record,Integer.parseInt(checkId),user);
+            } else if (statusChange!=null) {
+                int status=Integer.parseInt(request.getParameter("status"));
+                RecordStatusChange recordStatusChange=new RecordStatusChange();
+                recordStatusChange.setChangeDate(new Date());
+                recordStatusChange.setChangeBy(Context.getAuthenticatedUser());
+                recordStatusChange.setFromStatus(integrityWorkflowRecord.getRecordStatus());
+                recordStatusChange.setToStatus(integrityWorkflowService.getRecordStatus(status));
+                recordStatusChange.setIntegrityWorkflowRecord(integrityWorkflowRecord);
+                integrityWorkflowService.saveIntegrityRecordStatusChange(recordStatusChange);
+                integrityWorkflowRecord.setRecordStatus(integrityWorkflowService.getRecordStatus(status));
+                integrityWorkflowService.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
+            }
+        }
+        return new ModelAndView(new RedirectView(getSuccessView()+"?recordId="+recordId+"&checkId="+checkId));
+    }
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
-        return "hellp";
+
+        String text = "Not used";
+        log.debug("Returning hello world text: " + text);
+        return text;
     }
 
     protected Map referenceData(HttpServletRequest req) throws Exception {
@@ -64,12 +127,14 @@ public class ViewRecordFormController extends SimpleFormController {
                 integrityWorkflowRecord=dataIntegrityWorkflowService.getIntegrityWorkflowRecordByResult(integrityCheckResult);
             }
         }
+
         List<IntegrityRecordComment> integrityRecordCommentList=dataIntegrityWorkflowService.getIntegrityRecordComments(integrityWorkflowRecord);
         modelMap.put("record", integrityWorkflowRecord);
         Context.addProxyPrivilege("View Users");
         modelMap.put("allusers", Context.getUserService().getAllUsers());
         Context.removeProxyPrivilege("View Users");
         modelMap.put("stages", dataIntegrityWorkflowService.getWorkflowStages());
+        modelMap.put("status", dataIntegrityWorkflowService.getAllRecordStatus());
         modelMap.put("checkId",checkId);
         modelMap.put("resultId",resultId);
         modelMap.put("recordId",integrityWorkflowRecord.getRecordId());

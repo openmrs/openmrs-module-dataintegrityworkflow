@@ -30,8 +30,10 @@ public class IntegrityWorkflowRecord extends BaseOpenmrsObject{
     private RecordAssignee currentAssignee;
     private Set<RecordAssignee> previousRecordAssignees;
     private Set<IntegrityRecordComment> integrityRecordComments;
+    private Set<RecordStatusChange> recordStatusChanges;
     private IntegrityCheckResult integrityCheckResult;
     private int integrityCheckId;
+    private RecordStatus recordStatus;
     private Date lastUpdated;
 
     public Integer getId() {
@@ -102,5 +104,25 @@ public class IntegrityWorkflowRecord extends BaseOpenmrsObject{
 
     public void setRecordId(int recordId) {
         this.recordId = recordId;
+    }
+
+    public RecordStatus getRecordStatus() {
+        return recordStatus;
+    }
+
+    public void setRecordStatus(RecordStatus recordStatus) {
+        this.recordStatus = recordStatus;
+    }
+
+    public Set<RecordStatusChange> getRecordStatusChanges() {
+        if (recordStatusChanges == null) {
+            recordStatusChanges = new LinkedHashSet<RecordStatusChange>();
+        }
+        return recordStatusChanges;
+    }
+
+    public void setRecordStatusChanges(Set<RecordStatusChange> recordStatusChanges) {
+        this.recordStatusChanges = recordStatusChanges;
+
     }
 }

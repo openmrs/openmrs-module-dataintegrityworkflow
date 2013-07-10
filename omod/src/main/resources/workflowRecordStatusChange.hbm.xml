@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.openmrs.module.dataintegrityworkflow">
+    <class name="org.openmrs.module.dataintegrityworkflow.RecordStatusChange" table="workflow_record_statuschange">
+        <id name="recordStageChangeId" type="java.lang.Integer">
+            <column name="record_statuschange_id"/>
+            <generator class="native"/>
+        </id>
+        <property name="changeDate" type="timestamp">
+            <column length="19" name="change_date"/>
+        </property>
+        <many-to-one class="org.openmrs.User" column="change_by" name="changeBy" not-null="true"/>
+        <many-to-one class="IntegrityWorkflowRecord" column="workflow_record_id" name="integrityWorkflowRecord" not-null="true"/>
+        <many-to-one class="RecordStatus" column="from_status_id" name="fromStatus"/>
+        <many-to-one class="RecordStatus" column="to_status_id" name="toStatus" />
+    </class>
+</hibernate-mapping>

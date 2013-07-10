@@ -41,5 +41,5 @@ public class DataIntegrityWorkflowModuleActivator implements Activator {
 	public void shutdown() {
 		log.info("Shutting down Data Integrity Workflow Module");
 	}
-	
+
 }

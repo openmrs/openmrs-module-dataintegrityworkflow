@@ -17,6 +17,7 @@ import org.openmrs.BaseOpenmrsObject;
 import org.openmrs.User;
 
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -81,6 +82,9 @@ public class IntegrityRecordAssignment extends BaseOpenmrsObject {
     }
 
     public Set<IntegrityRecordStageChange> getIntegrityRecordStageChanges() {
+        if (integrityRecordStageChanges == null) {
+            integrityRecordStageChanges = new LinkedHashSet<IntegrityRecordStageChange>();
+        }
         return integrityRecordStageChanges;
     }
 

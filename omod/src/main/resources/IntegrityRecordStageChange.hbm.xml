@@ -7,7 +7,7 @@
             <generator class="native"/>
         </id>
 
-        <many-to-one name="integrityRecordAssignment" class="IntegrityWorkflowRecord" column="record_assignment_id"/>
+        <many-to-one name="integrityRecordAssignment" class="IntegrityRecordAssignment" column="record_assignment_id"/>
 
         <many-to-one class="org.openmrs.User" column="creator" name="changeBy" not-null="true"/>
         <property column="date_created" length="19" name="changeDate" not-null="true" type="timestamp"/>

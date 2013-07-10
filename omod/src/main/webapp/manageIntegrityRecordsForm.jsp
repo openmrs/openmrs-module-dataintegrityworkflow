@@ -34,6 +34,8 @@
         border: 1px solid #d8d8d6;
         color: #9e9e9c;
     }
+
+    form {display: inline; }
 </style>
 <script>
     var $j = jQuery.noConflict();
@@ -245,7 +247,15 @@
                             <input type="checkbox" size="3" name="recordId" class="checkboxRow" value="${record.integrityCheckResult.integrityCheckResultId}" />
                         </td>
                         <td><a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecord.form?resultId=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>&checkId=<c:out value="${check.id}"/>">RECORD-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/></a> </td>
-                        <td class="status"><c:out value="${record.integrityCheckResult.status}"/></td>
+                        <td class="status">
+                            <c:choose><c:when test="${not empty record.integrityWorkflowRecord}">
+                                <c:out value="${record.integrityWorkflowRecord.recordStatus.status}" />
+                            </c:when>
+                                <c:otherwise>
+                                    <c:out value="${record.integrityCheckResult.status}"/>
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
                         <td>
                             <c:if test="${not empty record.integrityWorkflowRecord.currentAssignee}">
                                 <c:out value="${record.integrityWorkflowRecord.currentAssignee.assignee.username}"/>
@@ -280,7 +290,9 @@
                             <button type="button" class="uiButtonM" id="assignDialog"><spring:message code="dataintegrityworkflow.assign"/></button>
                         </td>
                         <td id="remove">
-                            <input type="submit" id="unassignButton" name="operation" class="uiButtonM ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="<spring:message code="dataintegrityworkflow.records.Unassign"/>" onclick="return checkForRemoveAssignees();"/>
+                            <span class="ui-button-text">
+                            <input type="submit" id="unassignButton" name="operation" style="height:36px" class="uiButtonM ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="<spring:message code="dataintegrityworkflow.records.Unassign"/>" onclick="return checkForRemoveAssignees();"/>
+                            </span>
                         </td>
                     </tr>
                 </table>
@@ -344,7 +356,20 @@
         </form>
     </div>
     <div id="checkSummaryTab">
+        <b class="boxHeader"><spring:message code="dataintegrityworkflow.check.unresolved.byassignee"/></b>
+        <div class="box" >
+        <table id="table1">
+            <c:forEach items="${stages}" var="stageObj" >
+            <tr>
+                <c:out value="${stageObj.status}"/>"
+            </tr>
+            </c:forEach>
+        </table>
+        </div>
+        <b class="boxHeader"><spring:message code="dataintegrityworkflow.check.stage.summary"/></b>
+        <div class="box" >
 
+        </div>
     </div>
 </div>
 <%@ include file="/WEB-INF/template/footer.jsp" %>

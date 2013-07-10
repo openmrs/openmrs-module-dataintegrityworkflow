@@ -166,4 +166,75 @@
             <column name="status" value="On Progress"/>
         </insert>
     </changeSet>
+    <changeSet id="dataintegrityworkflow-2013-07-09-21:30" author="harsz89">
+
+        <comment>
+            Adding new column called to record table and new table for record statuses
+        </comment>
+
+        <addColumn tableName="workflow_record">
+            <column name="record_status_id" type="int"/>
+        </addColumn>
+
+        <createTable tableName="workflow_record_status">
+            <column name="workflow_status_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="status" type="varchar(50)"/>
+            <column name="uuid" type="varchar(38)"/>
+        </createTable>
+
+        <createTable tableName="workflow_check_updated">
+            <column name="check_update_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="integrity_check_id" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="last_run_date" type="datetime" />
+        </createTable>
+
+        <createTable tableName="workflow_record_statuschange">
+            <column name="record_statuschange_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="workflow_record_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_by" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="from_status_id" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="to_status_id" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="change_date" type="datetime" />
+            <column name="uuid" type="varchar(38)"/>
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="fk_workflow_record_assignment_id_of_record_status_change"
+                                 referencedTableName="workflow_record" baseColumnNames="workflow_record_id"
+                                 baseTableName="workflow_record_statuschange" referencedColumnNames="workflow_record_id" />
+        <addAutoIncrement tableName="workflow_record_statuschange" columnName="record_statuschange_id" columnDataType="int"/>
+        <addAutoIncrement tableName="workflow_record_status" columnName="workflow_status_id" columnDataType="int"/>
+        <addAutoIncrement tableName="workflow_check_updated" columnName="check_update_id" columnDataType="int"/>
+
+        <comment>
+            Adding default record statuses
+        </comment>
+
+        <insert tableName="workflow_record_status">
+            <column name="status" value="New"/>
+        </insert>
+        <insert tableName="workflow_record_status">
+            <column name="status" value="Ignored"/>
+        </insert>
+        <insert tableName="workflow_record_status">
+            <column name="status" value="Voided"/>
+        </insert>
+    </changeSet>
+
+
 </databaseChangeLog>
