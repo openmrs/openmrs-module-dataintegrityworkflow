@@ -32,6 +32,10 @@ import java.util.Set;
 /**
  * @author: harsz89
  */
+
+/**
+ * Data Integrity Workflow Service Implementation
+ */
 public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowService {
 
     /**
@@ -54,27 +58,45 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         return this.dao;
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#getAllIntegrityChecks()
+     */
     public List<IntegrityCheck> getAllIntegrityChecks()
     {
         return Context.getService(DataIntegrityService.class).getAllIntegrityChecks();
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#getIntegrityCheck(Integer)
+     */
     public IntegrityCheck getIntegrityCheck(Integer checkId) {
         return Context.getService(DataIntegrityService.class).getIntegrityCheck(checkId);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#getRecordAssigneeById(int)
+     */
     public RecordAssignee getRecordAssigneeById(int assigneeId) {
         return dao.getRecordAssigneeById(assigneeId);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#getIntegrityWorkflowRecordByResult(org.openmrs.module.dataintegrity.IntegrityCheckResult)
+     */
     public IntegrityWorkflowRecord getIntegrityWorkflowRecordByResult(IntegrityCheckResult integrityCheckResult) {
         return dao.getIntegrityWorkflowRecordByResult(integrityCheckResult);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#getAllIntegrityWorkflowRecords()
+     */
     public IntegrityWorkflowRecord getAllIntegrityWorkflowRecords() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#getAssignedIntegrityWorkflowRecordsOfCurrentUser(org.openmrs.User)
+     */
     public List<IntegrityWorkflowRecord> getAssignedIntegrityWorkflowRecordsOfCurrentUser(User assignedUser) {
         List<RecordAssignee> assignees=dao.getAllAssignmentsOfUser(assignedUser);
         List<IntegrityWorkflowRecord> integrityWorkflowRecords=new ArrayList<IntegrityWorkflowRecord>();
@@ -90,30 +112,44 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         return integrityWorkflowRecords;
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#getWorkflowStage(int)
+     */
     public WorkflowStage getWorkflowStage(int stageId) {
         return dao.getWorkflowStage(stageId);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#getWorkflowStages()
+     */
     public List<WorkflowStage> getWorkflowStages() {
         return dao.getWorkflowStages();
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#getIntegrityCheckUpdate(int)
+     */
     public IntegrityCheckUpdate getIntegrityCheckUpdate(int checkId) {
         return dao.getIntegrityCheckUpdate(checkId);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#getRecordStatus(int)
+     */
     public RecordStatus getRecordStatus(int stageId) {
         return dao.getRecordStatus(stageId);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#getAllRecordStatus()
+     */
     public List<RecordStatus> getAllRecordStatus() {
         return dao.getAllRecordStatus();
     }
 
-    public RecordAssignee getWorkflowRecordAssigneeByUserAndWorkflowRecord(IntegrityWorkflowRecord integrityWorkflowRecord, User assignUser) {
-        return dao.getWorkflowRecordAssigneeByUserAndWorkflowRecord(integrityWorkflowRecord,assignUser);
-    }
-
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#getAllIntegrityWorkflowRecordWithCheckResult(int)
+     */
     public List<IntegrityWorkflowRecordWithCheckResult> getAllIntegrityWorkflowRecordWithCheckResult(int checkId) {
         IntegrityCheck integrityCheck=Context.getService(DataIntegrityService.class).getIntegrityCheck(checkId);
         Set<IntegrityCheckResult> results=integrityCheck.getIntegrityCheckResults();
@@ -146,74 +182,128 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         return integrityWorkflowRecordWithCheckResultList;
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#getIntegrityRecordComments(org.openmrs.module.dataintegrityworkflow.IntegrityWorkflowRecord)
+     */
     public List<IntegrityRecordComment> getIntegrityRecordComments(IntegrityWorkflowRecord integrityWorkflowRecord) {
         return dao.getIntegrityRecordComments(integrityWorkflowRecord);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#getAllIntegrityWorkflowRecordsForCheck(int)
+     */
     public List<IntegrityWorkflowRecord> getAllIntegrityWorkflowRecordsForCheck(int checkId) {
         return dao.getAllIntegrityWorkflowRecordsForCheck(checkId);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#getIntegrityRecordAssignmentByAssigneeAndId(org.openmrs.module.dataintegrityworkflow.RecordAssignee, int)
+     */
     public IntegrityRecordAssignment getIntegrityRecordAssignmentByAssigneeAndId(RecordAssignee recordAssignee,int assginmentId) {
         return dao.getIntegrityRecordAssignmentByAssigneeAndId(recordAssignee, assginmentId);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#saveIntegrityWorkflowRecord(org.openmrs.module.dataintegrityworkflow.IntegrityWorkflowRecord)
+     */
     public void saveIntegrityWorkflowRecord(IntegrityWorkflowRecord integrityWorkflowRecord) {
         dao.saveIntegrityWorkflowRecord(integrityWorkflowRecord);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#saveWorkflowStage(org.openmrs.module.dataintegrityworkflow.WorkflowStage)
+     */
     public void saveWorkflowStage(WorkflowStage workflowStage) {
         dao.saveWorkflowStage(workflowStage);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#saveWorkflowAssignee(org.openmrs.module.dataintegrityworkflow.RecordAssignee)
+     */
     public int saveWorkflowAssignee(RecordAssignee recordAssignee) {
         return dao.saveWorkflowAssignee(recordAssignee);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#saveIntegrityCheckUpdate(org.openmrs.module.dataintegrityworkflow.IntegrityCheckUpdate)
+     */
     public void saveIntegrityCheckUpdate(IntegrityCheckUpdate integrityCheckUpdate) throws DAOException {
         dao.saveIntegrityCheckUpdate(integrityCheckUpdate);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#saveIntegrityRecordStageChange(org.openmrs.module.dataintegrityworkflow.IntegrityRecordStageChange)
+     */
     public void saveIntegrityRecordStageChange(IntegrityRecordStageChange integrityRecordStageChange) {
         dao.saveIntegrityRecordStageChange(integrityRecordStageChange);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#saveIntegrityRecordComment(org.openmrs.module.dataintegrityworkflow.IntegrityRecordComment)
+     */
     public void saveIntegrityRecordComment(IntegrityRecordComment integrityRecordComment) {
         dao.saveIntegrityRecordComment(integrityRecordComment);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#saveIntegrityRecordAssignment(org.openmrs.module.dataintegrityworkflow.IntegrityRecordAssignment)
+     */
     public int saveIntegrityRecordAssignment(IntegrityRecordAssignment integrityRecordAssignment) {
         return dao.saveIntegrityRecordAssignment(integrityRecordAssignment);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#saveIntegrityRecordStatusChange(org.openmrs.module.dataintegrityworkflow.RecordStatusChange)
+     */
     public void saveIntegrityRecordStatusChange(RecordStatusChange recordStatusChange) {
         dao.saveIntegrityRecordStatusChange(recordStatusChange);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#updateIntegrityRecordComment(org.openmrs.module.dataintegrityworkflow.IntegrityRecordComment)
+     */
     public void updateIntegrityRecordComment(IntegrityRecordComment integrityRecordComment) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#updateIntegrityWorkflowRecord(org.openmrs.module.dataintegrityworkflow.IntegrityWorkflowRecord)
+     */
     public void updateIntegrityWorkflowRecord(IntegrityWorkflowRecord integrityWorkflowRecord) {
         dao.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#updateWorkflowAssignee(org.openmrs.module.dataintegrityworkflow.RecordAssignee)
+     */
     public void updateWorkflowAssignee(RecordAssignee recordAssignee) {
         dao.updateWorkflowAssignee(recordAssignee);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#updateIntegrityRecordAssignment(org.openmrs.module.dataintegrityworkflow.IntegrityRecordAssignment)
+     */
     public void updateIntegrityRecordAssignment(IntegrityRecordAssignment integrityRecordAssignment) {
         dao.saveIntegrityRecordAssignment(integrityRecordAssignment);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#getIntegrityWorkflowRecordByRecordId(int)
+     */
     public IntegrityWorkflowRecord getIntegrityWorkflowRecordByRecordId(int recordId) {
         return dao.getIntegrityWorkflowRecordByRecordId(recordId);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#getIntegrityWorkflowRecordByResultId(int)
+     */
     public IntegrityWorkflowRecord getIntegrityWorkflowRecordByResultId(int resultId) {
         return dao.getIntegrityWorkflowRecordByResultId(resultId);
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#updateWorkflowRecords(int)
+     */
     public void updateWorkflowRecords(int checkId) {
         DataIntegrityWorkflowService integrityWorkflowService=Context.getService(DataIntegrityWorkflowService.class);
         IntegrityCheck integrityCheck=integrityWorkflowService.getIntegrityCheck(checkId);
@@ -238,6 +328,9 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         }
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#updateWorkflowRecordsOfAllChecks()
+     */
     public void updateWorkflowRecordsOfAllChecks() {
         DataIntegrityWorkflowService integrityWorkflowService=Context.getService(DataIntegrityWorkflowService.class);
         List<IntegrityCheck> integrityChecks=integrityWorkflowService.getAllIntegrityChecks();
@@ -266,17 +359,23 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         }
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#deleteIntegrityRecordComment(org.openmrs.module.dataintegrityworkflow.IntegrityRecordComment)
+     */
     public void deleteIntegrityRecordComment(IntegrityRecordComment integrityRecordComment) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void assignRecords(String[] recordIdList,int checkId,String user) {
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#assignRecords(String[], int, String)
+     */
+    public void assignRecords(String[] resultList,int checkId,String user) {
         DataIntegrityWorkflowService integrityWorkflowService=Context.getService(DataIntegrityWorkflowService.class);
         User assignUser=Context.getUserService().getUserByUsername(user);
         List<IntegrityWorkflowRecord> integrityWorkflowRecords=integrityWorkflowService.getAllIntegrityWorkflowRecordsForCheck(checkId);
         for(IntegrityWorkflowRecord integrityWorkflowRecord:integrityWorkflowRecords) {
-            for(String recordId:recordIdList) {
-                if(integrityWorkflowRecord.getIntegrityCheckResult().getIntegrityCheckResultId()==Integer.parseInt(recordId)) {
+            for(String resultId: resultList) {
+                if(integrityWorkflowRecord.getIntegrityCheckResult().getIntegrityCheckResultId()==Integer.parseInt(resultId)) {
                     if(integrityWorkflowRecord.getPreviousRecordAssignees().size()==0) {
                         int assigneeId;
                         int assginmentId;
@@ -369,14 +468,17 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
 
     }
 
-    public void removeRecordsAssignees(String[] recordIdList, int checkId) {
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#removeRecordsAssignees(String[], int)
+     */
+    public void removeRecordsAssignees(String[] resultList, int checkId) {
         DataIntegrityWorkflowService integrityWorkflowService=Context.getService(DataIntegrityWorkflowService.class);
         List<IntegrityWorkflowRecord> integrityWorkflowRecords=integrityWorkflowService.getAllIntegrityWorkflowRecordsForCheck(checkId);
-        for(String recordId:recordIdList)
+        for(String resultId: resultList)
         {
             for(IntegrityWorkflowRecord integrityWorkflowRecord:integrityWorkflowRecords)
             {
-                if(integrityWorkflowRecord.getIntegrityCheckResult().getIntegrityCheckResultId()==Integer.parseInt(recordId)) {
+                if(integrityWorkflowRecord.getIntegrityCheckResult().getIntegrityCheckResultId()==Integer.parseInt(resultId)) {
                     RecordAssignee  recordAssignee=integrityWorkflowRecord.getCurrentAssignee();
                     IntegrityRecordAssignment integrityRecordAssignment=recordAssignee.getCurrentIntegrityRecordAssignment();
                     integrityRecordAssignment.setUnassignDate(new Date());
@@ -392,6 +494,9 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         }
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#createWorkflowRecordsIfNotExists(String[], int)
+     */
     public void createWorkflowRecordsIfNotExists(String[] resultIdList,int checkId) {
         DataIntegrityWorkflowService integrityWorkflowService=Context.getService(DataIntegrityWorkflowService.class);
         int checkResultId;
@@ -417,6 +522,9 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         }
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#createIntegrityCheckupdateIfNotExists(int)
+     */
     public void createIntegrityCheckupdateIfNotExists(int checkId)
     {
         DataIntegrityWorkflowService integrityWorkflowService=Context.getService(DataIntegrityWorkflowService.class);
@@ -430,6 +538,9 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         }
     }
 
+    /**
+     * @see org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService#updateCheckUpdate(org.openmrs.module.dataintegrityworkflow.IntegrityCheckUpdate)
+     */
     public void updateCheckUpdate(IntegrityCheckUpdate integrityCheckUpdate)
     {
         dao.updateCheckUpdate(integrityCheckUpdate);

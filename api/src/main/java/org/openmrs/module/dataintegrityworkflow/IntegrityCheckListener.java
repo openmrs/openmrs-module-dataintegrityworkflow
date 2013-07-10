@@ -27,6 +27,10 @@ import java.util.List;
 /**
  * @author: harsz89
  */
+
+/**
+ * Class for listening the integrity check changes and update the workflow record status accordingly
+ */
 public class IntegrityCheckListener implements SubscribableEventListener{
 
     public void onMessage(Message msgParam) {

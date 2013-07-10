@@ -77,11 +77,11 @@ public class ViewRecordFormController extends SimpleFormController {
                 }
             } else if (deleteAssignee!=null) {
                 String[] record=new String[1];
-                record[0]=recordId;
+                record[0]=resultId;
                 integrityWorkflowService.removeRecordsAssignees(record,Integer.parseInt(checkId));
             } else if (addChangeUser!=null) {
                 String[] record=new String[1];
-                record[0]=recordId;
+                record[0]=resultId;
                 String user=request.getParameter("assigneeId");
                 integrityWorkflowService.assignRecords(record,Integer.parseInt(checkId),user);
             } else if (statusChange!=null) {
@@ -97,7 +97,7 @@ public class ViewRecordFormController extends SimpleFormController {
                 integrityWorkflowService.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
             }
         }
-        return new ModelAndView(new RedirectView(getSuccessView()+"?recordId="+recordId+"&checkId="+checkId));
+        return new ModelAndView(new RedirectView(getSuccessView()+"?recordId="+recordId+"&checkId="+checkId+"&resultId="+resultId));
     }
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
 

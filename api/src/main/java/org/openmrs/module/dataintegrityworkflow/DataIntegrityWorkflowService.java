@@ -107,9 +107,9 @@ public interface DataIntegrityWorkflowService {
 
     public void deleteIntegrityRecordComment(IntegrityRecordComment integrityRecordComment);
 
-    public void assignRecords(String[] recordList, int checkId, String user);
+    public void assignRecords(String[] resultList, int checkId, String user);
 
-    public void removeRecordsAssignees(String[] recordList, int checkId);
+    public void removeRecordsAssignees(String[] resultList, int checkId);
 
     public int saveIntegrityRecordAssignment(IntegrityRecordAssignment integrityRecordAssignment);
 
