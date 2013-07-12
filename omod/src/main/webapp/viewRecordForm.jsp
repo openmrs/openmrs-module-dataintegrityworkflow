@@ -70,51 +70,57 @@
 
 <b class="boxHeader"><spring:message code="dataintegrityworkflow.record.basic"/></b>
 <div class="box" >
-    <table id="table">
-        <tr>
-            <th width="100"><spring:message code="dataintegrityworkflow.recordId"/></th>
-            <td>RECORD-<c:out value="${record.integrityCheckResult.integrityCheckResultId} "/> </td>
-        </tr>
-        <tr>
-            <th width="100"><spring:message code="dataintegrityworkflow.status"/></th>
-            <td class="status">
-                <c:out value="${record.recordStatus.status} "/>
-            </td>
-        </tr>
-        <tr>
-            <th width="300"><spring:message code="dataintegrityworkflow.assignee"/></th>
-            <td><c:out value="${record.currentAssignee.assignee} "/> </td>
-        </tr>
-        <tr>
-            <th width="400"><spring:message code="dataintegrityworkflow.stage"/></th>
-            <td><c:out value="${record.currentAssignee.currentIntegrityRecordAssignment.currentStage.status} "/> </td>
-        </tr>
-        <tr>
-            <th width="400"><spring:message code="dataintegrityworkflow.assigneeBy"/></th>
-            <td><c:out value="${record.currentAssignee.currentIntegrityRecordAssignment.assignBy.personName} "/> </td>
-        </tr>
-        <tr>
-            <th width="300"><spring:message code="dataintegrityworkflow.dateOfAssign"/></th>
-            <td><openmrs:formatDate date="${record.currentAssignee.currentIntegrityRecordAssignment.assignedDate}" type="long"/></td>
-        </tr>
-        <tr>
-            <th width="400"><spring:message code="dataintegrityworkflow.checkName"/></th>
-            <td>
-                <c:out value="${check.name}"/>
-            </td>
-        </tr>
-        <tr>
-            <th width="400"><spring:message code="dataintegrityworkflow.checkDescription"/></th>
-            <td>
-                <c:out value="${check.description}"/>
-            </td>
-        </tr>
-        <tr>
-            <th width="300"><spring:message code="dataintegrityworkflow.lastupdated"/></th>
-            <td><openmrs:formatDate date="${record.lastUpdated}" type="long"/>
-            </td>
-        </tr>
-    </table>
+    <form id="general">
+        <input type=hidden name=recordId value=<c:out value="${recordId}"/> >
+        <input type=hidden name=checkId value=<c:out value="${checkId}"/> >
+        <input type=hidden name=resultId value=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/> >
+        <input type=hidden name=resultIdUuid value=<c:out value="${record.integrityCheckResult.uniqueIdentifier}"/> >
+        <table id="table">
+            <tr>
+                <th width="100"><spring:message code="dataintegrityworkflow.recordId"/></th>
+                <td>RECORD-<c:out value="${record.integrityCheckResult.integrityCheckResultId} "/> </td>
+            </tr>
+            <tr>
+                <th width="100"><spring:message code="dataintegrityworkflow.status"/></th>
+                <td class="status">
+                    <c:out value="${record.recordStatus.status} "/>
+                </td>
+            </tr>
+            <tr>
+                <th width="300"><spring:message code="dataintegrityworkflow.assignee"/></th>
+                <td><c:out value="${record.currentAssignee.assignee} "/> </td>
+            </tr>
+            <tr>
+                <th width="400"><spring:message code="dataintegrityworkflow.stage"/></th>
+                <td><c:out value="${record.currentAssignee.currentIntegrityRecordAssignment.currentStage.status} "/> </td>
+            </tr>
+            <tr>
+                <th width="400"><spring:message code="dataintegrityworkflow.assigneeBy"/></th>
+                <td><c:out value="${record.currentAssignee.currentIntegrityRecordAssignment.assignBy.personName} "/> </td>
+            </tr>
+            <tr>
+                <th width="300"><spring:message code="dataintegrityworkflow.dateOfAssign"/></th>
+                <td><openmrs:formatDate date="${record.currentAssignee.currentIntegrityRecordAssignment.assignedDate}" type="long"/></td>
+            </tr>
+            <tr>
+                <th width="400"><spring:message code="dataintegrityworkflow.checkName"/></th>
+                <td>
+                    <c:out value="${check.name}"/>
+                </td>
+            </tr>
+            <tr>
+                <th width="400"><spring:message code="dataintegrityworkflow.checkDescription"/></th>
+                <td>
+                    <c:out value="${check.description}"/>
+                </td>
+            </tr>
+            <tr>
+                <th width="300"><spring:message code="dataintegrityworkflow.lastupdated"/></th>
+                <td><openmrs:formatDate date="${record.lastUpdated}" type="long"/>
+                </td>
+            </tr>
+        </table>
+    </form>
 </div>
 
 <b class="boxHeader"><spring:message code="dataintegrityworkflow.record.data"/></b>
@@ -159,6 +165,7 @@
                         <input type=hidden name=recordId value=<c:out value="${recordId}"/> >
                         <input type=hidden name=checkId value=<c:out value="${checkId}"/> >
                         <input type=hidden name=resultId value=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/> >
+                        <input type=hidden name=resultIdUuid value=<c:out value="${record.integrityCheckResult.uniqueIdentifier}"/> >
                         <select name="status">
                             <c:forEach items="${status}" var="statusObj" >
                                 <option value="<c:out value="${statusObj.statusId}"/>"> <c:out value="${statusObj.status}"/> </option>

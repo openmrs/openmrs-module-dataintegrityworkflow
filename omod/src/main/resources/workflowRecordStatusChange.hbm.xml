@@ -11,7 +11,8 @@
         </property>
         <many-to-one class="org.openmrs.User" column="change_by" name="changeBy" not-null="true"/>
         <many-to-one class="IntegrityWorkflowRecord" column="workflow_record_id" name="integrityWorkflowRecord" not-null="true"/>
-        <many-to-one class="RecordStatus" column="from_status_id" name="fromStatus"/>
-        <many-to-one class="RecordStatus" column="to_status_id" name="toStatus" />
+        <property name="action" type="string">
+            <column length="19" name="operation"/>
+        </property>
     </class>
 </hibernate-mapping>

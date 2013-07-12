@@ -249,7 +249,7 @@
                         <td><a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecord.form?resultId=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>&checkId=<c:out value="${check.id}"/>">RECORD-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/></a> </td>
                         <td class="status">
                             <c:choose><c:when test="${not empty record.integrityWorkflowRecord}">
-                                <c:out value="${record.integrityWorkflowRecord.recordStatus.status}" />
+                                <c:out value="${record.integrityWorkflowRecord.integrityCheckResult.status}" />
                             </c:when>
                                 <c:otherwise>
                                     <c:out value="${record.integrityCheckResult.status}"/>
@@ -368,7 +368,6 @@
         </div>
         <b class="boxHeader"><spring:message code="dataintegrityworkflow.check.stage.summary"/></b>
         <div class="box" >
-
         </div>
     </div>
 </div>

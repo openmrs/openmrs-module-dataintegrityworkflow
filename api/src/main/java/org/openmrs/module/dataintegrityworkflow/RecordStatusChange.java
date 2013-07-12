@@ -26,8 +26,7 @@ public class RecordStatusChange extends BaseOpenmrsData {
     private IntegrityWorkflowRecord integrityWorkflowRecord;
     private User changeBy;
     private Date changeDate;
-    private RecordStatus fromStatus;
-    private RecordStatus toStatus;
+    private String action;
     public Integer getId() {
         return this.recordStageChangeId;
     }
@@ -68,19 +67,11 @@ public class RecordStatusChange extends BaseOpenmrsData {
         this.changeDate = changeDate;
     }
 
-    public RecordStatus getFromStatus() {
-        return fromStatus;
+    public String getAction() {
+        return action;
     }
 
-    public void setFromStatus(RecordStatus fromStatus) {
-        this.fromStatus = fromStatus;
-    }
-
-    public RecordStatus getToStatus() {
-        return toStatus;
-    }
-
-    public void setToStatus(RecordStatus toStatus) {
-        this.toStatus = toStatus;
+    public void setAction(String action) {
+        this.action = action;
     }
 }

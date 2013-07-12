@@ -90,8 +90,6 @@ public class ManageIntegrityRecordsFormController extends SimpleFormController {
         DataIntegrityWorkflowService integrityWorkflowService=getDataIntegrityWorkflowService();
         Map<String,Object> modelMap=new HashMap<String,Object>();
         int checkId=Integer.parseInt(req.getParameter("checkId"));
-        integrityWorkflowService.createIntegrityCheckupdateIfNotExists(checkId);
-        integrityWorkflowService.updateWorkflowRecords(checkId);
         String filter=req.getParameter("filter");
         List<IntegrityWorkflowRecordWithCheckResult> records=new ArrayList<IntegrityWorkflowRecordWithCheckResult>();
         IntegrityCheck integrityCheck = null;

@@ -75,15 +75,13 @@ public interface DataIntegrityWorkflowService {
 
     public List<WorkflowStage> getWorkflowStages();
 
-    public IntegrityCheckUpdate getIntegrityCheckUpdate(int checkId);
+    public IntegrityCheckAssignment getIntegrityCheckUpdate(int checkId);
 
     public List<IntegrityWorkflowRecordWithCheckResult> getAllIntegrityWorkflowRecordWithCheckResult(int checkId);
 
     public List<IntegrityWorkflowRecord> getAllIntegrityWorkflowRecordsForCheck(int checkId);
 
-    public RecordStatus getRecordStatus(int stageId);
-
-    public List<RecordStatus> getAllRecordStatus();
+    public IntegrityCheckResult getIntegrityCheckResultByUuid(IntegrityCheck integrityCheck,String uuid);
 
     public void saveIntegrityWorkflowRecord(IntegrityWorkflowRecord integrityWorkflowRecord);
 
@@ -91,7 +89,7 @@ public interface DataIntegrityWorkflowService {
 
     public int saveWorkflowAssignee(RecordAssignee recordAssignee);
 
-    public void saveIntegrityCheckUpdate(IntegrityCheckUpdate integrityCheckUpdate) throws DAOException;
+    public void saveIntegrityCheckUpdate(IntegrityCheckAssignment integrityCheckUpdate) throws DAOException;
 
     public void saveIntegrityRecordStageChange(IntegrityRecordStageChange integrityRecordStageChange);
 
@@ -117,8 +115,6 @@ public interface DataIntegrityWorkflowService {
 
     public void createWorkflowRecordsIfNotExists(String[] resultIdList, int checkId);
 
-    public void createIntegrityCheckupdateIfNotExists(int checkId);
-
     public IntegrityRecordAssignment getIntegrityRecordAssignmentByAssigneeAndId(RecordAssignee recordAssignee, int assignmentId);
 
     public void updateIntegrityRecordAssignment(IntegrityRecordAssignment integrityRecordAssignment);
@@ -132,10 +128,10 @@ public interface DataIntegrityWorkflowService {
 
     public IntegrityWorkflowRecord getIntegrityWorkflowRecordByResultId(int resultId);
 
-    public void updateWorkflowRecords(int checkId);
+    //public void updateWorkflowRecords(int checkId);
 
-    public void updateWorkflowRecordsOfAllChecks();
+    //public void updateWorkflowRecordsOfAllChecks();
 
-    public void updateCheckUpdate(IntegrityCheckUpdate integrityCheckUpdate);
+    public void updateCheckUpdate(IntegrityCheckAssignment integrityCheckUpdate);
 
 }

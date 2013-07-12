@@ -12,18 +12,6 @@
     <description>API project for Data Integrity Workflow Module</description>
 
     <dependencies>
-        <!--
-        Add other dependencies from lib:
-        <dependency>
-            <groupId>org.other.library</groupId>
-            <artifactId>library-name</artifactId>
-        </dependency>
-        -->
-        <dependency>
-            <groupId>javax.jms</groupId>
-            <artifactId>jms</artifactId>
-            <version>1.1</version>
-        </dependency>
         <dependency>
             <groupId>org.openmrs.api</groupId>
             <artifactId>openmrs-api</artifactId>
@@ -53,13 +41,6 @@
             <groupId>org.openmrs.module</groupId>
             <artifactId>dataintegrity-api</artifactId>
             <version>2.0</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>event-api</artifactId>
-            <version>2.1</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>

@@ -89,12 +89,8 @@ public class ViewRecordFormController extends SimpleFormController {
                 RecordStatusChange recordStatusChange=new RecordStatusChange();
                 recordStatusChange.setChangeDate(new Date());
                 recordStatusChange.setChangeBy(Context.getAuthenticatedUser());
-                recordStatusChange.setFromStatus(integrityWorkflowRecord.getRecordStatus());
-                recordStatusChange.setToStatus(integrityWorkflowService.getRecordStatus(status));
                 recordStatusChange.setIntegrityWorkflowRecord(integrityWorkflowRecord);
                 integrityWorkflowService.saveIntegrityRecordStatusChange(recordStatusChange);
-                integrityWorkflowRecord.setRecordStatus(integrityWorkflowService.getRecordStatus(status));
-                integrityWorkflowService.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
             }
         }
         return new ModelAndView(new RedirectView(getSuccessView()+"?recordId="+recordId+"&checkId="+checkId+"&resultId="+resultId));
@@ -134,7 +130,6 @@ public class ViewRecordFormController extends SimpleFormController {
         modelMap.put("allusers", Context.getUserService().getAllUsers());
         Context.removeProxyPrivilege("View Users");
         modelMap.put("stages", dataIntegrityWorkflowService.getWorkflowStages());
-        modelMap.put("status", dataIntegrityWorkflowService.getAllRecordStatus());
         modelMap.put("checkId",checkId);
         modelMap.put("resultId",resultId);
         modelMap.put("recordId",integrityWorkflowRecord.getRecordId());
