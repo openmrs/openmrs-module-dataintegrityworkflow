@@ -15,23 +15,23 @@ package org.openmrs.module.dataintegrityworkflow.web.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.User;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dataintegrity.IntegrityCheck;
 import org.openmrs.module.dataintegrity.IntegrityCheckResult;
 import org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService;
-import org.openmrs.module.dataintegrityworkflow.IntegrityRecordComment;
 import org.openmrs.module.dataintegrityworkflow.IntegrityWorkflowRecord;
+import org.openmrs.module.dataintegrityworkflow.RecordAssignee;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * @author: harsz89
  */
-public class ViewRecordSummaryFormController extends SimpleFormController {
+public class ViewAssignmentsFormController extends SimpleFormController {
     protected final Log log = LogFactory.getLog(getClass());
 
     private DataIntegrityWorkflowService getDataIntegrityWorkflowService() {
@@ -45,21 +45,17 @@ public class ViewRecordSummaryFormController extends SimpleFormController {
 
     protected Map referenceData(HttpServletRequest req) throws Exception {
         Map<String,Object> modelMap=new HashMap<String, Object>();
-        String resultId=req.getParameter("resultId");
+        String recordId=req.getParameter("recordId");
         String checkId=req.getParameter("checkId");
+        String assigneeId=req.getParameter("assigneeId");
         IntegrityWorkflowRecord integrityWorkflowRecord;
         DataIntegrityWorkflowService dataIntegrityWorkflowService=getDataIntegrityWorkflowService();
-        IntegrityCheck integrityCheck=dataIntegrityWorkflowService.getIntegrityCheck(Integer.parseInt(checkId));
-        IntegrityCheckResult integrityCheckResult=new IntegrityCheckResult();
-        integrityCheckResult.setId(Integer.parseInt(resultId));
-        integrityWorkflowRecord=dataIntegrityWorkflowService.getIntegrityWorkflowRecordByResult(integrityCheckResult);
-        if(integrityWorkflowRecord==null) {
-            String[] temp=new String[1];
-            temp[0]=resultId;
-            dataIntegrityWorkflowService.createWorkflowRecordsIfNotExists(temp,Integer.parseInt(checkId));
-            integrityWorkflowRecord=dataIntegrityWorkflowService.getIntegrityWorkflowRecordByResult(integrityCheckResult);
-        }
-        modelMap.put("record", integrityWorkflowRecord);
+        integrityWorkflowRecord=dataIntegrityWorkflowService.getIntegrityWorkflowRecordByRecordId(Integer.parseInt(recordId));
+        RecordAssignee recordAssignee=dataIntegrityWorkflowService.getRecordAssigneeById(Integer.parseInt(assigneeId));
+        modelMap.put("recordId", recordId);
+        modelMap.put("checkId", checkId);
+        modelMap.put("user", recordAssignee.getAssignee());
+        modelMap.put("assigneeId",assigneeId);
         return modelMap;
     }
 }

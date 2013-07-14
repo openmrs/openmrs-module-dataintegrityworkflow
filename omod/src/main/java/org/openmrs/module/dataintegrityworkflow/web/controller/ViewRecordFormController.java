@@ -16,9 +16,11 @@ package org.openmrs.module.dataintegrityworkflow.web.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.dataintegrity.DataIntegrityConstants;
 import org.openmrs.module.dataintegrity.IntegrityCheck;
 import org.openmrs.module.dataintegrity.IntegrityCheckResult;
 import org.openmrs.module.dataintegrityworkflow.*;
+import org.openmrs.web.WebConstants;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
@@ -51,7 +53,6 @@ public class ViewRecordFormController extends SimpleFormController {
         String stageChange=request.getParameter("changeStage");
         String addComment=request.getParameter("addComment");
         String addChangeUser=request.getParameter("changeAssigned");
-        String deleteAssignee=request.getParameter("delAssigned");
         DataIntegrityWorkflowService integrityWorkflowService=getDataIntegrityWorkflowService();
         IntegrityWorkflowRecord integrityWorkflowRecord;
         if(recordId!=null) {
@@ -75,22 +76,37 @@ public class ViewRecordFormController extends SimpleFormController {
                     integrityRecordComment.setIntegrityWorkflowRecord(integrityWorkflowRecord);
                     integrityWorkflowService.saveIntegrityRecordComment(integrityRecordComment);
                 }
-            } else if (deleteAssignee!=null) {
-                String[] record=new String[1];
-                record[0]=resultId;
-                integrityWorkflowService.removeRecordsAssignees(record,Integer.parseInt(checkId));
             } else if (addChangeUser!=null) {
                 String[] record=new String[1];
                 record[0]=resultId;
                 String user=request.getParameter("assigneeId");
-                integrityWorkflowService.assignRecords(record,Integer.parseInt(checkId),user);
+                if(!"Unassign".equals(user)){
+                integrityWorkflowService.assignRecords(record, Integer.parseInt(checkId), user);
+                } else {
+                    if(Context.getUserService().getUserByUsername(user)!=null)  {
+                    integrityWorkflowService.removeRecordsAssignees(record,Integer.parseInt(checkId));
+                    } else {
+                        request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
+                                "dataintegrityworkflow.record.usernotfound");
+                    }
+                }
+
             } else if (statusChange!=null) {
                 int status=Integer.parseInt(request.getParameter("status"));
+                IntegrityCheckResult integrityCheckResult;
+                IntegrityCheck integrityCheck=integrityWorkflowService.getIntegrityCheck(Integer.parseInt(checkId));
                 RecordStatusChange recordStatusChange=new RecordStatusChange();
                 recordStatusChange.setChangeDate(new Date());
                 recordStatusChange.setChangeBy(Context.getAuthenticatedUser());
                 recordStatusChange.setIntegrityWorkflowRecord(integrityWorkflowRecord);
                 integrityWorkflowService.saveIntegrityRecordStatusChange(recordStatusChange);
+                integrityCheckResult=integrityWorkflowService.findResultForIntegrityCheckById(integrityCheck,Integer.parseInt(resultId));
+                integrityCheckResult.setStatus(DataIntegrityConstants.RESULT_STATUS_NEW.equals(status) ?
+                        DataIntegrityConstants.RESULT_STATUS_IGNORED :
+                        DataIntegrityConstants.RESULT_STATUS_NEW);
+                integrityWorkflowService.saveIntegrityCheck(integrityCheck);
+                integrityWorkflowRecord.setLastUpdated(new Date());
+                integrityWorkflowService.saveIntegrityWorkflowRecord(integrityWorkflowRecord);
             }
         }
         return new ModelAndView(new RedirectView(getSuccessView()+"?recordId="+recordId+"&checkId="+checkId+"&resultId="+resultId));
@@ -109,7 +125,7 @@ public class ViewRecordFormController extends SimpleFormController {
         String checkId=req.getParameter("checkId");
         IntegrityWorkflowRecord integrityWorkflowRecord;
         DataIntegrityWorkflowService dataIntegrityWorkflowService=getDataIntegrityWorkflowService();
-        IntegrityCheck ingrityCheck=dataIntegrityWorkflowService.getIntegrityCheck(Integer.parseInt(checkId));
+        IntegrityCheck integrityCheck=dataIntegrityWorkflowService.getIntegrityCheck(Integer.parseInt(checkId));
         if(recordId!=null){
             integrityWorkflowRecord=dataIntegrityWorkflowService.getIntegrityWorkflowRecordByRecordId(Integer.parseInt(recordId));
         } else {
@@ -134,7 +150,7 @@ public class ViewRecordFormController extends SimpleFormController {
         modelMap.put("resultId",resultId);
         modelMap.put("recordId",integrityWorkflowRecord.getRecordId());
         modelMap.put("comments",integrityRecordCommentList);
-        modelMap.put("check",ingrityCheck);
+        modelMap.put("check",integrityCheck);
         return modelMap;
     }
 }

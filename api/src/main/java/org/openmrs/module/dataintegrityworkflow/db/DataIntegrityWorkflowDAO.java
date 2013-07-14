@@ -64,6 +64,8 @@ public interface DataIntegrityWorkflowDAO {
 
     public IntegrityWorkflowRecord getIntegrityWorkflowRecord(int integrityRecordWorkflowDetailId) throws DAOException;
 
+    public IntegrityRecordAssignment getIngrityRecordAssignmentById(int assignmentId) throws DAOException;
+
     public List<IntegrityWorkflowRecord> getAllIntegrityWorkflowRecordsForCheck(int checkId) throws DAOException;
 
     public List<RecordAssignee> getAllAssignmentsOfUser(User user) throws DAOException;
@@ -98,5 +100,5 @@ public interface DataIntegrityWorkflowDAO {
 
     public IntegrityWorkflowRecord getIntegrityWorkflowRecordByRecordId(int recordId);
 
-    public IntegrityCheckResult findResultForIntegrityCheckById(IntegrityCheck integrityCheck,int id);
+    public IntegrityCheckResult findResultForIntegrityCheckById(IntegrityCheck integrityCheck,int id) throws DAOException;
 }

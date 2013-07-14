@@ -81,6 +81,8 @@ public interface DataIntegrityWorkflowService {
 
     public List<IntegrityWorkflowRecord> getAllIntegrityWorkflowRecordsForCheck(int checkId);
 
+    public IntegrityRecordAssignment getIntegrityCheckAssignmentById(int assignmentId);
+
     public IntegrityCheckResult getIntegrityCheckResultByUuid(IntegrityCheck integrityCheck,String uuid);
 
     public void saveIntegrityWorkflowRecord(IntegrityWorkflowRecord integrityWorkflowRecord);
@@ -113,6 +115,8 @@ public interface DataIntegrityWorkflowService {
 
     public void saveIntegrityRecordStatusChange(RecordStatusChange recordStatusChange);
 
+    public void saveIntegrityCheck(IntegrityCheck integrityCheck);
+
     public void createWorkflowRecordsIfNotExists(String[] resultIdList, int checkId);
 
     public IntegrityRecordAssignment getIntegrityRecordAssignmentByAssigneeAndId(RecordAssignee recordAssignee, int assignmentId);
@@ -134,4 +138,5 @@ public interface DataIntegrityWorkflowService {
 
     public void updateCheckUpdate(IntegrityCheckAssignment integrityCheckUpdate);
 
+    public IntegrityCheckResult findResultForIntegrityCheckById(IntegrityCheck integrityCheck,int id);
 }

@@ -5,10 +5,22 @@
 <%@ taglib prefix="kc" tagdir="/WEB-INF/tags/module/dataintegrityworkflow/"%>
 <openmrs:htmlInclude file="/moduleResources/dataintegrityworkflow/css/module.css"/>
 <openmrs:htmlInclude file="/moduleResources/dataintegrityworkflow/js/module.js"/>
+<style>
+     /*Model Dialog properties*/
+     input.text { margin-bottom:12px; width:95%; padding: .4em; }
+    .validateTips { border: 1px solid transparent; padding: 0.3em; }
+    .ui-dialog .ui-state-error { padding: .3em; }
+/*===========================================================*/
+    .uiButtonM {
+        background: #e8e8e6;
+        border: 1px solid #d8d8d6;
+        color: #9e9e9c;
+    }
+</style>
 <script>
     var $j = jQuery.noConflict();
     $j(function() {
-        var availableTags = ["default"
+        var availableTags = ["default","Unassign"
                 <c:forEach items="${allusers}" var="user">
                 ,"${user}"
                 </c:forEach>
@@ -27,6 +39,14 @@
         });
         colorVisibleTableRows("table", "white", "whitesmoke");
         colorVisibleTableRows("table7", "white", "whitesmoke");
+
+        $j(".hover-on").mouseover(function() {
+            $j(this).removeClass('ui-state-default').addClass('ui-state-hover');
+        });
+
+        $j(".hover-on").mouseout(function() {
+            $j(this).removeClass('ui-state-hover').addClass('ui-state-default');
+        });
     });
 
     function renderCell(data, colDatatype) {
@@ -58,6 +78,88 @@
         return data;
     }
 
+    //Model Dialogs properties
+    $j(function() {
+        var tips = $j( ".validateTips" );
+        function updateTips( t ) {
+            tips
+                    .text( t )
+                    .addClass( "ui-state-highlight" );
+            setTimeout(function() {
+                tips.removeClass( "ui-state-highlight", 1500 );
+            }, 500 );
+        }
+
+        $j( "#dialog-form-assignee" ).dialog({
+            autoOpen: false,
+            height: 200,
+            width: 350,
+            modal: true,
+            buttons: {
+                "Assign": function() {
+                        var assigneeId=$j('#assigneeId').val();
+                        if(assigneeId!=""){
+                            $j("#assignee-change").submit();
+                            $j( this ).dialog( "close" );
+                        } else {
+                            updateTips("Please enter a assignee");
+                        }
+                },
+                Cancel: function() {
+                    $j( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+                $j('#assigneeId').text="";
+            }
+        });
+        $j("#changeAssignDialog")
+                .button()
+                .click(function() {
+                    $j( "#dialog-form-assignee" ).dialog( "open" );
+                });
+    });
+
+    $j(function() {
+        var tips = $j( ".validateTips" );
+        function updateTips( t ) {
+            tips
+                    .text( t )
+                    .addClass( "ui-state-highlight" );
+            setTimeout(function() {
+                tips.removeClass( "ui-state-highlight", 1500 );
+            }, 500 );
+        }
+
+        $j( "#dialog-form-stage" ).dialog({
+            autoOpen: false,
+            height: 200,
+            width: 350,
+            modal: true,
+            buttons: {
+                "Change": function() {
+                        var selection=$j('#stages').val();
+                        if(selection!="-"){
+                            $j("#stage-change").submit();
+                            $j( this ).dialog( "close" );
+                        } else {
+                            updateTips("Please select a stage");
+                        }
+                },
+                Cancel: function() {
+                    $j( this ).dialog( "close" );
+                }
+            },
+            close: function() {
+            }
+        });
+
+        $j("#changeStageDialog")
+                .button()
+                .click(function() {
+                    $j( "#dialog-form-stage" ).dialog( "open" );
+                });
+    });
 </script>
 
 <style>
@@ -70,11 +172,10 @@
 
 <b class="boxHeader"><spring:message code="dataintegrityworkflow.record.basic"/></b>
 <div class="box" >
-    <form id="general">
+    <form method="post">
         <input type=hidden name=recordId value=<c:out value="${recordId}"/> >
         <input type=hidden name=checkId value=<c:out value="${checkId}"/> >
         <input type=hidden name=resultId value=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/> >
-        <input type=hidden name=resultIdUuid value=<c:out value="${record.integrityCheckResult.uniqueIdentifier}"/> >
         <table id="table">
             <tr>
                 <th width="100"><spring:message code="dataintegrityworkflow.recordId"/></th>
@@ -83,16 +184,37 @@
             <tr>
                 <th width="100"><spring:message code="dataintegrityworkflow.status"/></th>
                 <td class="status">
-                    <c:out value="${record.recordStatus.status} "/>
+                    <c:out value="${record.integrityCheckResult.status} "/>
+                </td>
+                <td>
+                    <c:choose><c:when test="${record.integrityCheckResult.status!=1}">
+                        <input type=hidden name=status value=<c:out value="${record.integrityCheckResult.status}"/> >
+                        <input type="submit" id="ignore" class="ui-button ui-widget ui-state-default ui-corner-all hover-on" style="height:20px; font-size:10px" name="statusChange" value="<spring:message code="dataintegrityworkflow.record.ignore"/>" />
+                    </c:when>
+                        <c:otherwise>
+                            <input type=hidden name=status value=<c:out value="${record.integrityCheckResult.status}"/> >
+                            <input type="submit" id="unignore" class="ui-button ui-widget ui-state-default ui-corner-all hover-on" style="height:20px; font-size:10px" name="statusChange" value="<spring:message code="dataintegrityworkflow.record.unignore"/>" />
+                        </c:otherwise>
+                    </c:choose>
                 </td>
             </tr>
             <tr>
                 <th width="300"><spring:message code="dataintegrityworkflow.assignee"/></th>
                 <td><c:out value="${record.currentAssignee.assignee} "/> </td>
+                <openmrs:hasPrivilege privilege="Manage Record Assignees">
+                <td>
+                    <input type="button" style="height:20px; width:60px ;font-size:10px"  id="changeAssignDialog" value="<spring:message code="dataintegrityworkflow.record.change"/>"/>
+                </td>
+                </openmrs:hasPrivilege>
             </tr>
             <tr>
                 <th width="400"><spring:message code="dataintegrityworkflow.stage"/></th>
                 <td><c:out value="${record.currentAssignee.currentIntegrityRecordAssignment.currentStage.status} "/> </td>
+                <openmrs:hasPrivilege privilege="Manage Record Assignees">
+                <td>
+                    <input type="button"  style="height:20px; width:60px ;font-size:10px" id="changeStageDialog" value="<spring:message code="dataintegrityworkflow.record.change"/>"/>
+                </td>
+                </openmrs:hasPrivilege>
             </tr>
             <tr>
                 <th width="400"><spring:message code="dataintegrityworkflow.assigneeBy"/></th>
@@ -122,7 +244,7 @@
         </table>
     </form>
 </div>
-
+<br/>
 <b class="boxHeader"><spring:message code="dataintegrityworkflow.record.data"/></b>
 <div class="box" style="text-align: center;">
     <table id="table7">
@@ -142,7 +264,7 @@
         </tbody>
     </table>
 </div>
-
+<br/>
 <b class="boxHeader"><spring:message code="dataintegrityworkflow.record.comments"/></b>
 <div class="box" >
     <c:forEach items="${comments}" var="commentObj" >
@@ -152,35 +274,25 @@
             <kc:prettyTime date="${commentObj.dateCreated}"></kc:prettyTime>
         </div>
     </c:forEach>
+    <br/>
+    <table id="table9">
+        <form method="post">
+            <tr>
+                <th width="400" valign="top"><spring:message code="dataintegrityworkflow.record.comment"/> </th>
+                <td><textarea name="comment" rows="10" cols="120" type="_moz" size="35"></textarea> </td>
+            </tr>
+            <td>
+            </td>
+            <td>
+                <input type=hidden name=recordId value=<c:out value="${recordId}"/> >
+                <input type=hidden name=checkId value=<c:out value="${checkId}"/> >
+                <input type=hidden name=resultId value=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/> >
+                <input type="submit" class="ui-button ui-widget ui-state-default ui-corner-all hover-on" style="height:20px; font-size:10px" id="addComment" name="addComment" value="<spring:message code="dataintegrityworkflow.record.comment"/>" />
+        </form>
+    </table>
 </div>
 
-<openmrs:hasPrivilege privilege="View Record Assignments">
-    <b class="boxHeader"><spring:message code="dataintegrityworkflow.record.status.manage"/></b>
-    <div class="box" >
-        <table id="table8">
-            <tr>
-                <th width="400"><spring:message code="dataintegrityworkflow.status"/> </th>
-                <form method="post">
-                    <td>
-                        <input type=hidden name=recordId value=<c:out value="${recordId}"/> >
-                        <input type=hidden name=checkId value=<c:out value="${checkId}"/> >
-                        <input type=hidden name=resultId value=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/> >
-                        <input type=hidden name=resultIdUuid value=<c:out value="${record.integrityCheckResult.uniqueIdentifier}"/> >
-                        <select name="status">
-                            <c:forEach items="${status}" var="statusObj" >
-                                <option value="<c:out value="${statusObj.statusId}"/>"> <c:out value="${statusObj.status}"/> </option>
-                            </c:forEach>
-                            <option value="-" selected="selected">-</option>
-                        </select>
-                        <input type="submit" name="statusStage" value="<spring:message code="dataintegrityworkflow.record.change" />" />
-                </form>
-            </tr>
-        </table>
-    </div>
-</openmrs:hasPrivilege>
-
-
-<openmrs:hasPrivilege privilege="Manage Record Assignees">
+<%--<openmrs:hasPrivilege privilege="Manage Record Assignees">
     <b class="boxHeader"><spring:message code="dataintegrityworkflow.record.assignments"/></b>
     <div class="box" >
         <table id="table4">
@@ -234,25 +346,54 @@
             </tr>
         </table>
     </div>
-</openmrs:hasPrivilege>
-
-<b class="boxHeader"><spring:message code="dataintegrityworkflow.record.add.comment"/></b>
-<div class="box" >
-    <table id="table6">
-        <form method="post">
+</openmrs:hasPrivilege>--%>
+<div id="dialog-form-assignee" title="Assign Record">
+    <p class="validateTips">Select a assignee by typing the username</p>
+    <form id="assignee-change" method="post">
+        <input type=hidden name=recordId value=<c:out value="${recordId}"/> >
+        <input type=hidden name=checkId value=<c:out value="${checkId}"/> >
+        <input type=hidden name=resultId value=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/> >
+        <input type="hidden" name="changeAssigned" value="changeAssigned"/>
+    <fieldset>
+        <table>
             <tr>
-                <th width="400" valign="top"><spring:message code="dataintegrityworkflow.record.comment"/> </th>
-                <td><textarea name="comment" rows="10" cols="120" type="_moz" size="35"></textarea> </td>
+                <td>
+                    <spring:message code="dataintegrityworkflow.user"/></span>
+                </td>
+                <td>
+                    <input id="assigneeId" />
+                </td>
             </tr>
-            <td>
-            </td>
-            <td>
-                <input type=hidden name=recordId value=<c:out value="${recordId}"/> >
-                <input type=hidden name=checkId value=<c:out value="${checkId}"/> >
-                <input type=hidden name=resultId value=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/> >
-                <input type="submit" name="addComment" value="<spring:message code="dataintegrityworkflow.record.comment.add"/>" />
-        </form>
-    </table>
+        </table>
+    </fieldset>
+    </form>
+</div>
+
+<div id="dialog-form-stage" title="Change Stage">
+    <p class="validateTips">Select a stage</p>
+    <form id="stage-change" method="post">
+        <input type=hidden name=recordId value=<c:out value="${recordId}"/> >
+        <input type=hidden name=checkId value=<c:out value="${checkId}"/> >
+        <input type=hidden name=resultId value=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/> >
+        <input type="hidden" name="changeStage" value="changeStage"/>
+        <fieldset>
+        <table>
+            <tr>
+                <td>
+                    <spring:message code="dataintegrityworkflow.stage"/></span>
+                </td>
+                <td>
+                    <select name="stage" id="stages">
+                        <c:forEach items="${stages}" var="stageObj" >
+                            <option value="<c:out value="${stageObj.workflowStageId}"/>"> <c:out value="${stageObj.status}"/> </option>
+                        </c:forEach>
+                        <option value="-" selected="selected">-</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+    </form>
 </div>
 </openmrs:hasPrivilege>
 

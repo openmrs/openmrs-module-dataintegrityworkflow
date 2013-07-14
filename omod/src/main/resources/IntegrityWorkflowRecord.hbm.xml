@@ -10,14 +10,14 @@
             <column name="integrity_check_id" not-null="true"/>
         </property>
         <!-- associated data -->
-        <many-to-one class="RecordAssignee" column="current_assignee_id" name="currentAssignee" lazy="false" />
+        <many-to-one class="RecordAssignee" column="current_assignee_id" name="currentAssignee"/>
         <set name="previousRecordAssignees" lazy="false" cascade="all-delete-orphan"
              table="workflow_record_assignee" inverse="true" sort="unsorted"
              >
             <key column="workflow_record_id" not-null="false"/>
             <one-to-many class="RecordAssignee" not-found="ignore"/>
         </set>
-        <set name="integrityRecordComments" lazy="false" cascade="all-delete-orphan"
+        <set name="integrityRecordComments" cascade="all-delete-orphan"
              table="workflow_record_comment" inverse="true" sort="unsorted"
             >
             <key column="workflow_record_id" not-null="false"/>

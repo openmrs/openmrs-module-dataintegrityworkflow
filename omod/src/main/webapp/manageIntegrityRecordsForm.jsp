@@ -277,7 +277,7 @@
                             </c:choose>
                         </td>
                         <td>
-                            <a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecordSummary.form?recordId=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>&checkId="${check.id}"><spring:message code="dataintegrityworkflow.record.summary"/></a>
+                            <a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecordSummary.form?resultId=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>&checkId=<c:out value="${check.id}"/>"><spring:message code="dataintegrityworkflow.record.summary"/></a>
                         </td>
                     </tr>
                 </c:forEach>

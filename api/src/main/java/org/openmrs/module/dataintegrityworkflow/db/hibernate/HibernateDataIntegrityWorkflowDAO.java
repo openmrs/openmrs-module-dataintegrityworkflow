@@ -142,6 +142,12 @@ public class HibernateDataIntegrityWorkflowDAO implements DataIntegrityWorkflowD
         return (IntegrityWorkflowRecord) sessionFactory.getCurrentSession().get(IntegrityWorkflowRecord.class, integrityRecordWorkflowDetailId);
     }
 
+    public IntegrityRecordAssignment getIngrityRecordAssignmentById(int assignmentId) throws DAOException {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(IntegrityRecordAssignment.class);
+        criteria.add(Restrictions.eq("assignmentId",assignmentId));
+        return (IntegrityRecordAssignment) criteria.uniqueResult();
+    }
+
     /**
      * @see DataIntegrityWorkflowDAO#getAllIntegrityWorkflowRecordsForCheck(int)
      */
