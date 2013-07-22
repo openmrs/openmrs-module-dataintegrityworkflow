@@ -88,7 +88,7 @@
         <tbody id="statusContent">
         <c:forEach items="${record.recordStatusChanges}" var="statusChange" varStatus="loopStatus">
             <tr class="row">
-                <td><c:out value="${statusChange.changeBy}"/></td>
+                <td><c:out value="${statusChange.changeBy.personName}"/></td>
                 <td><openmrs:formatDate date="${statusChange.changeDate}" type="long"/></td>
                 <td><c:out value="${statusChange.action}"/></td>
             </tr>

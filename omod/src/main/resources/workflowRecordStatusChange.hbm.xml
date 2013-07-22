@@ -14,5 +14,6 @@
         <property name="action" type="string">
             <column length="19" name="action"/>
         </property>
+        <property length="38" name="uuid" not-null="true" type="string"/>
     </class>
 </hibernate-mapping>

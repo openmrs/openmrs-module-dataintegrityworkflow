@@ -93,17 +93,19 @@ public class ViewRecordFormController extends SimpleFormController {
 
             } else if (statusChange!=null) {
                 int status=Integer.parseInt(request.getParameter("status"));
+                int change=DataIntegrityConstants.RESULT_STATUS_NEW.equals(status) ?
+                        DataIntegrityConstants.RESULT_STATUS_IGNORED :
+                        DataIntegrityConstants.RESULT_STATUS_NEW;
                 IntegrityCheckResult integrityCheckResult;
                 IntegrityCheck integrityCheck=integrityWorkflowService.getIntegrityCheck(Integer.parseInt(checkId));
                 RecordStatusChange recordStatusChange=new RecordStatusChange();
                 recordStatusChange.setChangeDate(new Date());
                 recordStatusChange.setChangeBy(Context.getAuthenticatedUser());
                 recordStatusChange.setIntegrityWorkflowRecord(integrityWorkflowRecord);
+                recordStatusChange.setAction(Integer.toString(change));
                 integrityWorkflowService.saveIntegrityRecordStatusChange(recordStatusChange);
                 integrityCheckResult=integrityWorkflowService.findResultForIntegrityCheckById(integrityCheck,Integer.parseInt(resultId));
-                integrityCheckResult.setStatus(DataIntegrityConstants.RESULT_STATUS_NEW.equals(status) ?
-                        DataIntegrityConstants.RESULT_STATUS_IGNORED :
-                        DataIntegrityConstants.RESULT_STATUS_NEW);
+                integrityCheckResult.setStatus(change);
                 integrityWorkflowService.saveIntegrityCheck(integrityCheck);
                 integrityWorkflowRecord.setLastUpdated(new Date());
                 integrityWorkflowService.saveIntegrityWorkflowRecord(integrityWorkflowRecord);
