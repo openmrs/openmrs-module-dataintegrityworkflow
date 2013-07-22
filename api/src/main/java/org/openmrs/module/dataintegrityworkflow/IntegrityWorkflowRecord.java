@@ -25,6 +25,10 @@ import java.util.Set;
 /**
  * @author: harsz89
  */
+
+/**
+ * Pojo class for keep integrity workflow record data
+ */
 public class IntegrityWorkflowRecord extends BaseOpenmrsObject{
     private int recordId;
     private RecordAssignee currentAssignee;

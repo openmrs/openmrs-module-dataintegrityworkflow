@@ -16,6 +16,10 @@ package org.openmrs.module.dataintegrityworkflow;
 /**
  * @author: harsz89
  */
+
+/**
+ * Class for keep module constants
+ */
 public class IntegrityWorkflowConstants {
     public static final String MANAGE_RECORD_ASSIGNEES="Manage Record Assignees";
     public static final String VIEW_RECORD_ASSIGNMENTS="View Record Assignments";

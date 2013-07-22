@@ -99,7 +99,7 @@ public interface DataIntegrityWorkflowDAO {
     public void saveIntegrityRecordStatusChange(RecordStatusChange recordStatusChange);
 
     /**
-     *  Return the record assignee associate with the given id
+     * Return the record assignee associate with the given id
      * @param assigneeId assignee id for query the record assignee
      * @return matched RecordAssignee object will be returned
      */

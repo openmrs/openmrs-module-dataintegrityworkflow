@@ -20,6 +20,10 @@ import org.openmrs.BaseOpenmrsMetadata;
 /**
  * @author: harsz89
  */
+
+/**
+ * Pojo class for keep comment data associate with a workflow record
+ */
 public class IntegrityRecordComment extends BaseOpenmrsMetadata{
 
     private Integer integrityRecordCommentId;

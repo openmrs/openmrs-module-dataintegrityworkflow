@@ -21,6 +21,10 @@ import java.util.Date;
 /**
  * @author: harsz89
  */
+
+/**
+ * Pojo class for keep data of record stage changes
+ */
 public class IntegrityRecordStageChange extends BaseOpenmrsObject{
     private int stageChangeId;
     private IntegrityRecordAssignment integrityRecordAssignment;

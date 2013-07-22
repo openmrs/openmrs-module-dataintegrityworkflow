@@ -22,6 +22,10 @@ import java.util.Set;
 /**
  * @author: harsz89
  */
+
+/**
+ * Pojo class for keep record assignee data
+ */
 public class RecordAssignee extends BaseOpenmrsObject {
     private Integer recordAssigneeId;
     private User assignee;

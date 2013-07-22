@@ -23,6 +23,10 @@ import java.util.Set;
 /**
  * @author: harsz89
  */
+
+/**
+ * Pojo class for keep record assignment data
+ */
 public class IntegrityRecordAssignment extends BaseOpenmrsObject {
     private RecordAssignee recordAssignee;
     private int assignmentId;

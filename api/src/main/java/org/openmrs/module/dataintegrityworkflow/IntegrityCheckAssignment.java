@@ -21,6 +21,10 @@ import java.util.Date;
 /**
  * @author: harsz89
  */
+
+/**
+ * Class for keep integrity check assignment data
+ */
 public class IntegrityCheckAssignment {
     private int integrityCheckAssignmentId;
     private User assignee;

@@ -21,6 +21,10 @@ import java.util.Date;
 /**
  * @author: harsz89
  */
+
+/**
+ * Pojo class for keep record status change data
+ */
 public class RecordStatusChange extends BaseOpenmrsData {
     private int recordStageChangeId;
     private IntegrityWorkflowRecord integrityWorkflowRecord;

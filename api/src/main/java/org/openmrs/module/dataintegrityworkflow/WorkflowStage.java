@@ -22,7 +22,7 @@ import java.io.Serializable;
  */
 
 /**
- * Pojo file for the workflow stages relation in the Data Integrity Workflow Module
+ * Pojo class for the workflow stages relation in the Data Integrity Workflow Module
  */
 public class WorkflowStage extends BaseOpenmrsData implements Serializable {
     private Integer workflowStageId;

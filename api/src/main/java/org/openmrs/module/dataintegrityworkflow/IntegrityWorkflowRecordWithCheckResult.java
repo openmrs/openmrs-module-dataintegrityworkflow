@@ -18,6 +18,10 @@ import org.openmrs.module.dataintegrity.IntegrityCheckResult;
 /**
  * @author: harsz89
  */
+
+/**
+ * Class for map integrity workflow records with check results
+ */
 public class IntegrityWorkflowRecordWithCheckResult {
 
     private IntegrityCheckResult integrityCheckResult;
