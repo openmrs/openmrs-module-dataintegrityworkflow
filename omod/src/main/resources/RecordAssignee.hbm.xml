@@ -6,7 +6,7 @@
             <column name="assignee_id"/>
             <generator class="native"/>
         </id>
-        <many-to-one class="org.openmrs.User" column="assignee" name="assignee" not-null="true" lazy="false"/>
+        <many-to-one class="org.openmrs.User" column="assignee" name="assignee" not-null="true"/>
 
         <property name="uuid" type="string">
             <column length="38" name="uuid"/>
@@ -15,8 +15,8 @@
         <set name="integrityRecordAssignmentList" lazy="false" cascade="all-delete-orphan"
              table="workflow_record_assignment" inverse="true" sort="unsorted"
             >
-            <key column="workflow_record_assignee_id" not-null="true"/>
-            <one-to-many class="IntegrityRecordAssignment"/>
+            <key column="workflow_record_assignee_id" not-null="false"/>
+            <one-to-many class="IntegrityRecordAssignment" not-found="ignore"/>
         </set>
 
         <many-to-one name="integrityWorkflowRecord" class="IntegrityWorkflowRecord" column="workflow_record_id"/>

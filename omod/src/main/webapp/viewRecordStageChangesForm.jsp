@@ -26,17 +26,12 @@
                 { "bSearchable": true,
                     "bVisible":    true },
                 { "bSearchable": true,
-                    "bVisible":    true },
-                { "bSearchable": true,
-                    "bVisible":    true },
-                { "bSearchable": true,
                     "bVisible":    true }
             ]
-
         } );
     });
 </script>
-<h2><spring:message code="dataintegrityworkflow.record.assignments"/>-${user}:RECORD-<c:out value="${recordId}"/>
+<h2><spring:message code="dataintegrityworkflow.record.stageChanges"/>-${user}:RECORD-<c:out value="${recordId}"/>
 </h2>
 <div>
     <table cellspacing="0" cellpadding="2" id="table" class="display">
@@ -49,12 +44,12 @@
         </tr>
         </thead>
         <tbody id="formContent">
-        <c:forEach items="${statechanges}" var="change" varStatus="loopStatus">
+        <c:forEach items="${stagechanges}" var="change" varStatus="loopStatus">
             <tr class="row">
-                <td><c:out value="${change.chnageBy}"/></td>
+                <td><c:out value="${change.changeBy.personName}"/></td>
                 <td><openmrs:formatDate date="${change.changeDate}" type="long"/></td>
-                <td><c:out value="${change.fromStage}"/></td>
-                <td><c:out value="${change.toStage}"/></td>
+                <td><c:out value="${change.fromWorkflowStage.status}"/></td>
+                <td><c:out value="${change.toWorkflowStage.status}"/></td>
             </tr>
         </c:forEach>
         </tbody>

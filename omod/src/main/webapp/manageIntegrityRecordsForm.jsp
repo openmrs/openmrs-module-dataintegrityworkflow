@@ -25,7 +25,7 @@
         background: #d8d8d6 url(http://code.jquery.com/ui/1.8.23/themes/south-street/images/ui-bg_highlight-hard_100_f5f3e5_1x100.png) repeat-x scroll 50% top;
         border-width: 0px 1px 1px 1px;
     }
-    /*Model Dialog properties*/
+        /*Model Dialog properties*/
     input.text { margin-bottom:12px; width:95%; padding: .4em; }
     .validateTips { border: 1px solid transparent; padding: 0.3em; }
     .ui-dialog .ui-state-error { padding: .3em; }
@@ -118,17 +118,17 @@
         if($j('#formContent input[type=checkbox]:checked').length==0)
         {
             /*var count=0;
-            $j('tr .checkboxRow:checked').each(function() {
-                assigned=$j(this).closest('tr').children("td:nth-child(4)").text();
-                assigned=assigned.trim();
-                if(assigned!="")
-                {
-                 count++;
-                }
-            });
-            if(count>0) {
-                return confirmPopUpBox("Some selected records already assigned.Do you need to continue?");
-            }*/
+             $j('tr .checkboxRow:checked').each(function() {
+             assigned=$j(this).closest('tr').children("td:nth-child(4)").text();
+             assigned=assigned.trim();
+             if(assigned!="")
+             {
+             count++;
+             }
+             });
+             if(count>0) {
+             return confirmPopUpBox("Some selected records already assigned.Do you need to continue?");
+             }*/
             return false;
         }
         return true;
@@ -177,44 +177,44 @@
             }, 500 );
         }
 
-    $j( "#dialog-form" ).dialog({
-        autoOpen: false,
-        height: 250,
-        width: 350,
-        modal: true,
-        buttons: {
-            "Assign": function() {
-                if(checkForAssignAssignees()){
-                var assigneeId=$j('#assigneeId').val();
-                var selection=$j('#assignmentOpt').val();
-                if(assigneeId!=""){
-                var input1 = $j("<input>").attr("type", "hidden").attr("name", "operation").val("assign");
-                var input2 = $j("<input>").attr("type", "hidden").attr("name", "assigneeId").val(assigneeId);
-                var input3 = $j("<input>").attr("type", "hidden").attr("name", "assignmentOptions").val(selection);
-                $j('form#workflowRecords').append($j(input1));
-                $j('form#workflowRecords').append($j(input2));
-                $j('form#workflowRecords').append($j(input3));
-                $j('form#workflowRecords').submit();
-                $j( this ).dialog( "close" );
-                } else {
-                    updateTips("Please enter a assignee");
-                }}else {
-                    updateTips("No records selected")
+        $j( "#dialog-form" ).dialog({
+            autoOpen: false,
+            height: 250,
+            width: 350,
+            modal: true,
+            buttons: {
+                "Assign": function() {
+                    if(checkForAssignAssignees()){
+                        var assigneeId=$j('#assigneeId').val();
+                        var selection=$j('#assignmentOpt').val();
+                        if(assigneeId!=""){
+                            var input1 = $j("<input>").attr("type", "hidden").attr("name", "operation").val("assign");
+                            var input2 = $j("<input>").attr("type", "hidden").attr("name", "assigneeId").val(assigneeId);
+                            var input3 = $j("<input>").attr("type", "hidden").attr("name", "assignmentOptions").val(selection);
+                            $j('form#workflowRecords').append($j(input1));
+                            $j('form#workflowRecords').append($j(input2));
+                            $j('form#workflowRecords').append($j(input3));
+                            $j('form#workflowRecords').submit();
+                            $j( this ).dialog( "close" );
+                        } else {
+                            updateTips("Please enter a assignee");
+                        }}else {
+                        updateTips("No records selected")
+                    }
+                },
+                Cancel: function() {
+                    $j( this ).dialog( "close" );
                 }
             },
-            Cancel: function() {
-                $j( this ).dialog( "close" );
+            close: function() {
+                $j('#assigneeId').text="";
             }
-        },
-        close: function() {
-        $j('#assigneeId').text="";
-        }
-    });
-    $j("#assignDialog")
-            .button()
-            .click(function() {
-                $j( "#dialog-form" ).dialog( "open" );
-            });
+        });
+        $j("#assignDialog")
+                .button()
+                .click(function() {
+                    $j( "#dialog-form" ).dialog( "open" );
+                });
     });
 </script>
 <h2><c:out value="${check.name}"/>-<spring:message code="dataintegrityworkflow.record.list"/></h2>
@@ -225,6 +225,12 @@
         <li><a href="#checkSummaryTab">Check Summary</a></li>
     </ul>
     <div id="integrityResultsTab">
+        <div id="recordTableFilters">
+            <input type="checkbox" id="viewVoided"> </input>
+            <label for="viewVoided">View Voided Records</label>
+            <input type="checkbox" id="viewIgnored"> </input>
+            <label for="viewIgnored">View Ignored Records</label>
+        </div>
         <form id="workflowRecords" method="post">
             <input type="hidden" name="checkId" value="${check.id}"/>
             <input type="hidden" name="filter" value="${filter}"/>
@@ -242,7 +248,7 @@
                 </thead>
                 <tbody id="formContent">
                 <c:forEach items="${records}" var="record" varStatus="loopStatus">
-                    <tr class="row" id="${record.integrityCheckResult.integrityCheckResultId}">
+                    <tr class="row ${record.integrityCheckResult.status}" id="${record.integrityCheckResult.integrityCheckResultId}">
                         <td>
                             <input type="checkbox" size="3" name="recordId" class="checkboxRow" value="${record.integrityCheckResult.integrityCheckResultId}" />
                         </td>
@@ -258,8 +264,7 @@
                         </td>
                         <td>
                             <c:if test="${not empty record.integrityWorkflowRecord.currentAssignee}">
-                                <c:out value="${record.integrityWorkflowRecord.currentAssignee.assignee.username}"/>
-                                <span><a href="#" onclick=""></a></span>
+                                <a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewAssignedRecords.form?assignee=<c:out value="${record.integrityWorkflowRecord.currentAssignee.assignee.username}"/>"><c:out value="${record.integrityWorkflowRecord.currentAssignee.assignee.username}"/></a>
                             </c:if>
                         </td>
                         <td>
@@ -358,13 +363,14 @@
     <div id="checkSummaryTab">
         <b class="boxHeader"><spring:message code="dataintegrityworkflow.check.unresolved.byassignee"/></b>
         <div class="box" >
-        <table id="table1">
-            <c:forEach items="${stages}" var="stageObj" >
-            <tr>
-                <c:out value="${stageObj.status}"/>"
-            </tr>
-            </c:forEach>
-        </table>
+            <table id="table1">
+                <c:forEach items="${stages}" var="stageObj" >
+                    <tr>
+                        <c:out value="${stageObj.status}"/>"
+                    </tr>
+                </c:forEach>
+            </table>
+            <br/>
         </div>
         <b class="boxHeader"><spring:message code="dataintegrityworkflow.check.stage.summary"/></b>
         <div class="box" >

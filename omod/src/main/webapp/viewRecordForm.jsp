@@ -189,11 +189,11 @@
                 <td>
                     <c:choose><c:when test="${record.integrityCheckResult.status!=1}">
                         <input type=hidden name=status value=<c:out value="${record.integrityCheckResult.status}"/> >
-                        <input type="submit" id="ignore" class="ui-button ui-widget ui-state-default ui-corner-all hover-on" style="height:20px; font-size:10px" name="statusChange" value="<spring:message code="dataintegrityworkflow.record.ignore"/>" />
+                        <input type="submit" id="ignore" class="ui-button ui-widget ui-state-default ui-corner-all hover-on" style="height:20px;width:60px;font-size:10px" name="statusChange" value="<spring:message code="dataintegrityworkflow.record.ignore"/>" />
                     </c:when>
                         <c:otherwise>
                             <input type=hidden name=status value=<c:out value="${record.integrityCheckResult.status}"/> >
-                            <input type="submit" id="unignore" class="ui-button ui-widget ui-state-default ui-corner-all hover-on" style="height:20px; font-size:10px" name="statusChange" value="<spring:message code="dataintegrityworkflow.record.unignore"/>" />
+                            <input type="submit" id="unignore" class="ui-button ui-widget ui-state-default ui-corner-all hover-on" style="height:20px;width:60px;font-size:10px" name="statusChange" value="<spring:message code="dataintegrityworkflow.record.unignore"/>" />
                         </c:otherwise>
                     </c:choose>
                 </td>

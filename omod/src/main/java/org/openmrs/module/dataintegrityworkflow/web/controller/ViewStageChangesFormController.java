@@ -50,6 +50,10 @@ public class ViewStageChangesFormController extends SimpleFormController {
         DataIntegrityWorkflowService dataIntegrityWorkflowService=getDataIntegrityWorkflowService();
         IntegrityRecordAssignment integrityRecordAssignment=dataIntegrityWorkflowService.getIntegrityCheckAssignmentById(Integer.parseInt(assignmentId));
         modelMap.put("stagechanges",integrityRecordAssignment.getIntegrityRecordStageChanges());
+        modelMap.put("recordId", recordId);
+        modelMap.put("checkId", checkId);
+        modelMap.put("assigneeId",assigneeId);
+        modelMap.put("user",integrityRecordAssignment.getRecordAssignee().getAssignee());
         return modelMap;
     }
 }

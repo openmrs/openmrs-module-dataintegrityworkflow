@@ -58,7 +58,7 @@
                     <td><c:out value="${assignment.currentStage.status}"/></td>
                     <td><c:out value="${assignment.unassignBy.personName}"/></td>
                     <td><openmrs:formatDate date="${assignment.unassignDate}" type="long"/></td>
-                    <td><a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecordStageChange.form?recordId=<c:out value="${recordId}"/>&checkId="${checkId}"&assigneeId="${assigneeId}"&assignmentId="${assignment.integrityCheckAssignmentId}"><spring:message code="dataintegrityworkflow.record.changes"/></a> </td>
+                    <td><a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecordStageChange.form?recordId=<c:out value="${recordId}"/>&checkId=<c:out value="${checkId}"/>&assigneeId=<c:out value="${assigneeId}"/>&assignmentId=<c:out value="${assignment.assignmentId}"/>"><spring:message code="dataintegrityworkflow.record.changes"/></a> </td>
                 </tr>
             </c:forEach>
             </tbody>

@@ -56,6 +56,7 @@ public class ViewAssignmentsFormController extends SimpleFormController {
         modelMap.put("checkId", checkId);
         modelMap.put("user", recordAssignee.getAssignee());
         modelMap.put("assigneeId",assigneeId);
+        modelMap.put("assignments",recordAssignee.getIntegrityRecordAssignmentList());
         return modelMap;
     }
 }

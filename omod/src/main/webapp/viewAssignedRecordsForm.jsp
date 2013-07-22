@@ -42,6 +42,12 @@
 </c:if>
 </h2>
 <div>
+    <div id="recordTableFilters">
+        <input type="checkbox" id="viewVoided"> </input>
+        <label for="viewVoided">View Voided Records</label>
+        <input type="checkbox" id="viewIgnored"> </input>
+        <label for="viewIgnored">View Ignored Records</label>
+    </div>
         <table cellspacing="0" cellpadding="2" id="table" class="display">
             <thead>
             <tr>
@@ -55,7 +61,7 @@
             </thead>
             <tbody id="formContent">
             <c:forEach items="${records}" var="record" varStatus="loopStatus">
-                <tr class="row">
+                <tr class="row ${record.integrityCheckResult.status}">
                     <td><c:out value="${record.integrityCheckResult.integrityCheck.name}"/></td>
                     <td><a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecord.form?recordId=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>&checkId="${record.integrityCheckResult.integrityCheck.id}">RECORD-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/></a> </td>
                     <td class="status">

@@ -16,7 +16,7 @@
                 <prop key="/module/dataintegrityworkflow/viewCheckSummary.form">viewCheckSummaryForm</prop>
                 <prop key="/module/dataintegrityworkflow/viewRecord.form">viewRecordForm</prop>
                 <prop key="/module/dataintegrityworkflow/viewRecordAssignment.form">viewRecordAssignmentsForm</prop>
-                <prop key="/module/dataintegrityworkflow/viewRecordStageChange.form">viewRecordStatusChangesForm</prop>
+                <prop key="/module/dataintegrityworkflow/viewRecordStageChange.form">viewRecordStageChangesForm</prop>
             </props>
         </property>
     </bean>
@@ -69,9 +69,9 @@
         <property name="successView"><value>viewRecordAssignment.form</value></property>
     </bean>
 
-    <bean id="viewRecordStatusChangesForm" class="org.openmrs.module.dataintegrityworkflow.web.controller.ViewStageChangesFormController">
+    <bean id="viewRecordStageChangesForm" class="org.openmrs.module.dataintegrityworkflow.web.controller.ViewStageChangesFormController">
         <property name="commandName"><value>helloWorldObject</value></property>
-        <property name="formView"><value>/module/dataintegrityworkflow/viewRecordAssignmentsForm</value></property>
+        <property name="formView"><value>/module/dataintegrityworkflow/viewRecordStageChangesForm</value></property>
         <property name="successView"><value>viewRecordStageChange.form</value></property>
     </bean>
 
