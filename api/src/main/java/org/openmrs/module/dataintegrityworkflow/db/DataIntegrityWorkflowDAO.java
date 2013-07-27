@@ -21,6 +21,7 @@ import org.openmrs.module.dataintegrity.IntegrityCheckResult;
 import org.openmrs.module.dataintegrityworkflow.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: harsz89
@@ -218,6 +219,14 @@ public interface DataIntegrityWorkflowDAO {
     public IntegrityWorkflowRecord getAssignedIntegrityWorkflowRecordByAssignee(RecordAssignee recordAssignee);
 
     /**
+     * Get the assigned integrity workflow record of given record assignee   and check
+     * @param recordAssignee record assignee to be matched
+     * @param checkId check id of the check which given user associated
+     * @return will return the matched integrity workflow record
+     */
+    public IntegrityWorkflowRecord getAssignedIntegrityWorkflowRecordByAssigneeAndCheck(RecordAssignee recordAssignee,int checkId);
+
+    /**
      * Update a given integrity record assignment
      * @param integrityRecordAssignment integrity record assignment to be updated
      */
@@ -274,5 +283,10 @@ public interface DataIntegrityWorkflowDAO {
      */
     public IntegrityCheckResult findResultForIntegrityCheckById(IntegrityCheck integrityCheck,int id) throws DAOException;
 
+    public List getCheckRecordAssigneeCounts(IntegrityCheck integrityCheck);
+
+    public List getCheckRecordStagesCounts(IntegrityCheck integrityCheck);
+
+    public List getCheckRecordStatusCounts(IntegrityCheck integrityCheck);
 
 }

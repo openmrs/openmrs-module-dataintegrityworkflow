@@ -24,10 +24,7 @@ import org.openmrs.module.dataintegrity.IntegrityCheckResult;
 import org.openmrs.module.dataintegrityworkflow.*;
 import org.openmrs.module.dataintegrityworkflow.db.DataIntegrityWorkflowDAO;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author: harsz89
@@ -113,6 +110,24 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
     }
 
     /**
+     * @see DataIntegrityWorkflowService#getAssignedIntegrityWorkflowRecordsOfSpecifiedCheckAndCurrentUser(org.openmrs.User, int) (org.openmrs.User)
+     */
+    public List<IntegrityWorkflowRecord> getAssignedIntegrityWorkflowRecordsOfSpecifiedCheckAndCurrentUser(User assignedUser, int checkId) {
+        List<RecordAssignee> assignees=dao.getAllAssignmentsOfUser(assignedUser);
+        List<IntegrityWorkflowRecord> integrityWorkflowRecords=new ArrayList<IntegrityWorkflowRecord>();
+        IntegrityWorkflowRecord temp;
+        if(assignees!=null) {
+            for(RecordAssignee recordAssignee:assignees) {
+                temp=dao.getAssignedIntegrityWorkflowRecordByAssigneeAndCheck(recordAssignee, checkId);
+                if(temp!=null) {
+                    integrityWorkflowRecords.add(temp);
+                }
+            }
+        }
+        return integrityWorkflowRecords;
+    }
+
+    /**
      * @see DataIntegrityWorkflowService#getWorkflowStage(int)
      */
     public WorkflowStage getWorkflowStage(int stageId) {
@@ -152,9 +167,9 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
             integrityWorkflowRecordWithCheckResult=new IntegrityWorkflowRecordWithCheckResult();
             integrityWorkflowRecord=dao.getIntegrityWorkflowRecordByResult(integrityCheckResult);
             if(integrityWorkflowRecord!=null){
-                        integrityWorkflowRecordWithCheckResult.setIntegrityCheckResult(integrityCheckResult);
-                        integrityWorkflowRecordWithCheckResult.setIntegrityWorkflowRecord(integrityWorkflowRecord);
-                        integrityWorkflowRecordWithCheckResultList.add(integrityWorkflowRecordWithCheckResult);
+                integrityWorkflowRecordWithCheckResult.setIntegrityCheckResult(integrityCheckResult);
+                integrityWorkflowRecordWithCheckResult.setIntegrityWorkflowRecord(integrityWorkflowRecord);
+                integrityWorkflowRecordWithCheckResultList.add(integrityWorkflowRecordWithCheckResult);
             } else {
                 integrityWorkflowRecordWithCheckResult.setIntegrityCheckResult(integrityCheckResult);
                 integrityWorkflowRecordWithCheckResultList.add(integrityWorkflowRecordWithCheckResult);
@@ -307,11 +322,66 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         IntegrityCheckResult integrityCheckResult;
         IntegrityWorkflowRecord integrityWorkflowRecord;
         IntegrityCheck integrityCheck=integrityWorkflowService.getIntegrityCheck(checkId);
-            for(String resultId: resultList) {
-                integrityCheckResult=integrityWorkflowService.findResultForIntegrityCheckById(integrityCheck,Integer.parseInt(resultId));
-                integrityWorkflowRecord=integrityWorkflowService.getIntegrityWorkflowRecordByResult(integrityCheckResult);
-                if(integrityWorkflowRecord!=null)  {
-                    if(integrityWorkflowRecord.getPreviousRecordAssignees().size()==0) {
+        for(String resultId: resultList) {
+            integrityCheckResult=integrityWorkflowService.findResultForIntegrityCheckById(integrityCheck,Integer.parseInt(resultId));
+            integrityWorkflowRecord=integrityWorkflowService.getIntegrityWorkflowRecordByResult(integrityCheckResult);
+            if(integrityWorkflowRecord!=null)  {
+                if(integrityWorkflowRecord.getPreviousRecordAssignees().size()==0) {
+                    int assigneeId;
+                    int assginmentId;
+                    RecordAssignee recordAssignee=new RecordAssignee();
+                    recordAssignee.setAssignee(assignUser);
+                    recordAssignee.setIntegrityWorkflowRecord(integrityWorkflowRecord);
+                    assigneeId=integrityWorkflowService.saveWorkflowAssignee(recordAssignee);
+                    recordAssignee=integrityWorkflowService.getRecordAssigneeById(assigneeId);
+                    IntegrityRecordAssignment integrityRecordAssignment=new IntegrityRecordAssignment();
+                    integrityRecordAssignment.setAssignBy(Context.getUserContext().getAuthenticatedUser());
+                    integrityRecordAssignment.setAssignedDate(new Date());
+                    integrityRecordAssignment.setCurrentStage(integrityWorkflowService.getWorkflowStage(1));
+                    integrityRecordAssignment.setRecordAssignee(recordAssignee);
+                    assginmentId=integrityWorkflowService.saveIntegrityRecordAssignment(integrityRecordAssignment);
+                    integrityRecordAssignment=integrityWorkflowService.getIntegrityRecordAssignmentByAssigneeAndId(recordAssignee, assginmentId);
+                    recordAssignee.setCurrentIntegrityRecordAssignment(integrityRecordAssignment);
+                    integrityWorkflowService.updateWorkflowAssignee(recordAssignee);
+                    integrityWorkflowRecord.setCurrentAssignee(recordAssignee);
+                    integrityWorkflowRecord.setLastUpdated(new Date());
+                    integrityWorkflowService.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
+                } else {
+                    boolean isAssigneeFound=false;
+                    for(RecordAssignee assignee:integrityWorkflowRecord.getPreviousRecordAssignees())
+                    {
+                        if(assignee.getAssignee().equals(assignUser))
+                        {
+                            isAssigneeFound=true;
+                            if(!assignee.equals(integrityWorkflowRecord.getCurrentAssignee()))
+                            {
+                                int assginmentId;
+                                IntegrityRecordAssignment integrityRecordAssignment=new IntegrityRecordAssignment();
+                                integrityRecordAssignment.setAssignBy(Context.getUserContext().getAuthenticatedUser());
+                                integrityRecordAssignment.setAssignedDate(new Date());
+                                integrityRecordAssignment.setCurrentStage(integrityWorkflowService.getWorkflowStage(1));
+                                integrityRecordAssignment.setRecordAssignee(assignee);
+                                assginmentId=integrityWorkflowService.saveIntegrityRecordAssignment(integrityRecordAssignment);
+                                integrityRecordAssignment=integrityWorkflowService.getIntegrityRecordAssignmentByAssigneeAndId(assignee, assginmentId);
+                                assignee.setCurrentIntegrityRecordAssignment(integrityRecordAssignment);
+                                integrityWorkflowService.updateWorkflowAssignee(assignee);
+                                RecordAssignee previousRecordAssignee=integrityWorkflowRecord.getCurrentAssignee();
+                                if(previousRecordAssignee!=null){
+                                    IntegrityRecordAssignment previousAssigneeAssignment=previousRecordAssignee.getCurrentIntegrityRecordAssignment();
+                                    previousAssigneeAssignment.setUnassignBy(Context.getUserContext().getAuthenticatedUser());
+                                    previousAssigneeAssignment.setUnassignDate(new Date());
+                                    integrityWorkflowService.updateIntegrityRecordAssignment(previousAssigneeAssignment);
+                                    previousRecordAssignee.setCurrentIntegrityRecordAssignment(previousAssigneeAssignment);
+                                    integrityWorkflowService.updateWorkflowAssignee(previousRecordAssignee);
+                                }
+                                integrityWorkflowRecord.setCurrentAssignee(assignee);
+                                integrityWorkflowRecord.setLastUpdated(new Date());
+                                integrityWorkflowService.saveIntegrityWorkflowRecord(integrityWorkflowRecord);
+                            }
+                            break;
+                        }
+                    }
+                    if(!isAssigneeFound) {
                         int assigneeId;
                         int assginmentId;
                         RecordAssignee recordAssignee=new RecordAssignee();
@@ -328,76 +398,21 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
                         integrityRecordAssignment=integrityWorkflowService.getIntegrityRecordAssignmentByAssigneeAndId(recordAssignee, assginmentId);
                         recordAssignee.setCurrentIntegrityRecordAssignment(integrityRecordAssignment);
                         integrityWorkflowService.updateWorkflowAssignee(recordAssignee);
+                        RecordAssignee previousRecordAssignee=integrityWorkflowRecord.getCurrentAssignee();
+                        if(previousRecordAssignee!=null){
+                            IntegrityRecordAssignment previousAssigneeAssignment=previousRecordAssignee.getCurrentIntegrityRecordAssignment();
+                            previousAssigneeAssignment.setUnassignBy(Context.getUserContext().getAuthenticatedUser());
+                            previousAssigneeAssignment.setUnassignDate(new Date());
+                            integrityWorkflowService.updateIntegrityRecordAssignment(previousAssigneeAssignment);
+                            previousRecordAssignee.setCurrentIntegrityRecordAssignment(previousAssigneeAssignment);
+                            integrityWorkflowService.updateWorkflowAssignee(previousRecordAssignee);
+                        }
                         integrityWorkflowRecord.setCurrentAssignee(recordAssignee);
                         integrityWorkflowRecord.setLastUpdated(new Date());
                         integrityWorkflowService.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
-                    } else {
-                        boolean isAssigneeFound=false;
-                        for(RecordAssignee assignee:integrityWorkflowRecord.getPreviousRecordAssignees())
-                        {
-                            if(assignee.getAssignee().equals(assignUser))
-                            {
-                                isAssigneeFound=true;
-                                if(!assignee.equals(integrityWorkflowRecord.getCurrentAssignee()))
-                                {
-                                    int assginmentId;
-                                    IntegrityRecordAssignment integrityRecordAssignment=new IntegrityRecordAssignment();
-                                    integrityRecordAssignment.setAssignBy(Context.getUserContext().getAuthenticatedUser());
-                                    integrityRecordAssignment.setAssignedDate(new Date());
-                                    integrityRecordAssignment.setCurrentStage(integrityWorkflowService.getWorkflowStage(1));
-                                    integrityRecordAssignment.setRecordAssignee(assignee);
-                                    assginmentId=integrityWorkflowService.saveIntegrityRecordAssignment(integrityRecordAssignment);
-                                    integrityRecordAssignment=integrityWorkflowService.getIntegrityRecordAssignmentByAssigneeAndId(assignee, assginmentId);
-                                    assignee.setCurrentIntegrityRecordAssignment(integrityRecordAssignment);
-                                    integrityWorkflowService.updateWorkflowAssignee(assignee);
-                                    RecordAssignee previousRecordAssignee=integrityWorkflowRecord.getCurrentAssignee();
-                                    if(previousRecordAssignee!=null){
-                                        IntegrityRecordAssignment previousAssigneeAssignment=previousRecordAssignee.getCurrentIntegrityRecordAssignment();
-                                        previousAssigneeAssignment.setUnassignBy(Context.getUserContext().getAuthenticatedUser());
-                                        previousAssigneeAssignment.setUnassignDate(new Date());
-                                        integrityWorkflowService.updateIntegrityRecordAssignment(previousAssigneeAssignment);
-                                        previousRecordAssignee.setCurrentIntegrityRecordAssignment(previousAssigneeAssignment);
-                                        integrityWorkflowService.updateWorkflowAssignee(previousRecordAssignee);
-                                    }
-                                    integrityWorkflowRecord.setCurrentAssignee(assignee);
-                                    integrityWorkflowRecord.setLastUpdated(new Date());
-                                    integrityWorkflowService.saveIntegrityWorkflowRecord(integrityWorkflowRecord);
-                                }
-                                break;
-                            }
-                        }
-                        if(!isAssigneeFound) {
-                            int assigneeId;
-                            int assginmentId;
-                            RecordAssignee recordAssignee=new RecordAssignee();
-                            recordAssignee.setAssignee(assignUser);
-                            recordAssignee.setIntegrityWorkflowRecord(integrityWorkflowRecord);
-                            assigneeId=integrityWorkflowService.saveWorkflowAssignee(recordAssignee);
-                            recordAssignee=integrityWorkflowService.getRecordAssigneeById(assigneeId);
-                            IntegrityRecordAssignment integrityRecordAssignment=new IntegrityRecordAssignment();
-                            integrityRecordAssignment.setAssignBy(Context.getUserContext().getAuthenticatedUser());
-                            integrityRecordAssignment.setAssignedDate(new Date());
-                            integrityRecordAssignment.setCurrentStage(integrityWorkflowService.getWorkflowStage(1));
-                            integrityRecordAssignment.setRecordAssignee(recordAssignee);
-                            assginmentId=integrityWorkflowService.saveIntegrityRecordAssignment(integrityRecordAssignment);
-                            integrityRecordAssignment=integrityWorkflowService.getIntegrityRecordAssignmentByAssigneeAndId(recordAssignee, assginmentId);
-                            recordAssignee.setCurrentIntegrityRecordAssignment(integrityRecordAssignment);
-                            integrityWorkflowService.updateWorkflowAssignee(recordAssignee);
-                            RecordAssignee previousRecordAssignee=integrityWorkflowRecord.getCurrentAssignee();
-                            if(previousRecordAssignee!=null){
-                                IntegrityRecordAssignment previousAssigneeAssignment=previousRecordAssignee.getCurrentIntegrityRecordAssignment();
-                                previousAssigneeAssignment.setUnassignBy(Context.getUserContext().getAuthenticatedUser());
-                                previousAssigneeAssignment.setUnassignDate(new Date());
-                                integrityWorkflowService.updateIntegrityRecordAssignment(previousAssigneeAssignment);
-                                previousRecordAssignee.setCurrentIntegrityRecordAssignment(previousAssigneeAssignment);
-                                integrityWorkflowService.updateWorkflowAssignee(previousRecordAssignee);
-                            }
-                            integrityWorkflowRecord.setCurrentAssignee(recordAssignee);
-                            integrityWorkflowRecord.setLastUpdated(new Date());
-                            integrityWorkflowService.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
-                        }
                     }
                 }
+            }
         }
 
     }
@@ -416,16 +431,16 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
             integrityCheckResult=integrityWorkflowService.findResultForIntegrityCheckById(integrityCheck,Integer.parseInt(resultId));
             integrityWorkflowRecord=integrityWorkflowService.getIntegrityWorkflowRecordByResult(integrityCheckResult);
             if(integrityWorkflowRecord!=null)  {
-                    RecordAssignee  recordAssignee=integrityWorkflowRecord.getCurrentAssignee();
-                    IntegrityRecordAssignment integrityRecordAssignment=recordAssignee.getCurrentIntegrityRecordAssignment();
-                    integrityRecordAssignment.setUnassignDate(new Date());
-                    integrityRecordAssignment.setUnassignBy(Context.getUserContext().getAuthenticatedUser());
-                    integrityWorkflowService.updateIntegrityRecordAssignment(integrityRecordAssignment);
-                    recordAssignee.setCurrentIntegrityRecordAssignment(integrityRecordAssignment);
-                    integrityWorkflowService.updateWorkflowAssignee(recordAssignee);
-                    integrityWorkflowRecord.setCurrentAssignee(null);
-                    integrityWorkflowRecord.setLastUpdated(new Date());
-                    integrityWorkflowService.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
+                RecordAssignee  recordAssignee=integrityWorkflowRecord.getCurrentAssignee();
+                IntegrityRecordAssignment integrityRecordAssignment=recordAssignee.getCurrentIntegrityRecordAssignment();
+                integrityRecordAssignment.setUnassignDate(new Date());
+                integrityRecordAssignment.setUnassignBy(Context.getUserContext().getAuthenticatedUser());
+                integrityWorkflowService.updateIntegrityRecordAssignment(integrityRecordAssignment);
+                recordAssignee.setCurrentIntegrityRecordAssignment(integrityRecordAssignment);
+                integrityWorkflowService.updateWorkflowAssignee(recordAssignee);
+                integrityWorkflowRecord.setCurrentAssignee(null);
+                integrityWorkflowRecord.setLastUpdated(new Date());
+                integrityWorkflowService.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
             }
         }
     }
@@ -468,5 +483,55 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
 
     public IntegrityCheckResult findResultForIntegrityCheckById(IntegrityCheck integrityCheck, int id) {
         return dao.findResultForIntegrityCheckById(integrityCheck,id);
+    }
+
+    public Map<User, Integer> getCheckRecordAssigneeCounts(IntegrityCheck integrityCheck) {
+        Map<Integer,Integer> counts=displayObjectsMap(dao.getCheckRecordAssigneeCounts(integrityCheck));
+        Map<User,Integer> out=new HashMap<User, Integer>();
+        Iterator it = counts.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pairs = (Map.Entry)it.next();
+            out.put(Context.getUserService().getUser((Integer)pairs.getKey()),(Integer)pairs.getValue());
+        }
+        return out;
+    }
+
+    public Map<WorkflowStage, Integer> getCheckRecordStagesCounts(IntegrityCheck integrityCheck) {
+        Map<Integer,Integer> counts=displayObjectsMap(dao.getCheckRecordAssigneeCounts(integrityCheck));
+        Map<WorkflowStage,Integer> out=new HashMap<WorkflowStage, Integer>();
+        Iterator it = counts.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pairs = (Map.Entry)it.next();
+            out.put(dao.getWorkflowStage((Integer)pairs.getKey()),(Integer)pairs.getValue());
+        }
+        return out;
+    }
+
+    public Map<Integer, Integer> getCheckRecordStatusCounts(IntegrityCheck integrityCheck) {
+        Map<Integer,Integer> counts=displayObjectsMap(dao.getCheckRecordAssigneeCounts(integrityCheck));
+        int count=0;
+        Iterator it = counts.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pairs = (Map.Entry)it.next();
+            count+=(Integer)pairs.getValue();
+        }
+        counts.put(4,integrityCheck.getIntegrityCheckResults().size()-count);
+        return counts;
+    }
+
+    private Map<Integer,Integer> displayObjectsMap(List list)
+    {
+        Map<Integer,Integer> temp=new HashMap<Integer, Integer>();
+        Iterator iter = list.iterator();
+        if (!iter.hasNext())
+        {
+            return null;
+        }
+        while (iter.hasNext())
+        {
+            Object[] obj = (Object[]) iter.next();
+            temp.put((Integer)obj[0],(Integer)obj[1]);
+        }
+        return temp;
     }
 }

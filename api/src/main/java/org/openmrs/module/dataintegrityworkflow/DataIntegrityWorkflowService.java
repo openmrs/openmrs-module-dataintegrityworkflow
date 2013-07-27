@@ -21,6 +21,7 @@ import org.openmrs.module.dataintegrityworkflow.db.DataIntegrityWorkflowDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: harsz89
@@ -85,6 +86,14 @@ public interface DataIntegrityWorkflowService {
      * @return will return a list of workflow record associated with the given user
      */
     public List<IntegrityWorkflowRecord> getAssignedIntegrityWorkflowRecordsOfCurrentUser(User assignedUser);
+
+    /**
+     * Return the list of all workflow record associated with a given user  for given check
+     * @param assignedUser record assignee to find the workflow record associate with him
+     * @param checkId check which need to find the assignments of the user
+     * @return will return a list of workflow record associated with the given user
+     */
+    public List<IntegrityWorkflowRecord> getAssignedIntegrityWorkflowRecordsOfSpecifiedCheckAndCurrentUser(User assignedUser,int checkId);
 
     /**
      * Get workflow stage by id
@@ -309,4 +318,11 @@ public interface DataIntegrityWorkflowService {
      * @throws DAOException
      */
     public IntegrityCheckResult findResultForIntegrityCheckById(IntegrityCheck integrityCheck,int id);
+
+    public Map<User,Integer> getCheckRecordAssigneeCounts(IntegrityCheck integrityCheck);
+
+    public Map<WorkflowStage,Integer> getCheckRecordStagesCounts(IntegrityCheck integrityCheck);
+
+    public Map<Integer,Integer> getCheckRecordStatusCounts(IntegrityCheck integrityCheck);
+
 }

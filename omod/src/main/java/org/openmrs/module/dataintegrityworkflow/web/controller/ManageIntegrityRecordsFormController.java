@@ -109,6 +109,9 @@ public class ManageIntegrityRecordsFormController extends SimpleFormController {
         modelMap.put("users", Context.getUserService().getAllUsers());
         Context.removeProxyPrivilege("View Users");
         modelMap.put("filter",filter);
+        modelMap.put("stageSummary",integrityWorkflowService.getCheckRecordStagesCounts(integrityCheck));
+        modelMap.put("statusSummary",integrityWorkflowService.getCheckRecordStatusCounts(integrityCheck));
+        modelMap.put("userSummary",integrityWorkflowService.getCheckRecordAssigneeCounts(integrityCheck));
         return modelMap;
     }
 }

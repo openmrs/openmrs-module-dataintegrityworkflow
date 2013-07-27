@@ -360,6 +360,7 @@
             </div>
         </form>
     </div>
+
     <div id="checkSummaryTab">
         <b class="boxHeader"><spring:message code="dataintegrityworkflow.check.unresolved.byassignee"/></b>
         <div class="box" >
@@ -370,9 +371,13 @@
                     </tr>
                 </c:forEach>
             </table>
-            <br/>
         </div>
+        <br/>
         <b class="boxHeader"><spring:message code="dataintegrityworkflow.check.stage.summary"/></b>
+        <div class="box" >
+        </div>
+        <br/>
+        <b class="boxHeader"><spring:message code="dataintegrityworkflow.check.status.summary"/></b>
         <div class="box" >
         </div>
     </div>

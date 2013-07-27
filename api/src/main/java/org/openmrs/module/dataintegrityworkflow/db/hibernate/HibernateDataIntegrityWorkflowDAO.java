@@ -14,8 +14,12 @@
 package org.openmrs.module.dataintegrityworkflow.db.hibernate;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.Transformers;
 import org.openmrs.User;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.dataintegrity.IntegrityCheck;
@@ -23,7 +27,9 @@ import org.openmrs.module.dataintegrity.IntegrityCheckResult;
 import org.openmrs.module.dataintegrityworkflow.*;
 import org.openmrs.module.dataintegrityworkflow.db.DataIntegrityWorkflowDAO;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: harsz89
@@ -166,6 +172,12 @@ public class HibernateDataIntegrityWorkflowDAO implements DataIntegrityWorkflowD
         return (IntegrityWorkflowRecord) criteria.uniqueResult();
     }
 
+    public IntegrityWorkflowRecord getAssignedIntegrityWorkflowRecordByAssigneeAndCheck(RecordAssignee recordAssignee, int checkId) {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(IntegrityWorkflowRecord.class);
+        criteria.add(Restrictions.eq("currentAssignee",recordAssignee)).add(Restrictions.eq("integrityCheckId",checkId));
+        return (IntegrityWorkflowRecord) criteria.uniqueResult();
+    }
+
     /**
      * @see DataIntegrityWorkflowDAO#getAllAssignmentsOfUser(org.openmrs.User)
      */
@@ -295,5 +307,30 @@ public class HibernateDataIntegrityWorkflowDAO implements DataIntegrityWorkflowD
                 .add(Restrictions.eq("integrityCheck", integrityCheck))
                 .add(Restrictions.eq("integrityCheckResultId", id));
         return (IntegrityCheckResult) crit.uniqueResult();
+    }
+
+    public List getCheckRecordAssigneeCounts(IntegrityCheck integrityCheck) {
+        String hql = " select count(recordassignees.assignee), recordassignees.assignee  from IntegrityWorkflowRecord as record inner join RecordAssignee as recordassignees " +
+                " where record.currentAssignee is not null and record.currentAssignee=recordassignees.recordAssigneeId";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        return query.list();
+    }
+
+    public List getCheckRecordStagesCounts(IntegrityCheck integrityCheck) {
+        String hql = "select count(recordassignment.currentStage), recordassignment.currentStage  from IntegrityWorkflowRecord as record inner join RecordAssignee as recordassignees " +
+                " inner join IntegrityRecordAssignment as recordassignment where  record.currentAssignee is not null and recordassignees.currentIntegrityRecordAssignment is not null and record.currentAssignee=recordassignees.recordAssigneeId" +
+                " and recordassignees.currentIntegrityRecordAssignment = recordassignment.assignmentId";
+        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        return query.list();
+    }
+
+    public List getCheckRecordStatusCounts(IntegrityCheck integrityCheck) {
+        Criteria criteria= sessionFactory.getCurrentSession().createCriteria(IntegrityCheckResult.class);
+        criteria.add(Restrictions.eq("integrityCheck",integrityCheck));
+        ProjectionList projList = Projections.projectionList();
+        projList.add(Projections.groupProperty("status"), "statusId");
+        projList.add(Projections.rowCount(), "count");
+        criteria.setProjection(projList);
+        return criteria.list();
     }
 }

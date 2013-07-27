@@ -36,7 +36,11 @@
         } );
     });
 </script>
-<h2><spring:message code="dataintegrityworkflow.assigned.record.list"/>
+<h2>
+    <c:if test="${not empty check}">
+        <c:out value="${check.name}"/>-
+    </c:if>
+    <spring:message code="dataintegrityworkflow.assigned.record.list"/>
 <c:if test="${not empty assignedUser}">
     -<c:out value="${assignedUser.username}"/>
 </c:if>

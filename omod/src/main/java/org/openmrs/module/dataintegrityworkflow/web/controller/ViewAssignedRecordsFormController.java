@@ -45,6 +45,7 @@ public class ViewAssignedRecordsFormController extends SimpleFormController {
 
     protected Map referenceData(HttpServletRequest req) throws Exception {
         String assignee=req.getParameter("assignee");
+        String checkId=req.getParameter("checkId");
         Map<String,Object> modelMap=new HashMap<String, Object>();
         User user;
         List<IntegrityWorkflowRecord> records;
@@ -55,7 +56,13 @@ public class ViewAssignedRecordsFormController extends SimpleFormController {
             user=Context.getAuthenticatedUser();
         }
         DataIntegrityWorkflowService dataIntegrityWorkflowService=getDataIntegrityWorkflowService();
-        records=dataIntegrityWorkflowService.getAssignedIntegrityWorkflowRecordsOfCurrentUser(user);
+
+        if(checkId==null) {
+            records=dataIntegrityWorkflowService.getAssignedIntegrityWorkflowRecordsOfCurrentUser(user);
+        } else {
+            records=dataIntegrityWorkflowService.getAssignedIntegrityWorkflowRecordsOfSpecifiedCheckAndCurrentUser(user,Integer.parseInt(checkId));
+            modelMap.put("check",dataIntegrityWorkflowService.getIntegrityCheck(Integer.parseInt(checkId)));
+        }
         modelMap.put("records",records);
         return modelMap;
     }
