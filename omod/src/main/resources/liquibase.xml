@@ -205,5 +205,10 @@
 
     </changeSet>
 
+    <changeSet id="dataintegrityworkflow-2013-07-28-14:07" author="harsha">
+        <insert tableName="workflow_record_stage">
+            <column name="status" value="Unassigned"/>
+        </insert>
+    </changeSet>
 
 </databaseChangeLog>

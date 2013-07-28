@@ -171,6 +171,14 @@ public interface DataIntegrityWorkflowDAO {
     public WorkflowStage getWorkflowStage(int stageId) throws DAOException;
 
     /**
+     * Get workflow stage by status
+     * @param status status of the workflow record to be queried
+     * @return matched workflow record will be returned
+     * @throws DAOException
+     */
+    public WorkflowStage getWorkflowStageByStatus(String status) throws DAOException;
+
+    /**
      * Get all the workflow stages
      * @return  will return the list of all available workflow stages
      */

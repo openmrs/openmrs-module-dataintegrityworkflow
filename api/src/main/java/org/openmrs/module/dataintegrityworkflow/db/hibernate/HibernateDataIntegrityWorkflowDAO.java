@@ -202,6 +202,15 @@ public class HibernateDataIntegrityWorkflowDAO implements DataIntegrityWorkflowD
     }
 
     /**
+     * @see DataIntegrityWorkflowDAO#getWorkflowStageByStatus(String)
+     */
+    public WorkflowStage getWorkflowStageByStatus(String status) throws DAOException {
+        Criteria criteria = sessionFactory.getCurrentSession().createCriteria(WorkflowStage.class);
+        criteria.add(Restrictions.eq("status",status));
+        return (WorkflowStage) criteria.uniqueResult();
+    }
+
+    /**
      * @see DataIntegrityWorkflowDAO#getWorkflowStages()
      */
     public List<WorkflowStage> getWorkflowStages() {
@@ -310,16 +319,16 @@ public class HibernateDataIntegrityWorkflowDAO implements DataIntegrityWorkflowD
     }
 
     public List getCheckRecordAssigneeCounts(IntegrityCheck integrityCheck) {
-        String hql = " select count(recordassignees.assignee), recordassignees.assignee  from IntegrityWorkflowRecord as record inner join RecordAssignee as recordassignees " +
-                " where record.currentAssignee is not null and record.currentAssignee=recordassignees.recordAssigneeId";
+        String hql = " select recordassignees.assignee.username, count(recordassignees.assignee)  from IntegrityWorkflowRecord as record inner join record.currentAssignee as recordassignees " +
+                " where record.currentAssignee is not null and record.currentAssignee.recordAssigneeId=recordassignees.recordAssigneeId and record.integrityCheckId ="+integrityCheck.getIntegrityCheckId()+" group by recordassignees.assignee";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         return query.list();
     }
 
     public List getCheckRecordStagesCounts(IntegrityCheck integrityCheck) {
-        String hql = "select count(recordassignment.currentStage), recordassignment.currentStage  from IntegrityWorkflowRecord as record inner join RecordAssignee as recordassignees " +
-                " inner join IntegrityRecordAssignment as recordassignment where  record.currentAssignee is not null and recordassignees.currentIntegrityRecordAssignment is not null and record.currentAssignee=recordassignees.recordAssigneeId" +
-                " and recordassignees.currentIntegrityRecordAssignment = recordassignment.assignmentId";
+        String hql = "select  recordassignment.currentStage.workflowStageId , count(recordassignment.currentStage)  from IntegrityWorkflowRecord as record inner join record.currentAssignee as recordassignees " +
+                " inner join recordassignees.currentIntegrityRecordAssignment as recordassignment where  record.currentAssignee is not null and recordassignees.currentIntegrityRecordAssignment is not null and record.currentAssignee.recordAssigneeId=recordassignees.recordAssigneeId" +
+                " and recordassignees.currentIntegrityRecordAssignment.assignmentId = recordassignment.assignmentId and record.integrityCheckId ="+integrityCheck.getIntegrityCheckId()+" group by recordassignment.currentStage";
         Query query = sessionFactory.getCurrentSession().createQuery(hql);
         return query.list();
     }

@@ -36,6 +36,42 @@
     }
 
     form {display: inline; }
+
+    /*Progress bar properties*/
+    .progressBar {
+        width: 100px;
+        height: 15px;
+        border: 1px solid #111;
+        background-color: #292929;
+    }
+
+    .progressBar div {
+        height: 100%;
+        color: #fff;
+        text-align: right;
+        line-height: 22px; /* same as #progressBar height if we want text middle aligned */
+        width: 0;
+        background-color: #00ff03;
+        font-family: 'Josefin Sans', sans-serif;
+        font-size: 11px;
+    }
+
+    /*Progress bar skins*/
+    .defaultBar {
+        background: #292929;
+        border: 1px solid #111;
+        border-radius: 5px;
+        overflow: hidden;
+        box-shadow: 0 0 5px #333;
+    }
+    .defaultBar div {
+        background-color: #1a82f7;
+        background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#0099FF), to(#1a82f7));
+        background: -webkit-linear-gradient(top, #0099FF, #1a82f7);
+        background: -moz-linear-gradient(top, #0099FF, #1a82f7);
+        background: -ms-linear-gradient(top, #0099FF, #1a82f7);
+        background: -o-linear-gradient(top, #0099FF, #1a82f7);
+    }
 </style>
 <script>
     var $j = jQuery.noConflict();
@@ -104,7 +140,6 @@
         $j("#unassignButton").mouseout(function() {
             $j(this).removeClass('ui-state-hover').addClass('ui-state-default');
         });
-
     } );
 
     function showDiv(action)
@@ -157,6 +192,14 @@
             return false;
         }
         return true;
+    }
+
+
+    function progress(percent, $element) {
+        var progressBarWidth = percent * $element.width() / 100;
+        progressBarWidth=progressBarWidth.toFixed(1);
+        percent=percent.toFixed(1);
+        $element.find('div').animate({ width: progressBarWidth }, 500).html(percent + "%&nbsp;");
     }
 
     function confirmPopUpBox(msg)
@@ -216,6 +259,9 @@
                     $j( "#dialog-form" ).dialog( "open" );
                 });
     });
+
+
+
 </script>
 <h2><c:out value="${check.name}"/>-<spring:message code="dataintegrityworkflow.record.list"/></h2>
 
@@ -363,22 +409,78 @@
 
     <div id="checkSummaryTab">
         <b class="boxHeader"><spring:message code="dataintegrityworkflow.check.unresolved.byassignee"/></b>
+        <c:set var="resultCount" value="${fn:length(records)}"/>
         <div class="box" >
             <table id="table1">
-                <c:forEach items="${stages}" var="stageObj" >
+                <c:set var="statusIndex" value="0"/>
+                <c:forEach var="user" items="${userSummary}">
                     <tr>
-                        <c:out value="${stageObj.status}"/>"
+                        <td>
+                        <a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewAssignedRecords.form?assignee=<c:out value="${user.key.username}"/>&checkId=<c:out value="${check.id}"/>"><c:out value="${user.key.username}"/></a>
+                        </td>
+                        <td>
+                            ${user.value}
+                        </td>
+                        <td>
+                            <div class="progressBar defaultBar" id="progressBarAssignee${statusIndex}"><div></div></div>
+                            <script>
+
+                                progress(${user.value*100/resultCount},$j('#progressBarAssignee${statusIndex}'));
+
+                            </script>
+                        </td>
                     </tr>
+                    <c:set var="statusIndex" value="${statusIndex+1}"/>
                 </c:forEach>
             </table>
         </div>
         <br/>
         <b class="boxHeader"><spring:message code="dataintegrityworkflow.check.stage.summary"/></b>
         <div class="box" >
+            <table id="table2">
+                <c:forEach var="stage" items="${stageSummary}">
+                    <tr>
+                        <td>
+                            <a href ="<openmrs:contextPath/>/module/dataintegrityworkflow/manageIntegrityRecords.form?filter=stage-<c:out value="${stage.key.workflowStageId}"/>&checkId=<c:out value="${check.id}"/>"><c:out value="${stage.key.status}"/></a>
+                        </td>
+                        <td>
+                            ${stage.value}
+                        </td>
+                        <td>
+                            <div class="progressBar defaultBar"  id="progressBarStage${statusIndex}"><div></div></div>
+                            <script>
+                                progress(${stage.value*100/resultCount},$j('#progressBarStage${statusIndex}'));
+                            </script>
+                        </td>
+                    </tr>
+                    <c:set var="statusIndex" value="${statusIndex+1}"/>
+                </c:forEach>
+            </table>
         </div>
         <br/>
         <b class="boxHeader"><spring:message code="dataintegrityworkflow.check.status.summary"/></b>
         <div class="box" >
+            <table id="table3">
+                <c:forEach var="status" items="${statusSummary}">
+                    <tr>
+                        <td>
+                                <a class="status" href="<openmrs:contextPath/>/module/dataintegrityworkflow/manageIntegrityRecords.form?filter=status-<c:out value="${status.key}"/>&checkId=<c:out value="${check.id}"/>"><c:out value="${status.key}"/></a>
+                        </td>
+                        <td>
+                            ${status.value}
+                        </td>
+                        <td>
+                            <div class="progressBar defaultBar" id="progressBarStatus${statusIndex}"><div></div></div>
+                            <script>
+
+                                progress(${status.value*100/resultCount},$j('#progressBarStatus${statusIndex}'));
+
+                            </script>
+                        </td>
+                        <c:set var="statusIndex" value="${statusIndex+1}"/>
+                    </tr>
+                </c:forEach>
+            </table>
         </div>
     </div>
 </div>

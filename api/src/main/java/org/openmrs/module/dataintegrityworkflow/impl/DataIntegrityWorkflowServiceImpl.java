@@ -486,42 +486,44 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
     }
 
     public Map<User, Integer> getCheckRecordAssigneeCounts(IntegrityCheck integrityCheck) {
-        Map<Integer,Integer> counts=displayObjectsMap(dao.getCheckRecordAssigneeCounts(integrityCheck));
+        Map<Object,Integer> counts=displayObjectsMap(dao.getCheckRecordAssigneeCounts(integrityCheck));
         Map<User,Integer> out=new HashMap<User, Integer>();
         Iterator it = counts.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry)it.next();
-            out.put(Context.getUserService().getUser((Integer)pairs.getKey()),(Integer)pairs.getValue());
+            out.put(Context.getUserService().getUserByUsername(pairs.getKey().toString()),(Integer)pairs.getValue());
         }
         return out;
     }
 
     public Map<WorkflowStage, Integer> getCheckRecordStagesCounts(IntegrityCheck integrityCheck) {
-        Map<Integer,Integer> counts=displayObjectsMap(dao.getCheckRecordAssigneeCounts(integrityCheck));
+        Map<Object,Integer> counts=displayObjectsMap(dao.getCheckRecordStagesCounts(integrityCheck));
         Map<WorkflowStage,Integer> out=new HashMap<WorkflowStage, Integer>();
         Iterator it = counts.entrySet().iterator();
+        int count=0;
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry)it.next();
             out.put(dao.getWorkflowStage((Integer)pairs.getKey()),(Integer)pairs.getValue());
+            count+=(Integer)pairs.getValue();
         }
+        out.put(dao.getWorkflowStageByStatus("Unassigned"),integrityCheck.getIntegrityCheckResults().size()-count);
         return out;
     }
 
     public Map<Integer, Integer> getCheckRecordStatusCounts(IntegrityCheck integrityCheck) {
-        Map<Integer,Integer> counts=displayObjectsMap(dao.getCheckRecordAssigneeCounts(integrityCheck));
-        int count=0;
+        Map<Object,Integer> counts=displayObjectsMap(dao.getCheckRecordStatusCounts(integrityCheck));
+        Map<Integer,Integer> out=new HashMap<Integer, Integer>();
         Iterator it = counts.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry)it.next();
-            count+=(Integer)pairs.getValue();
+            out.put((Integer)pairs.getKey(),(Integer)pairs.getValue());
         }
-        counts.put(4,integrityCheck.getIntegrityCheckResults().size()-count);
-        return counts;
+        return out;
     }
 
-    private Map<Integer,Integer> displayObjectsMap(List list)
+    private Map<Object,Integer> displayObjectsMap(List list)
     {
-        Map<Integer,Integer> temp=new HashMap<Integer, Integer>();
+        Map<Object,Integer> temp=new HashMap<Object, Integer>();
         Iterator iter = list.iterator();
         if (!iter.hasNext())
         {
@@ -530,7 +532,7 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         while (iter.hasNext())
         {
             Object[] obj = (Object[]) iter.next();
-            temp.put((Integer)obj[0],(Integer)obj[1]);
+            temp.put(obj[0],Integer.parseInt(obj[1].toString()));
         }
         return temp;
     }
