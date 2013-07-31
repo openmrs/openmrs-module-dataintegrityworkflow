@@ -288,7 +288,7 @@
                     <th width="300"><spring:message code="dataintegrityworkflow.status"/></th>
                     <th width="300"><spring:message code="dataintegrityworkflow.assignee"/></th>
                     <th width="300"><spring:message code="dataintegrityworkflow.stage"/></th>
-                    <th width="300"><spring:message code="dataintegrityworkflow.lastupdated"/></th>
+                    <th width="350"><spring:message code="dataintegrityworkflow.lastupdated"/></th>
                     <th width="300"><spring:message code="dataintegrityworkflow.summary"/></th>
                 </tr>
                 </thead>

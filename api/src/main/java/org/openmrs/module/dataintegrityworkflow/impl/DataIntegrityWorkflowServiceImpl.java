@@ -527,7 +527,7 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         Iterator iter = list.iterator();
         if (!iter.hasNext())
         {
-            return null;
+            return temp;
         }
         while (iter.hasNext())
         {
