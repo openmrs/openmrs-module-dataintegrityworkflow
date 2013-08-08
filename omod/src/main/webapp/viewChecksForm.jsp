@@ -48,6 +48,7 @@
         <table id="integrityCheckTable" cellpadding="10" cellspacing="0" >
             <thead>
             <tr>
+                <th><spring:message code="dataintegrityworkflow.check.key"/></th>
                 <th><spring:message code="dataintegrityworkflow.check.name"/></th>
                 <th><spring:message code="dataintegrityworkflow.check.description"/></th>
                 <th><spring:message code="dataintegrityworkflow.check.status"/></th>
@@ -56,8 +57,9 @@
             </thead>
             <c:forEach items="${checks}" var="check" varStatus="varStatus">
                 <tr class="<c:choose><c:when test="${varStatus.index % 2 == 0}">oddRow</c:when><c:otherwise>evenRow</c:otherwise></c:choose> <c:if test="${check.retired}">retired</c:if>">
+                    <td><kc:checkKey checkName="${check.name}" checkId="${check.id}"></kc:checkKey></td>
                     <c:choose><c:when test="${not empty check.integrityCheckRuns}">
-                        <td><a href ="<openmrs:contextPath/>/module/dataintegrityworkflow/manageIntegrityRecords.form?filter=all&checkId=<c:out value="${check.id}"/>"><c:out value="${check.name} "/></a></td>
+                        <td><a href ="<openmrs:contextPath/>/module/dataintegrityworkflow/manageIntegrityRecords.form?filter=all&checkId=<c:out value="${check.id}"/>"><c:out value="${check.name}"/></a></td>
                     </c:when>
                     <c:otherwise>
                         <td><a href ="#"><c:out value="${check.name} "/></a></td>

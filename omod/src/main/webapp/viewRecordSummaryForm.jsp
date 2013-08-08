@@ -17,7 +17,6 @@
             "bProcessing": true,
             "bJQueryUI": true,
             "sPaginationType": "full_numbers",
-            "aaSorting": [[ 7, "desc" ]],
             "aoColumns": [
                 { "bSearchable": true,
                     "bVisible":    true },
@@ -35,7 +34,23 @@
             "bProcessing": true,
             "bJQueryUI": true,
             "sPaginationType": "full_numbers",
-            "aaSorting": [[ 7, "desc" ]],
+            "aoColumns": [
+                { "bSearchable": true,
+                    "bVisible":    true },
+                { "bSearchable": true,
+                    "bVisible":    true },
+                { "bSearchable": true,
+                    "bVisible":    true }
+            ]
+
+        } );
+
+        $j('#table2').dataTable( {
+            "bFilter": true,
+            "iDisplayLength": 15,
+            "bProcessing": true,
+            "bJQueryUI": true,
+            "sPaginationType": "full_numbers",
             "aoColumns": [
                 { "bSearchable": true,
                     "bVisible":    true },
@@ -47,6 +62,8 @@
 
         } );
     });
+
+
 </script>
 <h2><spring:message code="dataintegrityworkflow.record.summary"/>:RECORD-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>
 </h2>
@@ -76,7 +93,7 @@
    </div>
     <br/>
     <b class="boxHeader"><spring:message code="dataintegrityworkflow.record.statusChange"/></b>
-    <div class="box" id="">
+    <div class="box" id="statusChange">
     <table cellspacing="0" cellpadding="2" id="table1" class="display">
         <thead>
         <tr>
@@ -95,6 +112,28 @@
         </c:forEach>
         </tbody>
     </table>
+    </div>
+    <br/>
+    <b class="boxHeader"><spring:message code="dataintegrityworkflow.record.statusChange"/></b>
+    <div class="box" id="">
+        <table cellspacing="0" cellpadding="2" id="table2" class="display">
+            <thead>
+            <tr>
+                <th width="200"><spring:message code="dataintegrityworkflow.record.changeBy"/></th>
+                <th width="300"><spring:message code="dataintegrityworkflow.record.changeDate"/></th>
+                <th width="300"><spring:message code="dataintegrityworkflow.record.action"/></th>
+            </tr>
+            </thead>
+            <tbody id="contents">
+            <c:forEach items="${summary}" var="summaryEntry" varStatus="loopStatus">
+                <tr class="row">
+                    <td><c:out value="${summaryEntry.changeBy.personName}"/></td>
+                    <td><openmrs:formatDate date="${summaryEntry.dateActionPerformed}" type="long"/></td>
+                    <td class="status"><c:out value="${summaryEntry.action}"/></td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
     </div>
 </div>
 <%@ include file="/WEB-INF/template/footer.jsp" %>

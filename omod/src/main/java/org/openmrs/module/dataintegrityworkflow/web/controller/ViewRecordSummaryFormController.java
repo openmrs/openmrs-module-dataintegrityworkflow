@@ -60,6 +60,7 @@ public class ViewRecordSummaryFormController extends SimpleFormController {
             integrityWorkflowRecord=dataIntegrityWorkflowService.getIntegrityWorkflowRecordByResult(integrityCheckResult);
         }
         modelMap.put("record", integrityWorkflowRecord);
+        modelMap.put("summary", dataIntegrityWorkflowService.getIntegrityRecordHistory(Integer.parseInt(resultId)));
         return modelMap;
     }
 }

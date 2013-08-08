@@ -17,7 +17,6 @@
             "bProcessing": true,
             "bJQueryUI": true,
             "sPaginationType": "full_numbers",
-            "aaSorting": [[ 7, "desc" ]],
             "aoColumns": [
                 { "bSearchable": true,
                     "bVisible":    true },

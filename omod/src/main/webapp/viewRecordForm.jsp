@@ -1,8 +1,6 @@
 <%@ include file="localHeader.jsp"%>
 
 <openmrs:hasPrivilege privilege="View Record Assignments">
-
-<%@ taglib prefix="kc" tagdir="/WEB-INF/tags/module/dataintegrityworkflow/"%>
 <openmrs:htmlInclude file="/moduleResources/dataintegrityworkflow/css/module.css"/>
 <openmrs:htmlInclude file="/moduleResources/dataintegrityworkflow/js/module.js"/>
 <style>
@@ -210,11 +208,9 @@
             <tr>
                 <th width="400"><spring:message code="dataintegrityworkflow.stage"/></th>
                 <td><c:out value="${record.currentAssignee.currentIntegrityRecordAssignment.currentStage.status} "/> </td>
-                <openmrs:hasPrivilege privilege="Manage Record Assignees">
                 <td>
                     <input type="button"  style="height:20px; width:60px ;font-size:10px" id="changeStageDialog" value="<spring:message code="dataintegrityworkflow.record.change"/>"/>
                 </td>
-                </openmrs:hasPrivilege>
             </tr>
             <tr>
                 <th width="400"><spring:message code="dataintegrityworkflow.assigneeBy"/></th>

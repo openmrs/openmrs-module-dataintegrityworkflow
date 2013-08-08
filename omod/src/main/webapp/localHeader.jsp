@@ -4,6 +4,7 @@
 
 <!-- Include taglibs from core -->
 <%@ taglib prefix="fn" uri="/WEB-INF/taglibs/fn.tld" %>
+<%@ taglib prefix="kc" tagdir="/WEB-INF/tags/module/dataintegrityworkflow/"%>
 <ul id="menu">
 	<li class="first">
 		<a href="${pageContext.request.contextPath}/admin"><spring:message code="admin.title.short"/></a>

@@ -23,5 +23,9 @@ package org.openmrs.module.dataintegrityworkflow;
 public class IntegrityWorkflowConstants {
     public static final String MANAGE_RECORD_ASSIGNEES="Manage Record Assignees";
     public static final String VIEW_RECORD_ASSIGNMENTS="View Record Assignments";
+    public static final String IGNORE="Ignore";
+    public static final String UNIGNORE="Unignore";
+    public static final String ASSIGNTO="Assign to";
+    public static final String UNASSIGNFROM="Unassign from";
 
 }

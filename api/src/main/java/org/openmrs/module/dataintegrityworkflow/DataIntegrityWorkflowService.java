@@ -325,4 +325,10 @@ public interface DataIntegrityWorkflowService {
 
     public Map<Integer,Integer> getCheckRecordStatusCounts(IntegrityCheck integrityCheck);
 
+    public List<IntegrityRecordHistoryEntry> getIntegrityRecordHistory(int resultId);
+
+    public List<IntegrityWorkflowRecordWithCheckResult> getIntegrityRecordForCheckByStage(IntegrityCheck integrityCheck,String stage);
+
+    public List<IntegrityWorkflowRecordWithCheckResult> getIntegrityRecordForCheckByStatus(IntegrityCheck integrityCheck,String status);
+
 }

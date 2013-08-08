@@ -97,8 +97,12 @@ public class ManageIntegrityRecordsFormController extends SimpleFormController {
         {
             if("all".equals(filter)) {
             records=integrityWorkflowService.getAllIntegrityWorkflowRecordWithCheckResult(checkId);
-            integrityCheck=getDataIntegrityWorkflowService().getIntegrityCheck(checkId);
+            } else if(filter.contains("status")) {
+
+            } else if(filter.contains("stage")) {
+
             }
+            integrityCheck=getDataIntegrityWorkflowService().getIntegrityCheck(checkId);
         }
         modelMap.put("records",records);
         modelMap.put("check",integrityCheck);
