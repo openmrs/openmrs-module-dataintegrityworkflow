@@ -297,7 +297,7 @@
                         <td>
                             <input type="checkbox" size="3" name="recordId" class="checkboxRow" value="${record.integrityCheckResult.integrityCheckResultId}" />
                         </td>
-                        <td><a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecord.form?resultId=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>&checkId=<c:out value="${check.id}"/>">RECORD-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/></a> </td>
+                        <td><a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecord.form?resultId=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>&checkId=<c:out value="${check.id}"/>"><c:out value="${key.key}"/>-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/></a> </td>
                         <td class="status">
                             <c:choose><c:when test="${not empty record.integrityWorkflowRecord}">
                                 <c:out value="${record.integrityWorkflowRecord.integrityCheckResult.status}" />

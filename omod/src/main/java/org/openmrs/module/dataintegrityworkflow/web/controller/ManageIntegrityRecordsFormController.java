@@ -116,6 +116,7 @@ public class ManageIntegrityRecordsFormController extends SimpleFormController {
         modelMap.put("stageSummary",integrityWorkflowService.getCheckRecordStagesCounts(integrityCheck));
         modelMap.put("statusSummary",integrityWorkflowService.getCheckRecordStatusCounts(integrityCheck));
         modelMap.put("userSummary",integrityWorkflowService.getCheckRecordAssigneeCounts(integrityCheck));
+        modelMap.put("key",integrityWorkflowService.getIntegrityCheckKey(integrityCheck));
         return modelMap;
     }
 }

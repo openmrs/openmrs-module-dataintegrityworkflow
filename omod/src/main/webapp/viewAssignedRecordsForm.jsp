@@ -55,7 +55,6 @@
         <table cellspacing="0" cellpadding="2" id="table" class="display">
             <thead>
             <tr>
-                <th width="200"><spring:message code="dataintegrityworkflow.checkName"/></th>
                 <th width="200"><spring:message code="dataintegrityworkflow.recordId"/></th>
                 <th width="300"><spring:message code="dataintegrityworkflow.status"/></th>
                 <th width="300"><spring:message code="dataintegrityworkflow.assigneeBy"/></th>
@@ -66,8 +65,7 @@
             <tbody id="formContent">
             <c:forEach items="${records}" var="record" varStatus="loopStatus">
                 <tr class="row ${record.integrityCheckResult.status}">
-                    <td><c:out value="${record.integrityCheckResult.integrityCheck.name}"/></td>
-                    <td><a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecord.form?recordId=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>&checkId=<c:out value="${record.integrityCheckResult.integrityCheck.id}"/>">RECORD-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/></a> </td>
+                    <td><a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecord.form?recordId=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>&checkId=<c:out value="${record.integrityCheckResult.integrityCheck.id}"/>"><c:out value="${record.integrityCheckKey.key}"/>-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/></a> </td>
                     <td class="status">
                             <c:out value="${record.integrityCheckResult.status}" />
                     </td>

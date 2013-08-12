@@ -334,4 +334,7 @@ public interface DataIntegrityWorkflowService {
     public void generateIntegrityCheckKeysIfNotExists();
 
     public List<IntegrityCheckWithCheckKey> getAllIntegrityCheckWithKey();
+
+    public IntegrityCheckKey getIntegrityCheckKey(IntegrityCheck integrityCheck);
+
 }
