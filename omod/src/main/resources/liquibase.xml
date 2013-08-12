@@ -212,6 +212,11 @@
     </changeSet>
 
     <changeSet id="dataintegrityworkflow-2013-08-13-00:28" author="harsha">
+
+        <preConditions onFail="MARK_RAN">
+        <not><tableExists tableName="check_key"/></not>
+        </preConditions>
+
         <createTable tableName="check_key">
             <column name="key_id" type="int">
                 <constraints primaryKey="true" nullable="false"/>
@@ -219,11 +224,14 @@
             <column name="check_id" type="int"/>
             <column name="key" type="varchar(50)"/>
         </createTable>
+
         <comment>Add integrity check key column to workflow record</comment>
         <addColumn tableName="workflow_record">
             <column name="key_id" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
+
+        <addAutoIncrement tableName="check_key" columnName="key_id" columnDataType="int"/>
     </changeSet>
 </databaseChangeLog>

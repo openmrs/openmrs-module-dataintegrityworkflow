@@ -7,7 +7,6 @@
 <style>
     #integrityCheckTable td { padding: 0.5em; vertical-align: middle; }
     #integrityCheckTable th { padding: 0.5em; }
-
     td.run { line-height: 2em; }
     td.run .details { white-space: nowrap; }
     td.run .passed { width: 7em; display: inline-block; text-align: center; line-height: 2em; font-weight: bold; text-transform: uppercase; }
@@ -24,10 +23,8 @@
     $j(document).ready(function(){
         // hide retired checks
         toggleRowVisibilityForClass('integrityCheckTable', 'retired');
-
         // hide previous results
         $j("td.run .history").hide();
-
         $j("td.run span.true").html("PASSED");
         $j("td.run span.false").html("FAILED");
     })
