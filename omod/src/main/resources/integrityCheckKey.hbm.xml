@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.openmrs.module.dataintegrityworkflow">
+    <class name="org.openmrs.module.dataintegrityworkflow.IntegrityCheckKey" table="check_key">
+        <id name="keyId" type="java.lang.Integer">
+            <column name="key_id"/>
+            <generator class="native"/>
+        </id>
+        <property length="38" name="uuid" not-null="true" type="string"/>
+        <property name="key" type="string">
+            <column length="50" name="key"/>
+        </property>
+        <many-to-one name="integrityCheck" class="org.openmrs.module.dataintegrity.IntegrityCheck" column="check_id"/>
+    </class>
+</hibernate-mapping>

@@ -331,4 +331,7 @@ public interface DataIntegrityWorkflowService {
 
     public List<IntegrityWorkflowRecordWithCheckResult> getIntegrityRecordForCheckByStatus(IntegrityCheck integrityCheck,String status);
 
+    public void generateIntegrityCheckKeysIfNotExists();
+
+    public List<IntegrityCheckWithCheckKey> getAllIntegrityCheckWithKey();
 }

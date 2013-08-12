@@ -30,6 +30,7 @@
             <one-to-many class="RecordStatusChange" not-found="ignore"/>
         </set>
         <many-to-one class="org.openmrs.module.dataintegrity.IntegrityCheckResult" column="integrity_result_id" name="integrityCheckResult" />
+        <many-to-one class="IntegrityCheckKey" column="key_id" name="integrityCheckKey" />
         <property name="lastUpdated" type="timestamp">
             <column length="19" name="date_updated"/>
         </property>

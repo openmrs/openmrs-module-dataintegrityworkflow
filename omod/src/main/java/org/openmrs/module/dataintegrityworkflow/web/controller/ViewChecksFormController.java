@@ -18,6 +18,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dataintegrity.IntegrityCheck;
 import org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService;
+import org.openmrs.module.dataintegrityworkflow.IntegrityCheckWithCheckKey;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,11 +44,16 @@ public class ViewChecksFormController extends SimpleFormController {
     protected Map referenceData(HttpServletRequest req) throws Exception {
         Map<String,Object> modelMap=new HashMap<String,Object>();
         List<IntegrityCheck> checks=new ArrayList<IntegrityCheck>();
+        DataIntegrityWorkflowService integrityWorkflowService=getDataIntegrityWorkflowService();
+        List<IntegrityCheckWithCheckKey> integrityCheckWithCheckKeys = null;
         if(Context.isAuthenticated())
         {
+            integrityWorkflowService.generateIntegrityCheckKeysIfNotExists();
+            integrityCheckWithCheckKeys=integrityWorkflowService.getAllIntegrityCheckWithKey();
             checks=getDataIntegrityWorkflowService().getAllIntegrityChecks();
         }
         modelMap.put("checks",checks);
+        modelMap.put("checkwithkeys",integrityCheckWithCheckKeys);
         return modelMap;
     }
 }

@@ -465,6 +465,7 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
                         integrityWorkflowRecord.setIntegrityCheckResult(integrityCheckResult);
                         integrityWorkflowRecord.setIntegrityCheckId(checkId);
                         integrityWorkflowRecord.setLastUpdated(new Date());
+                        integrityWorkflowRecord.setIntegrityCheckKey(dao.getIntegrityCheckKey(integrityCheck));
                         integrityWorkflowService.saveIntegrityWorkflowRecord(integrityWorkflowRecord);
                         //integrityWorkflowRecord.setRecordStatus(integrityWorkflowService.getRecordStatus(integrityCheckResult.getStatus()+1));
                     }
@@ -558,7 +559,7 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
                     }
                     for(IntegrityRecordStageChange integrityRecordStageChange:integrityRecordAssignment.getIntegrityRecordStageChanges()) {
                         integrityRecordHistoryEntry=new IntegrityRecordHistoryEntry();
-                        integrityRecordHistoryEntry.setAction(integrityRecordStageChange.getFromWorkflowStage().getStatus()+" to "+integrityRecordStageChange.getToWorkflowStage().getStatus());
+                        integrityRecordHistoryEntry.setAction(integrityRecordStageChange.getFromWorkflowStage().getStatus()+" -> "+integrityRecordStageChange.getToWorkflowStage().getStatus());
                         integrityRecordHistoryEntry.setChangeBy(integrityRecordStageChange.getChangeBy());
                         integrityRecordHistoryEntry.setDateActionPerformed(integrityRecordStageChange.getChangeDate());
                         integrityRecordHistoryEntries.add(integrityRecordHistoryEntry);
@@ -577,7 +578,7 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         IntegrityWorkflowRecordWithCheckResult integrityWorkflowRecordWithCheckResult;
         for(IntegrityWorkflowRecord integrityWorkflowRecord:recordList) {
             if(integrityWorkflowRecord.getCurrentAssignee().getCurrentIntegrityRecordAssignment().getCurrentStage().getWorkflowStageId()==stageId){
-            integrityWorkflowRecordWithCheckResult=new IntegrityWorkflowRecordWithCheckResult();
+                integrityWorkflowRecordWithCheckResult=new IntegrityWorkflowRecordWithCheckResult();
                 integrityWorkflowRecordWithCheckResult.setIntegrityWorkflowRecord(integrityWorkflowRecord);
                 integrityWorkflowRecordWithCheckResult.setIntegrityCheckResult(integrityWorkflowRecord.getIntegrityCheckResult());
                 integrityWorkflowRecordWithCheckResultList.add(integrityWorkflowRecordWithCheckResult);
@@ -602,6 +603,50 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         return integrityWorkflowRecordWithCheckResultList;
     }
 
+    public void generateIntegrityCheckKeysIfNotExists() {
+        DataIntegrityWorkflowService integrityWorkflowService=Context.getService(DataIntegrityWorkflowService.class);
+        List<IntegrityCheck> integrityChecks=integrityWorkflowService.getAllIntegrityChecks();
+        for(IntegrityCheck integrityCheck:integrityChecks) {
+            int counter=1;
+            if(!dao.isCheckInKeyList(integrityCheck)){
+                String key=getKeyForCheck(integrityCheck.getName());
+                while (dao.isCheckKeyExists(key)) {
+                    key=key+counter;
+                    counter++;
+                }
+                IntegrityCheckKey integrityCheckKey=new IntegrityCheckKey();
+                integrityCheckKey.setIntegrityCheck(integrityCheck);
+                integrityCheckKey.setKey(key);
+                dao.saveIntegrityCheckKey(integrityCheckKey);
+            }
+        }
+    }
+
+    public List<IntegrityCheckWithCheckKey> getAllIntegrityCheckWithKey() {
+        DataIntegrityWorkflowService integrityWorkflowService=Context.getService(DataIntegrityWorkflowService.class);
+        List<IntegrityCheck> integrityChecks=integrityWorkflowService.getAllIntegrityChecks();
+        List<IntegrityCheckWithCheckKey> integrityCheckWithCheckKeys=new ArrayList<IntegrityCheckWithCheckKey>();
+        for(IntegrityCheck integrityCheck:integrityChecks) {
+            IntegrityCheckWithCheckKey integrityCheckWithCheckKey=new IntegrityCheckWithCheckKey();
+            integrityCheckWithCheckKey.setIntegrityCheck(integrityCheck);
+            integrityCheckWithCheckKey.setIntegrityCheckKey(dao.getIntegrityCheckKey(integrityCheck));
+            integrityCheckWithCheckKeys.add(integrityCheckWithCheckKey);
+        }
+        return integrityCheckWithCheckKeys;
+    }
+
+    private String getKeyForCheck(String checkName) {
+        String[] split=checkName.split("\\s");
+        String key="";
+        for(String s:split) {
+            if(s.length()>0) {
+                key=key+s.substring(0,1);
+            }
+        }
+        key=key.replaceAll("[^A-Za-z]","");
+        key=key.toUpperCase();
+        return key;
+    }
     private Map<Object,Integer> displayObjectsMap(List list)
     {
         Map<Object,Integer> temp=new HashMap<Object, Integer>();

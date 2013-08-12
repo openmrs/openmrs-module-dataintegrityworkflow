@@ -44,7 +44,7 @@
     <spring:message code="dataintegrityworkflow.check.list.title"/>
 </b>
 <div class="box">
-    <c:if test="${not empty checks}">
+    <c:if test="${not empty checkwithkeys}">
         <table id="integrityCheckTable" cellpadding="10" cellspacing="0" >
             <thead>
             <tr>
@@ -55,25 +55,25 @@
                 <th><spring:message code="dataintegrityworkflow.check.lastRunTimeStamp"/></th>
             </tr>
             </thead>
-            <c:forEach items="${checks}" var="check" varStatus="varStatus">
-                <tr class="<c:choose><c:when test="${varStatus.index % 2 == 0}">oddRow</c:when><c:otherwise>evenRow</c:otherwise></c:choose> <c:if test="${check.retired}">retired</c:if>">
-                    <td><kc:checkKey checkName="${check.name}" checkId="${check.id}"></kc:checkKey></td>
-                    <c:choose><c:when test="${not empty check.integrityCheckRuns}">
-                        <td><a href ="<openmrs:contextPath/>/module/dataintegrityworkflow/manageIntegrityRecords.form?filter=all&checkId=<c:out value="${check.id}"/>"><c:out value="${check.name}"/></a></td>
+            <c:forEach items="${checkwithkeys}" var="check" varStatus="varStatus">
+                <tr class="<c:choose><c:when test="${varStatus.index % 2 == 0}">oddRow</c:when><c:otherwise>evenRow</c:otherwise></c:choose> <c:if test="${check.integrityCheck.retired}">retired</c:if>">
+                    <td><<c:out value="${check.integrityCheckKey.key} "/></td>
+                    <c:choose><c:when test="${not empty check.integrityCheck.integrityCheckRuns}">
+                        <td><a href ="<openmrs:contextPath/>/module/dataintegrityworkflow/manageIntegrityRecords.form?filter=all&checkId=<c:out value="${check.integrityCheck.id}"/>"><c:out value="${check.integrityCheck.name}"/></a></td>
                     </c:when>
                     <c:otherwise>
-                        <td><a href ="#"><c:out value="${check.name} "/></a></td>
+                        <td><a href ="#"><c:out value="${check.integrityCheck.name} "/></a></td>
                     </c:otherwise>
                     </c:choose>
-                        <td>${check.description}</td>
-                        <c:if test="${not empty check.integrityCheckRuns}">
-                            <c:set value="${check.mostRecentRun}" var="run"/>
+                        <td>${check.integrityCheck.description}</td>
+                        <c:if test="${not empty check.integrityCheck.integrityCheckRuns}">
+                            <c:set value="${check.integrityCheck.mostRecentRun}" var="run"/>
                             <td class="run"><span class="passed ${run.checkPassed}">${run.checkPassed}</span></td>
                             <td>
                                 <span class="dateRan"><openmrs:formatDate date="${run.dateCreated}" type="long"/></span>
                             </td>
                         </c:if>
-                        <c:if test="${not empty check.resultsColumns and empty check.integrityCheckRuns}">
+                        <c:if test="${not empty check.integrityCheck.resultsColumns and empty check.integrityCheck.integrityCheckRuns}">
                             <td><spring:message code="dataintegrityworkflow.check.no-runs"/></td>
                             <td><spring:message code="dataintegrityworkflow.check.data.notAvailable"/></td>
                         </c:if>
@@ -81,7 +81,7 @@
             </c:forEach>
         </table>
     </c:if>
-    <c:if test="${empty checks}"><spring:message code="dataintegrityworkflow.list.empty"/></c:if>
+    <c:if test="${empty checkwithkeys}"><spring:message code="dataintegrityworkflow.list.empty"/></c:if>
 </div>
 </div>
 <%@ include file="/WEB-INF/template/footer.jsp" %>

@@ -38,7 +38,7 @@ public class IntegrityWorkflowRecord extends BaseOpenmrsObject{
     private IntegrityCheckResult integrityCheckResult;
     private int integrityCheckId;
     private Date lastUpdated;
-
+    private IntegrityCheckKey integrityCheckKey;
     public Integer getId() {
         return getRecordId();
     }
@@ -119,5 +119,13 @@ public class IntegrityWorkflowRecord extends BaseOpenmrsObject{
     public void setRecordStatusChanges(Set<RecordStatusChange> recordStatusChanges) {
         this.recordStatusChanges = recordStatusChanges;
 
+    }
+
+    public IntegrityCheckKey getIntegrityCheckKey() {
+        return integrityCheckKey;
+    }
+
+    public void setIntegrityCheckKey(IntegrityCheckKey integrityCheckKey) {
+        this.integrityCheckKey = integrityCheckKey;
     }
 }

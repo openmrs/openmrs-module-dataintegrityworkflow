@@ -92,15 +92,15 @@ public class ManageIntegrityRecordsFormController extends SimpleFormController {
         int checkId=Integer.parseInt(req.getParameter("checkId"));
         String filter=req.getParameter("filter");
         List<IntegrityWorkflowRecordWithCheckResult> records=new ArrayList<IntegrityWorkflowRecordWithCheckResult>();
-        IntegrityCheck integrityCheck = null;
+        IntegrityCheck integrityCheck = integrityWorkflowService.getIntegrityCheck(checkId);
         if(Context.isAuthenticated())
         {
             if("all".equals(filter)) {
             records=integrityWorkflowService.getAllIntegrityWorkflowRecordWithCheckResult(checkId);
             } else if(filter.contains("status")) {
-
+                records=integrityWorkflowService.getIntegrityRecordForCheckByStatus(integrityCheck,filter.split("_")[1]);
             } else if(filter.contains("stage")) {
-
+                records=integrityWorkflowService.getIntegrityRecordForCheckByStage(integrityCheck,filter.split("_")[1]);
             }
             integrityCheck=getDataIntegrityWorkflowService().getIntegrityCheck(checkId);
         }

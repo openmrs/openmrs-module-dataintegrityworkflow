@@ -342,4 +342,34 @@ public class HibernateDataIntegrityWorkflowDAO implements DataIntegrityWorkflowD
         criteria.setProjection(projList);
         return criteria.list();
     }
+
+    public void saveIntegrityCheckKey(IntegrityCheckKey integrityCheckKey) {
+        sessionFactory.getCurrentSession().save(integrityCheckKey);
+    }
+
+    public boolean isCheckKeyExists(String key) {
+        Criteria criteria=sessionFactory.getCurrentSession().createCriteria(IntegrityCheckKey.class);
+        criteria.add(Restrictions.eq("key",key));
+        if (criteria.list().size()>0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public IntegrityCheckKey getIntegrityCheckKey(IntegrityCheck integrityCheck) {
+        Criteria criteria=sessionFactory.getCurrentSession().createCriteria(IntegrityCheckKey.class);
+        criteria.add(Restrictions.eq("integrityCheck",integrityCheck));
+        return (IntegrityCheckKey)criteria.uniqueResult();
+    }
+
+    public boolean isCheckInKeyList(IntegrityCheck integrityCheck){
+        Criteria criteria=sessionFactory.getCurrentSession().createCriteria(IntegrityCheckKey.class);
+        criteria.add(Restrictions.eq("integrityCheck",integrityCheck));
+        if(criteria.list().size()>0){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

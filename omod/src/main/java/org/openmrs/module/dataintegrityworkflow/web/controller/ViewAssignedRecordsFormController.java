@@ -37,11 +37,11 @@ public class ViewAssignedRecordsFormController extends SimpleFormController {
         return (DataIntegrityWorkflowService) Context.getService(DataIntegrityWorkflowService.class);
     }
 
-    protected Object formBackingObject(HttpServletRequest request) throws Exception {
-        String text = "Not used";
-        log.debug("Returning hello world text: " + text);
-        return text;
-    }
+        protected Object formBackingObject(HttpServletRequest request) throws Exception {
+            String text = "Not used";
+            log.debug("Returning hello world text: " + text);
+            return text;
+        }
 
     protected Map referenceData(HttpServletRequest req) throws Exception {
         String assignee=req.getParameter("assignee");

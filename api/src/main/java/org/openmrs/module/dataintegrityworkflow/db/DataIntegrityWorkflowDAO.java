@@ -297,4 +297,12 @@ public interface DataIntegrityWorkflowDAO {
 
     public List getCheckRecordStatusCounts(IntegrityCheck integrityCheck);
 
+    public void saveIntegrityCheckKey(IntegrityCheckKey integrityCheckKey);
+
+    public boolean isCheckKeyExists(String key);
+
+    public IntegrityCheckKey getIntegrityCheckKey(IntegrityCheck integrityCheck);
+
+    public boolean isCheckInKeyList(IntegrityCheck integrityCheck);
+
 }
