@@ -22,7 +22,7 @@ import org.openmrs.module.dataintegrity.IntegrityCheck;
 public class IntegrityCheckKey extends BaseOpenmrsObject {
     private int keyId;
     private IntegrityCheck integrityCheck;
-    private String key;
+    private String keyVal;
 
     public IntegrityCheckKey() {
     }
@@ -33,14 +33,6 @@ public class IntegrityCheckKey extends BaseOpenmrsObject {
 
     public void setIntegrityCheck(IntegrityCheck integrityCheck) {
         this.integrityCheck = integrityCheck;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 
     public Integer getId() {
@@ -57,5 +49,13 @@ public class IntegrityCheckKey extends BaseOpenmrsObject {
 
     public void setKeyId(int keyId) {
         this.keyId = keyId;
+    }
+
+    public String getKeyVal() {
+        return keyVal;
+    }
+
+    public void setKeyVal(String keyVal) {
+        this.keyVal = keyVal;
     }
 }

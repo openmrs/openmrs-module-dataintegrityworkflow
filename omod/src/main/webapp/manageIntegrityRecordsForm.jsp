@@ -139,7 +139,7 @@
         $j("#unassignButton").mouseout(function() {
             $j(this).removeClass('ui-state-hover').addClass('ui-state-default');
         });
-    } );
+    } );;
 
     function showDiv(action)
     {
@@ -259,8 +259,17 @@
                 });
     });
 
+    function customQuery(){
 
+    }
 
+    $j(function() {
+        $j( "#fromDate" ).datepicker();
+    });
+
+    $j(function() {
+        $j( "#toDate" ).datepicker();
+    })
 </script>
 <h2><c:out value="${check.name}"/>-<spring:message code="dataintegrityworkflow.record.list"/></h2>
 
@@ -297,7 +306,7 @@
                         <td>
                             <input type="checkbox" size="3" name="recordId" class="checkboxRow" value="${record.integrityCheckResult.integrityCheckResultId}" />
                         </td>
-                        <td><a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecord.form?resultId=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>&checkId=<c:out value="${check.id}"/>"><c:out value="${key.key}"/>-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/></a> </td>
+                        <td><a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecord.form?resultId=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>&checkId=<c:out value="${check.id}"/>"><c:out value="${key.keyVal}"/>-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/></a> </td>
                         <td class="status">
                             <c:choose><c:when test="${not empty record.integrityWorkflowRecord}">
                                 <c:out value="${record.integrityWorkflowRecord.integrityCheckResult.status}" />
@@ -479,6 +488,38 @@
                         <c:set var="statusIndex" value="${statusIndex+1}"/>
                     </tr>
                 </c:forEach>
+            </table>
+        </div>
+        <br/>
+        <b class="boxHeader"><spring:message code="dataintegrityworkflow.check.query.view"/></b>
+        <div class="box" >
+            <table id="table4">
+                    <tr>
+                    <span>
+                    Select
+                        <select name="recordStatus" id="statusIds">
+                                <option value="status-0">New</option>
+                                <option value="status-1">Ignored</option>
+                                <option value="status-2">Voided</option>
+                        </select>
+                        <select name="recordStages" id="stagesIds">
+                            <c:forEach items="${stages}" var="stageObj" >
+                                <option value="stage-<c:out value="${stageObj.workflowStageId}"/>"> <c:out value="${stageObj.status}"/> </option>
+                            </c:forEach>
+                        </select>
+                        records of
+                        <select name="userList" id="userIds">
+                            <c:forEach items="${users}" var="user">
+                                <option value="${user}">${user}</option>
+                            </c:forEach>
+                        </select>
+                        from
+                        <input type="text" name="fromDate" id="fromDate" size="11" value="" onclick="showCalendar(this,60)" onchange="clearError('fromDate')" class="hasDatepicker">
+                        to
+                        <input type="text" name="toDate" id="toDate" size="11" value="" onclick="showCalendar(this,60)" onchange="clearError('toDate')" class="hasDatepicker">
+                        <input type="button" id="queryButton" onclick="customQuery()">Submit</input>
+                    </span>
+                    </tr>
             </table>
         </div>
     </div>

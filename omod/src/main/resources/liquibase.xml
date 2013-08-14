@@ -222,7 +222,8 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="check_id" type="int"/>
-            <column name="key" type="varchar(50)"/>
+            <column name="key_value" type="varchar(50)"/>
+            <column name="uuid" type="varchar(38)"/>
         </createTable>
 
         <comment>Add integrity check key column to workflow record</comment>

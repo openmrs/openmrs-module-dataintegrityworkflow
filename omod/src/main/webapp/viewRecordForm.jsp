@@ -177,7 +177,7 @@
         <table id="table">
             <tr>
                 <th width="100"><spring:message code="dataintegrityworkflow.recordId"/></th>
-                <td>RECORD-<c:out value="${record.integrityCheckResult.integrityCheckResultId} "/> </td>
+                <td><c:out value="${record.integrityCheckKey.keyVal} "/>-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/> </td>
             </tr>
             <tr>
                 <th width="100"><spring:message code="dataintegrityworkflow.status"/></th>
@@ -383,7 +383,6 @@
                         <c:forEach items="${stages}" var="stageObj" >
                             <option value="<c:out value="${stageObj.workflowStageId}"/>"> <c:out value="${stageObj.status}"/> </option>
                         </c:forEach>
-                        <option value="-" selected="selected">-</option>
                     </select>
                 </td>
             </tr>

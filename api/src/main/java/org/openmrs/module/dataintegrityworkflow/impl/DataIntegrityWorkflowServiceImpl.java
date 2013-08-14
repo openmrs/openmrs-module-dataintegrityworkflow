@@ -574,7 +574,7 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
     public List<IntegrityWorkflowRecordWithCheckResult> getIntegrityRecordForCheckByStage(IntegrityCheck integrityCheck, String stage) {
         List<IntegrityWorkflowRecord> recordList=dao.getAllIntegrityWorkflowRecordsForCheck(integrityCheck.getId());
         List<IntegrityWorkflowRecordWithCheckResult> integrityWorkflowRecordWithCheckResultList=new ArrayList<IntegrityWorkflowRecordWithCheckResult>();
-        int stageId=Integer.parseInt(stage.split("_")[1]);
+        int stageId=Integer.parseInt(stage.split("-")[1]);
         IntegrityWorkflowRecordWithCheckResult integrityWorkflowRecordWithCheckResult;
         for(IntegrityWorkflowRecord integrityWorkflowRecord:recordList) {
             if(integrityWorkflowRecord.getCurrentAssignee().getCurrentIntegrityRecordAssignment().getCurrentStage().getWorkflowStageId()==stageId){
@@ -590,7 +590,7 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
     public List<IntegrityWorkflowRecordWithCheckResult> getIntegrityRecordForCheckByStatus(IntegrityCheck integrityCheck, String status) {
         List<IntegrityWorkflowRecord> recordList=dao.getAllIntegrityWorkflowRecordsForCheck(integrityCheck.getId());
         List<IntegrityWorkflowRecordWithCheckResult> integrityWorkflowRecordWithCheckResultList=new ArrayList<IntegrityWorkflowRecordWithCheckResult>();
-        int statusId=Integer.parseInt(status.split("_")[1]);
+        int statusId=Integer.parseInt(status.split("-")[1]);
         IntegrityWorkflowRecordWithCheckResult integrityWorkflowRecordWithCheckResult;
         for(IntegrityWorkflowRecord integrityWorkflowRecord:recordList) {
             if(integrityWorkflowRecord.getIntegrityCheckResult().getStatus()==statusId){
@@ -616,7 +616,7 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
                 }
                 IntegrityCheckKey integrityCheckKey=new IntegrityCheckKey();
                 integrityCheckKey.setIntegrityCheck(integrityCheck);
-                integrityCheckKey.setKey(key);
+                integrityCheckKey.setKeyVal(key);
                 dao.saveIntegrityCheckKey(integrityCheckKey);
             }
         }

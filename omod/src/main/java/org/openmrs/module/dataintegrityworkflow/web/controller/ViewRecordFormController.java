@@ -67,6 +67,7 @@ public class ViewRecordFormController extends SimpleFormController {
                 integrityWorkflowStageChange.setIntegrityRecordAssignment(integrityWorkflowRecord.getCurrentAssignee().getCurrentIntegrityRecordAssignment());
                 integrityWorkflowService.saveIntegrityRecordStageChange(integrityWorkflowStageChange);
                 integrityWorkflowRecord.getCurrentAssignee().getCurrentIntegrityRecordAssignment().setCurrentStage(integrityWorkflowService.getWorkflowStage(Integer.parseInt(stage)));
+                integrityWorkflowRecord.setLastUpdated(new Date());
                 integrityWorkflowService.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
             } else if (addComment!=null) {
                 String comment=request.getParameter("comment");
@@ -75,6 +76,8 @@ public class ViewRecordFormController extends SimpleFormController {
                     integrityRecordComment.setComment(comment);
                     integrityRecordComment.setIntegrityWorkflowRecord(integrityWorkflowRecord);
                     integrityWorkflowService.saveIntegrityRecordComment(integrityRecordComment);
+                    integrityWorkflowRecord.setLastUpdated(new Date());
+                    integrityWorkflowService.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
                 }
             } else if (addChangeUser!=null) {
                 String[] record=new String[1];

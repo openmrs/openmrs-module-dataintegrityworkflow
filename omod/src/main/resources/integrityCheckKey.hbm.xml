@@ -6,10 +6,10 @@
             <column name="key_id"/>
             <generator class="native"/>
         </id>
-        <property length="38" name="uuid" not-null="true" type="string"/>
-        <property name="key" type="string">
-            <column length="50" name="key"/>
+        <property name="keyVal" type="string">
+            <column length="50" name="key_value"/>
         </property>
         <many-to-one name="integrityCheck" class="org.openmrs.module.dataintegrity.IntegrityCheck" column="check_id"/>
+        <property length="38" name="uuid" type="java.lang.String" unique="true"/>
     </class>
 </hibernate-mapping>

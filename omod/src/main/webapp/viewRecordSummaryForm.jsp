@@ -28,7 +28,7 @@
     });
 
 </script>
-<h2><spring:message code="dataintegrityworkflow.record.summary"/>:RECORD-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>
+<h2><spring:message code="dataintegrityworkflow.record.summary"/>:<c:out value="${record.integrityCheckKey.keyVal}"/>-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>
 </h2>
     <b class="boxHeader"><spring:message code="dataintegrityworkflow.record.history.header"/></b>
     <div class="box" id="">

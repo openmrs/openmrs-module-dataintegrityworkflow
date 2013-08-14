@@ -54,7 +54,7 @@
             </thead>
             <c:forEach items="${checkwithkeys}" var="check" varStatus="varStatus">
                 <tr class="<c:choose><c:when test="${varStatus.index % 2 == 0}">oddRow</c:when><c:otherwise>evenRow</c:otherwise></c:choose> <c:if test="${check.integrityCheck.retired}">retired</c:if>">
-                    <td><<c:out value="${check.integrityCheckKey.key} "/></td>
+                    <td><c:out value="${check.integrityCheckKey.keyVal}"/></td>
                     <c:choose><c:when test="${not empty check.integrityCheck.integrityCheckRuns}">
                         <td><a href ="<openmrs:contextPath/>/module/dataintegrityworkflow/manageIntegrityRecords.form?filter=all&checkId=<c:out value="${check.integrityCheck.id}"/>"><c:out value="${check.integrityCheck.name}"/></a></td>
                     </c:when>

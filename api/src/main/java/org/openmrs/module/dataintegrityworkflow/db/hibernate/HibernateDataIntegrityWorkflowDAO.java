@@ -349,7 +349,7 @@ public class HibernateDataIntegrityWorkflowDAO implements DataIntegrityWorkflowD
 
     public boolean isCheckKeyExists(String key) {
         Criteria criteria=sessionFactory.getCurrentSession().createCriteria(IntegrityCheckKey.class);
-        criteria.add(Restrictions.eq("key",key));
+        criteria.add(Restrictions.eq("keyVal",key));
         if (criteria.list().size()>0) {
             return true;
         } else {
@@ -372,4 +372,6 @@ public class HibernateDataIntegrityWorkflowDAO implements DataIntegrityWorkflowD
             return false;
         }
     }
+
+
 }

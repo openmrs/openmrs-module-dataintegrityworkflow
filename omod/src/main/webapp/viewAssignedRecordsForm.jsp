@@ -28,8 +28,6 @@
                 { "bSearchable": true,
                     "bVisible":    true },
                 { "bSearchable": true,
-                    "bVisible":    true },
-                { "bSearchable": true,
                     "bVisible":    true }
             ]
 
@@ -65,7 +63,7 @@
             <tbody id="formContent">
             <c:forEach items="${records}" var="record" varStatus="loopStatus">
                 <tr class="row ${record.integrityCheckResult.status}">
-                    <td><a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecord.form?recordId=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>&checkId=<c:out value="${record.integrityCheckResult.integrityCheck.id}"/>"><c:out value="${record.integrityCheckKey.key}"/>-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/></a> </td>
+                    <td><a href="<openmrs:contextPath/>/module/dataintegrityworkflow/viewRecord.form?recordId=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/>&checkId=<c:out value="${record.integrityCheckResult.integrityCheck.id}"/>"><c:out value="${record.integrityCheckKey.keyVal}"/>-<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/></a> </td>
                     <td class="status">
                             <c:out value="${record.integrityCheckResult.status}" />
                     </td>
