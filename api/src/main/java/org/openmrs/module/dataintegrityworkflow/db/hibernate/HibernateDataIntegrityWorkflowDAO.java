@@ -373,5 +373,9 @@ public class HibernateDataIntegrityWorkflowDAO implements DataIntegrityWorkflowD
         }
     }
 
+    public void updateWorkflowStage(WorkflowStage workflowStage) {
+        sessionFactory.getCurrentSession().update(workflowStage);
+    }
+
 
 }

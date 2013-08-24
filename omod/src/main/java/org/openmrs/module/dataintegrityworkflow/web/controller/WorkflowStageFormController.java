@@ -18,6 +18,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService;
 import org.openmrs.module.dataintegrityworkflow.WorkflowStage;
+import org.openmrs.web.WebConstants;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
@@ -33,7 +34,7 @@ import java.util.Map;
 /**
  * @author: harsz89
  */
-public class AddWorkflowStageFormController extends SimpleFormController {
+public class WorkflowStageFormController extends SimpleFormController{
     protected final Log log = LogFactory.getLog(getClass());
 
     private DataIntegrityWorkflowService getDataIntegrityWorkflowService() {
@@ -42,12 +43,13 @@ public class AddWorkflowStageFormController extends SimpleFormController {
 
     protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command,
                                     BindException errors) throws Exception {
+        String workflowStageId=request.getParameter("workflowStageId");
         String status=request.getParameter("status");
         DataIntegrityWorkflowService dataIntegrityWorkflowService=getDataIntegrityWorkflowService();
-        WorkflowStage workflowStage=new WorkflowStage();
+        WorkflowStage workflowStage=dataIntegrityWorkflowService.getWorkflowStage(Integer.parseInt(workflowStageId));
         workflowStage.setStatus(status);
-        dataIntegrityWorkflowService.saveWorkflowStage(workflowStage);
-        return new ModelAndView(new RedirectView(getSuccessView()));
+        dataIntegrityWorkflowService.updateWorkflowStage(workflowStage);
+        return new ModelAndView(new RedirectView(getSuccessView()+"?workflowStageId="+workflowStageId));
     }
 
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
@@ -57,13 +59,11 @@ public class AddWorkflowStageFormController extends SimpleFormController {
     }
 
     protected Map referenceData(HttpServletRequest req) throws Exception {
+        String workflowId=req.getParameter("workflowStageId");
         DataIntegrityWorkflowService integrityWorkflowService=getDataIntegrityWorkflowService();
         Map<String,Object> modelMap=new HashMap<String,Object>();
-        List<WorkflowStage> workflowStageList=new ArrayList<WorkflowStage>();
-        workflowStageList=integrityWorkflowService.getWorkflowStages();
-        modelMap.put("stages",workflowStageList);
+        WorkflowStage workflowStage=integrityWorkflowService.getWorkflowStage(Integer.parseInt(workflowId));
+        modelMap.put("stage",workflowStage);
         return modelMap;
     }
-
-
 }

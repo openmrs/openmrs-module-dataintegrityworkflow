@@ -1,7 +1,8 @@
 <%@ include file="localHeader.jsp"%>
 
 <openmrs:require privilege="Manage Record Assignees" otherwise="/login.htm" redirect="/module/dataintegrityworkflow/viewChecks.form" />
-
+<openmrs:htmlInclude file="/scripts/calendar/calendar.js" />
+<openmrs:htmlInclude file="/scripts/validation.js" />
 
 <openmrs:htmlInclude file="/moduleResources/dataintegrityworkflow/demo_table_jui.css" />
 <openmrs:htmlInclude file="/moduleResources/dataintegrityworkflow/jquery.dataTables.min.js" />
@@ -401,7 +402,6 @@
                             <td>
                                 <spring:message code="dataintegrityworkflow.selection"/>
                             </td>
-                            <td>
                                 <select name="assignmentOptions" id="assignmentOpt">
                                     <option value="selected">Selected</option>
                                     <option value="all">All</option>
@@ -495,13 +495,13 @@
         <div class="box" >
             <table id="table4">
                     <tr>
-                    <span>
                     Select
                         <select name="recordStatus" id="statusIds">
                                 <option value="status-0">New</option>
                                 <option value="status-1">Ignored</option>
                                 <option value="status-2">Voided</option>
                         </select>
+                        and
                         <select name="recordStages" id="stagesIds">
                             <c:forEach items="${stages}" var="stageObj" >
                                 <option value="stage-<c:out value="${stageObj.workflowStageId}"/>"> <c:out value="${stageObj.status}"/> </option>
@@ -514,11 +514,11 @@
                             </c:forEach>
                         </select>
                         from
-                        <input type="text" name="fromDate" id="fromDate" size="11" value="" onclick="showCalendar(this,60)" onchange="clearError('fromDate')" class="hasDatepicker">
+                        <input type="text" name="fromDate" id="fromDate" size="11" value=""  onclick="showCalendar(this,60)" onchange="clearError('toDate')" class="hasDatepicker">
                         to
-                        <input type="text" name="toDate" id="toDate" size="11" value="" onclick="showCalendar(this,60)" onchange="clearError('toDate')" class="hasDatepicker">
-                        <input type="button" id="queryButton" onclick="customQuery()">Submit</input>
-                    </span>
+                        <input type="text" name="toDate" id="toDate" size="11" value=""  onclick="showCalendar(this,60)" onchange="clearError('fromDate')" class="hasDatepicker">
+
+                        <button type="button" id="queryButton" onclick="customQuery()">Submit</button>
                     </tr>
             </table>
         </div>

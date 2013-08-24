@@ -305,4 +305,6 @@ public interface DataIntegrityWorkflowDAO {
 
     public boolean isCheckInKeyList(IntegrityCheck integrityCheck);
 
+    public void updateWorkflowStage(WorkflowStage workflowStage);
+
 }

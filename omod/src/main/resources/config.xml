@@ -50,8 +50,8 @@
 
 
     <globalProperty>
-        <property>integrityworkflow.notification</property>
-        <defaultValue>A New Feedback Submitted Successfully</defaultValue>
+        <property>dataintegrityworkflow.stage.empty</property>
+        <defaultValue>Workflow stage name is empty</defaultValue>
         <description>What message should be sent to the user once feedback is successfully submitted</description>
     </globalProperty>
 	
