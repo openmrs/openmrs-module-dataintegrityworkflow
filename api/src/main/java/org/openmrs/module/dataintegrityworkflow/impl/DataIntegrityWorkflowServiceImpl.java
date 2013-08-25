@@ -643,6 +643,9 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         dao.updateWorkflowStage(workflowStage);
     }
 
+    public void updateCheckKey(IntegrityCheckKey integrityCheckKey) {
+        dao.updateCheckKey(integrityCheckKey);
+    }
 
     private String getKeyForCheck(String checkName) {
         String[] split=checkName.split("\\s");

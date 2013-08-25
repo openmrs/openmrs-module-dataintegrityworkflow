@@ -339,4 +339,6 @@ public interface DataIntegrityWorkflowService {
 
     public void updateWorkflowStage(WorkflowStage workflowStage);
 
+    public void updateCheckKey(IntegrityCheckKey integrityCheckKey);
+
 }

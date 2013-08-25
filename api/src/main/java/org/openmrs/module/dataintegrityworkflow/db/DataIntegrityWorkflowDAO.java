@@ -307,4 +307,6 @@ public interface DataIntegrityWorkflowDAO {
 
     public void updateWorkflowStage(WorkflowStage workflowStage);
 
+    public void updateCheckKey(IntegrityCheckKey integrityCheckKey);
+
 }
