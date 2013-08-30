@@ -49,12 +49,6 @@ public class ViewAssignedRecordsFormController extends SimpleFormController {
         String toDate=req.getParameter("toDate");
         String stage=req.getParameter("stage");
         String status=req.getParameter("status");
-        DateFormat formatter ;
-        Date fromDateFormatted;
-        Date toDateFormatted;
-        formatter = new SimpleDateFormat("dd/MM/yy");
-        fromDateFormatted = formatter.parse(fromDate);
-        toDateFormatted = formatter.parse(toDate);
         Map<String,Object> modelMap=new HashMap<String, Object>();
         User user;
         List<IntegrityWorkflowRecord> records = null;
@@ -69,6 +63,12 @@ public class ViewAssignedRecordsFormController extends SimpleFormController {
         if(checkId==null) {
             records=dataIntegrityWorkflowService.getAssignedIntegrityWorkflowRecordsOfCurrentUser(user);
         } else if(checkId!=null && fromDate!=null && toDate!=null && status!=null && stage!=null){
+            DateFormat formatter ;
+            Date fromDateFormatted;
+            Date toDateFormatted;
+            formatter = new SimpleDateFormat("dd/MM/yy");
+            fromDateFormatted = formatter.parse(fromDate);
+            toDateFormatted = formatter.parse(toDate);
             records=dataIntegrityWorkflowService.getResultsForCustomQuery(status,stage,fromDateFormatted,toDateFormatted,user,checkId);
         } else {
             records=dataIntegrityWorkflowService.getAssignedIntegrityWorkflowRecordsOfSpecifiedCheckAndCurrentUser(user,Integer.parseInt(checkId));
