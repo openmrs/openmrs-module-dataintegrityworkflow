@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet id="dataintegrityworkflow-2013-06-13-22:07" author="harsha">
+    <preConditions onFail="MARK_RAN">
+        <not><tableExists tableName="workflow_record"/></not>
+        <not><tableExists tableName="workflow_record_assignee"/></not>
+        <not><tableExists tableName="workflow_record_stage"/></not>
+        <not><tableExists tableName="workflow_record_stagechange"/></not>
+        <not><tableExists tableName="workflow_record_comment"/></not>
+        <not><tableExists tableName="workflow_record_assignment"/></not>
+    </preConditions>
+
+    <comment>
+        Creating the data integrity workflow module tables
+    </comment>
+
+        <createTable tableName="workflow_record">
+            <column name="workflow_record_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="current_assignee_id" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="integrity_check_id" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="integrity_result_id" type="int">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="uuid" type="varchar(38)"/>
+
+            <column name="date_updated" type="datetime" />
+        </createTable>
+
+        <createTable tableName="workflow_record_assignee">
+            <column name="assignee_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="assignee" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="workflow_record_id" type="int" />
+            <column name="current_assignment_id" type="int" />
+            <column name="uuid" type="varchar(38)"/>
+        </createTable>
+
+        <createTable tableName="workflow_record_assignment">
+            <column name="assignment_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="assign_by" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unassign_by" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="date_assigned" type="datetime" />
+            <column name="date_unassign" type="datetime" />
+
+            <column name="current_stage_id" type="int" />
+            <column name="workflow_record_assignee_id" type="int" />
+            <column name="uuid" type="varchar(38)"/>
+        </createTable>
+
+        <createTable tableName="workflow_record_comment">
+            <column name="record_comment_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="workflow_record_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" type="varchar(5000)"/>
+            <column name="creator" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="retired_by" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="retired" type="tinyint" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="datetime" />
+            <column name="date_changed" type="datetime" />
+            <column name="date_retired" type="datetime" />
+            <column name="retired_reason" type="varchar(50)"/>
+            <column name="uuid" type="varchar(38)"/>
+        </createTable>
+
+        <createTable tableName="workflow_record_stagechange">
+            <column name="record_stagechange_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="record_assignment_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creator" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="from_workflow_stage_id" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="to_workflow_stage_id" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="date_created" type="datetime" />
+            <column name="uuid" type="varchar(38)"/>
+        </createTable>
+
+        <createTable tableName="workflow_record_stage">
+            <column name="workflow_stage_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="status" type="varchar(50)"/>
+            <column name="uuid" type="varchar(38)"/>
+
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="fk_integrity_check_id"
+                                 referencedTableName="dataintegrity_check" baseColumnNames="integrity_check_id"
+                                 baseTableName="workflow_record" referencedColumnNames="check_id" />
+        <addForeignKeyConstraint constraintName="fk_integrity_result_id"
+                                 referencedTableName="dataintegrity_result" baseColumnNames="integrity_result_id"
+                                 baseTableName="workflow_record" referencedColumnNames="result_id" />
+        <addForeignKeyConstraint constraintName="fk_workflow_record_id"
+                                 referencedTableName="workflow_record" baseColumnNames="workflow_record_id"
+                                 baseTableName="workflow_record_assignee" referencedColumnNames="workflow_record_id" />
+        <addForeignKeyConstraint constraintName="fk_workflow_record_id_of_record_comment"
+                                 referencedTableName="workflow_record" baseColumnNames="workflow_record_id"
+                                 baseTableName="workflow_record_comment" referencedColumnNames="workflow_record_id" />
+        <addForeignKeyConstraint constraintName="fk_workflow_assignee_id_of_workflow_record_assignment"
+                                 referencedTableName="workflow_record_assignee" baseColumnNames="workflow_record_assignee_id"
+                                 baseTableName="workflow_record_assignment" referencedColumnNames="assignee_id" />
+        <addForeignKeyConstraint constraintName="fk_workflow_record_assignment_id_of_record_stage_change"
+                                 referencedTableName="workflow_record_assignment" baseColumnNames="record_assignment_id"
+                                 baseTableName="workflow_record_stagechange" referencedColumnNames="assignment_id" />
+
+        <addAutoIncrement tableName="workflow_record" columnName="workflow_record_id" columnDataType="int"/>
+        <addAutoIncrement tableName="workflow_record_assignee" columnName="assignee_id" columnDataType="int"/>
+        <addAutoIncrement tableName="workflow_record_stage" columnName="workflow_stage_id" columnDataType="int"/>
+        <addAutoIncrement tableName="workflow_record_stagechange" columnName="record_stagechange_id" columnDataType="int"/>
+        <addAutoIncrement tableName="workflow_record_comment" columnName="record_comment_id" columnDataType="int"/>
+        <addAutoIncrement tableName="workflow_record_assignment" columnName="assignment_id" columnDataType="int"/>
+
+        <comment>
+           Adding default workflow stages
+        </comment>
+        <insert tableName="workflow_record_stage">
+            <column name="status" value="Assigned"/>
+        </insert>
+        <insert tableName="workflow_record_stage">
+            <column name="status" value="Waiting for information"/>
+        </insert>
+        <insert tableName="workflow_record_stage">
+            <column name="status" value="Verified"/>
+        </insert>
+        <insert tableName="workflow_record_stage">
+            <column name="status" value="On Progress"/>
+        </insert>
+
+        <createTable tableName="workflow_check_assignment">
+            <column name="check_assignment_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="check_id" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="assign_by" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="assignee" type="int">
+            <constraints nullable="true"/>
+        </column>
+            <column name="assign_date" type="datetime" />
+        </createTable>
+
+        <createTable tableName="workflow_record_statuschange">
+            <column name="record_statuschange_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="workflow_record_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="change_by" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="action" type="varchar(18)"/>
+            <column name="change_date" type="datetime" />
+            <column name="uuid" type="varchar(38)"/>
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="fk_workflow_record_assignment_id_of_record_status_change"
+                                 referencedTableName="workflow_record" baseColumnNames="workflow_record_id"
+                                 baseTableName="workflow_record_statuschange" referencedColumnNames="workflow_record_id" />
+        <addAutoIncrement tableName="workflow_record_statuschange" columnName="record_statuschange_id" columnDataType="int"/>
+        <addAutoIncrement tableName="workflow_check_assignment" columnName="check_assignment_id" columnDataType="int"/>
+
+    </changeSet>
+
+    <changeSet id="dataintegrityworkflow-2013-07-28-14:07" author="harsha">
+        <insert tableName="workflow_record_stage">
+            <column name="status" value="Unassigned"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="dataintegrityworkflow-2013-08-13-00:28" author="harsha">
+
+        <preConditions onFail="MARK_RAN">
+        <not><tableExists tableName="check_key"/></not>
+        </preConditions>
+
+        <createTable tableName="check_key">
+            <column name="key_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="check_id" type="int"/>
+            <column name="key_value" type="varchar(50)"/>
+            <column name="uuid" type="varchar(38)"/>
+        </createTable>
+
+        <comment>Add integrity check key column to workflow record</comment>
+        <addColumn tableName="workflow_record">
+            <column name="key_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addAutoIncrement tableName="check_key" columnName="key_id" columnDataType="int"/>
+    </changeSet>
+</databaseChangeLog>
