@@ -9,10 +9,10 @@
                 <input type=hidden name=checkId value= <c:out value="${checkkey.integrityCheck.id}"/> >
                 <table>
                     <tr>
-                        <td width="200"><spring:message code="dataintegrityworkflow.check.name"/></td>
+                        <td width="200"><spring:message code="dataintegrityworkflow.checkkey.name"/></td>
                         <td> <c:out value="${checkkey.integrityCheck.name}"/></td>
                     </tr>
-                    <tr>
+                    <tr class="evenRow">
                         <td width="200"><spring:message code="dataintegrityworkflow.check.key"/></td>
                         <td><input type="text" size="12" name="keyVal" value="${checkkey.keyVal}"  size="50" /></td>
                     </tr>

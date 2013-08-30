@@ -47,7 +47,7 @@ public class ViewAssignedRecordsFormController extends SimpleFormController {
         String checkId=req.getParameter("checkId");
         String fromDate=req.getParameter("fromDate");
         String toDate=req.getParameter("toDate");
-        String stage=req.getParameter("status");
+        String stage=req.getParameter("stage");
         String status=req.getParameter("status");
         DateFormat formatter ;
         Date fromDateFormatted;

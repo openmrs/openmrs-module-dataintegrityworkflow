@@ -346,6 +346,16 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
                     integrityWorkflowRecord.setCurrentAssignee(recordAssignee);
                     integrityWorkflowRecord.setLastUpdated(new Date());
                     integrityWorkflowService.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
+
+                    IntegrityRecordStageChange integrityWorkflowStageChange=new IntegrityRecordStageChange();
+                    integrityWorkflowStageChange.setChangeDate(new Date());
+                    integrityWorkflowStageChange.setChangeBy(Context.getAuthenticatedUser());
+                    integrityWorkflowStageChange.setFromWorkflowStage(integrityWorkflowService.getWorkflowStage(5));
+                    integrityWorkflowStageChange.setToWorkflowStage(integrityWorkflowService.getWorkflowStage(1));
+                    integrityWorkflowStageChange.setIntegrityRecordAssignment(integrityWorkflowRecord.getCurrentAssignee().getCurrentIntegrityRecordAssignment());
+                    integrityWorkflowService.saveIntegrityRecordStageChange(integrityWorkflowStageChange);
+
+                    integrityWorkflowService.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
                 } else {
                     boolean isAssigneeFound=false;
                     for(RecordAssignee assignee:integrityWorkflowRecord.getPreviousRecordAssignees())
@@ -376,7 +386,17 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
                                 }
                                 integrityWorkflowRecord.setCurrentAssignee(assignee);
                                 integrityWorkflowRecord.setLastUpdated(new Date());
-                                integrityWorkflowService.saveIntegrityWorkflowRecord(integrityWorkflowRecord);
+                                integrityWorkflowService.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
+
+                                IntegrityRecordStageChange integrityWorkflowStageChange=new IntegrityRecordStageChange();
+                                integrityWorkflowStageChange.setChangeDate(new Date());
+                                integrityWorkflowStageChange.setChangeBy(Context.getAuthenticatedUser());
+                                integrityWorkflowStageChange.setFromWorkflowStage(integrityWorkflowService.getWorkflowStage(5));
+                                integrityWorkflowStageChange.setToWorkflowStage(integrityWorkflowService.getWorkflowStage(1));
+                                integrityWorkflowStageChange.setIntegrityRecordAssignment(integrityWorkflowRecord.getCurrentAssignee().getCurrentIntegrityRecordAssignment());
+                                integrityWorkflowService.saveIntegrityRecordStageChange(integrityWorkflowStageChange);
+
+                                integrityWorkflowService.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
                             }
                             break;
                         }
@@ -409,6 +429,16 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
                         }
                         integrityWorkflowRecord.setCurrentAssignee(recordAssignee);
                         integrityWorkflowRecord.setLastUpdated(new Date());
+                        integrityWorkflowService.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
+
+                        IntegrityRecordStageChange integrityWorkflowStageChange=new IntegrityRecordStageChange();
+                        integrityWorkflowStageChange.setChangeDate(new Date());
+                        integrityWorkflowStageChange.setChangeBy(Context.getAuthenticatedUser());
+                        integrityWorkflowStageChange.setFromWorkflowStage(integrityWorkflowService.getWorkflowStage(5));
+                        integrityWorkflowStageChange.setToWorkflowStage(integrityWorkflowService.getWorkflowStage(1));
+                        integrityWorkflowStageChange.setIntegrityRecordAssignment(integrityWorkflowRecord.getCurrentAssignee().getCurrentIntegrityRecordAssignment());
+                        integrityWorkflowService.saveIntegrityRecordStageChange(integrityWorkflowStageChange);
+
                         integrityWorkflowService.updateIntegrityWorkflowRecord(integrityWorkflowRecord);
                     }
                 }
@@ -651,8 +681,8 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         DataIntegrityWorkflowService integrityWorkflowService=Context.getService(DataIntegrityWorkflowService.class);
         List<IntegrityWorkflowRecord> assigneRecords=integrityWorkflowService.getAssignedIntegrityWorkflowRecordsOfSpecifiedCheckAndCurrentUser(assignee, Integer.parseInt(checkId));
         List<IntegrityWorkflowRecord> filteredList=new ArrayList<IntegrityWorkflowRecord>();
-        WorkflowStage workflowStage=integrityWorkflowService.getWorkflowStage(Integer.parseInt(stage.split("-")[0]));
-        int statusId=Integer.parseInt(stage.split("-")[0]);
+        WorkflowStage workflowStage=integrityWorkflowService.getWorkflowStage(Integer.parseInt(stage.split("-")[1]));
+        int statusId=Integer.parseInt(status.split("-")[1]);
         for(IntegrityWorkflowRecord integrityWorkflowRecord:assigneRecords) {
             if(integrityWorkflowRecord.getIntegrityCheckResult().getStatus()==statusId) {
                 if(integrityWorkflowRecord.getCurrentAssignee().getCurrentIntegrityRecordAssignment().getCurrentStage().equals(workflowStage)) {
@@ -661,7 +691,7 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
                         lastChange=integrityRecordStageChange;
                     }
                     if(lastChange!=null) {
-                        if(fromDate.compareTo(lastChange.getChangeDate())>=0 && toDate.compareTo(lastChange.getChangeDate())<=0) {
+                        if(fromDate.compareTo(lastChange.getChangeDate())<=0 && toDate.compareTo(lastChange.getChangeDate())>=0) {
                          filteredList.add(integrityWorkflowRecord);
                         }
                     }

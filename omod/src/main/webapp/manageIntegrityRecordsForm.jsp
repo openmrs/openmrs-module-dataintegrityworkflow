@@ -280,7 +280,7 @@
                 <c:set var="actionServerUrl" value="${pageContext.request.contextPath}"/>
         </c:if>
         //$j.get("${actionServerUrl}/module/dataintegrityworkflow/viewAssignedRecords.form", { status: status, stage: stage, assignee: user, fromDate: fromDate,toDate:toDate,checkId:${check.id}} );
-        window.location.href='${actionServerUrl}/module/dataintegrityworkflow/viewAssignedRecords.form?checkid=${check.id}'+'&status='+status+'&stage='+stage+'&assignee='+user+'&fromDate='+fromDate+'&toDate='+toDate;
+        window.location.href='${actionServerUrl}/module/dataintegrityworkflow/viewAssignedRecords.form?checkId=${check.id}'+'&status='+status+'&stage='+stage+'&assignee='+user+'&fromDate='+fromDate+'&toDate='+toDate;
     }
 </script>
 <h2><c:out value="${check.name}"/>-<spring:message code="dataintegrityworkflow.record.list"/></h2>
@@ -413,6 +413,7 @@
                             <td>
                                 <spring:message code="dataintegrityworkflow.selection"/>
                             </td>
+                            <td>
                                 <select name="assignmentOptions" id="assignmentOpt">
                                     <option value="selected">Selected</option>
                                     <option value="all">All</option>

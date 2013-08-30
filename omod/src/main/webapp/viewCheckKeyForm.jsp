@@ -7,11 +7,11 @@
                 <table>
                     <thead>
                         <th width="200"><spring:message code="dataintegrityworkflow.check.key"/></th>
-                        <th width="200"><spring:message code="dataintegrityworkflow.check.name"/></th>
+                        <th width="200"><spring:message code="dataintegrityworkflow.checkkey.name"/></th>
                     </thead>
                     <tbody>
                     <c:forEach items="${checkwithkeys}" var="check" varStatus="varStatus">
-                    <tr>
+                    <tr class="${varStatus.index % 2 == 0 ? 'evenRow' : 'oddRow'}">
                         <td>
                            <a href ="<openmrs:contextPath/>/module/dataintegrityworkflow/changeCheckKey.form?checkId=<c:out value="${check.integrityCheck.id}"/>"><c:out value="${check.integrityCheckKey.keyVal}"/></a>
                         </td>
