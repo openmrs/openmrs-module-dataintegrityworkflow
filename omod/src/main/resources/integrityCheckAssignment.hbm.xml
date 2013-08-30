@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.openmrs.module.dataintegrityworkflow">
+    <class name="IntegrityCheckAssignment" table="workflow_check_assignment">
+
+        <id name="integrityCheckAssignmentId" type="java.lang.Integer">
+            <column name="check_assignment_id"/>
+            <generator class="native"/>
+        </id>
+        <many-to-one name="integrityCheck" class="org.openmrs.module.dataintegrity.IntegrityCheck" column="check_id"/>
+        <many-to-one class="org.openmrs.User" column="assign_by" name="assignBy"/>
+        <many-to-one class="org.openmrs.User" column="assignee" name="assignee"/>
+        <property column="assign_date" length="19" name="assignDate" not-null="true" type="timestamp"/>
+    </class>
+</hibernate-mapping>
