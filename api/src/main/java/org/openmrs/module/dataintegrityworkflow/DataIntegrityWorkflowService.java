@@ -20,6 +20,7 @@ import org.openmrs.module.dataintegrity.IntegrityCheckResult;
 import org.openmrs.module.dataintegrityworkflow.db.DataIntegrityWorkflowDAO;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -341,4 +342,5 @@ public interface DataIntegrityWorkflowService {
 
     public void updateCheckKey(IntegrityCheckKey integrityCheckKey);
 
+    public List<IntegrityWorkflowRecord> getResultsForCustomQuery(String status,String stage,Date fromDate,Date toDate,User assignee, String checkId);
 }

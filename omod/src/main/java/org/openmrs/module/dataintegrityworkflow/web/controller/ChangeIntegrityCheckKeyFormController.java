@@ -35,7 +35,7 @@ public class ChangeIntegrityCheckKeyFormController extends SimpleFormController 
     protected final Log log = LogFactory.getLog(getClass());
 
     private DataIntegrityWorkflowService getDataIntegrityWorkflowService() {
-        return (DataIntegrityWorkflowService)    Context.getService(DataIntegrityWorkflowService.class);
+       return (DataIntegrityWorkflowService) Context.getService(DataIntegrityWorkflowService.class);
     }
 
     protected ModelAndView onSubmit(HttpServletRequest request, HttpServletResponse response, Object command,

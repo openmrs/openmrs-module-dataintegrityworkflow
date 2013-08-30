@@ -647,6 +647,29 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         dao.updateCheckKey(integrityCheckKey);
     }
 
+    public List<IntegrityWorkflowRecord> getResultsForCustomQuery(String status, String stage, Date fromDate, Date toDate, User assignee, String checkId) {
+        DataIntegrityWorkflowService integrityWorkflowService=Context.getService(DataIntegrityWorkflowService.class);
+        List<IntegrityWorkflowRecord> assigneRecords=integrityWorkflowService.getAssignedIntegrityWorkflowRecordsOfSpecifiedCheckAndCurrentUser(assignee, Integer.parseInt(checkId));
+        List<IntegrityWorkflowRecord> filteredList=new ArrayList<IntegrityWorkflowRecord>();
+        WorkflowStage workflowStage=integrityWorkflowService.getWorkflowStage(Integer.parseInt(stage.split("-")[0]));
+        int statusId=Integer.parseInt(stage.split("-")[0]);
+        for(IntegrityWorkflowRecord integrityWorkflowRecord:assigneRecords) {
+            if(integrityWorkflowRecord.getIntegrityCheckResult().getStatus()==statusId) {
+                if(integrityWorkflowRecord.getCurrentAssignee().getCurrentIntegrityRecordAssignment().getCurrentStage().equals(workflowStage)) {
+                    IntegrityRecordStageChange lastChange = null;
+                    for(IntegrityRecordStageChange integrityRecordStageChange:integrityWorkflowRecord.getCurrentAssignee().getCurrentIntegrityRecordAssignment().getIntegrityRecordStageChanges()){
+                        lastChange=integrityRecordStageChange;
+                    }
+                    if(lastChange!=null) {
+                        if(fromDate.compareTo(lastChange.getChangeDate())>=0 && toDate.compareTo(lastChange.getChangeDate())<=0) {
+                         filteredList.add(integrityWorkflowRecord);
+                        }
+                    }
+                }
+            }
+        }
+        return filteredList;
+    }
     private String getKeyForCheck(String checkName) {
         String[] split=checkName.split("\\s");
         String key="";

@@ -90,6 +90,15 @@
         $j( "#tabs" ).tabs();
     });
     $j(document).ready(function() {
+
+        $j(function() {
+            $j( "#fromDate" ).datepicker();
+        });
+
+        $j(function() {
+            $j( "#toDate" ).datepicker();
+        });
+
         $j('#table').dataTable( {
             "bFilter": true,
             "iDisplayLength": 15,
@@ -260,17 +269,19 @@
                 });
     });
 
-    function customQuery(){
-
+    function customQuery() {
+        var status=$j('#statusIds').val();
+        var stage=$j('#stagesIds').val();
+        var user=$j('#userIds').val();
+        var fromDate=$j('#fromDate').val();
+        var toDate=$j('#toDate').val();
+        <openmrs:globalProperty key="dataintegrityworkflow.actionServerUrl" var="actionServerUrl"/>
+        <c:if test="${empty actionServerUrl}">
+                <c:set var="actionServerUrl" value="${pageContext.request.contextPath}"/>
+        </c:if>
+        //$j.get("${actionServerUrl}/module/dataintegrityworkflow/viewAssignedRecords.form", { status: status, stage: stage, assignee: user, fromDate: fromDate,toDate:toDate,checkId:${check.id}} );
+        window.location.href='${actionServerUrl}/module/dataintegrityworkflow/viewAssignedRecords.form?checkid=${check.id}'+'&status='+status+'&stage='+stage+'&assignee='+user+'&fromDate='+fromDate+'&toDate='+toDate;
     }
-
-    $j(function() {
-        $j( "#fromDate" ).datepicker();
-    });
-
-    $j(function() {
-        $j( "#toDate" ).datepicker();
-    })
 </script>
 <h2><c:out value="${check.name}"/>-<spring:message code="dataintegrityworkflow.record.list"/></h2>
 
@@ -494,6 +505,7 @@
         <b class="boxHeader"><spring:message code="dataintegrityworkflow.check.query.view"/></b>
         <div class="box" >
             <table id="table4">
+                <form>
                     <tr>
                     Select
                         <select name="recordStatus" id="statusIds">
@@ -514,12 +526,13 @@
                             </c:forEach>
                         </select>
                         from
-                        <input type="text" name="fromDate" id="fromDate" size="11" value=""  onclick="showCalendar(this,60)" onchange="clearError('toDate')" class="hasDatepicker">
+                        <input type="text" name="fromDate" id="fromDate" size="11" class="hasDatepicker">
                         to
-                        <input type="text" name="toDate" id="toDate" size="11" value=""  onclick="showCalendar(this,60)" onchange="clearError('fromDate')" class="hasDatepicker">
+                        <input type="text" name="toDate" id="toDate" size="11" class="hasDatepicker">
 
                         <button type="button" id="queryButton" onclick="customQuery()">Submit</button>
                     </tr>
+                </form>
             </table>
         </div>
     </div>

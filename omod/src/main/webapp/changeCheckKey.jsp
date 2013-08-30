@@ -10,13 +10,14 @@
                 <table>
                     <tr>
                         <td width="200"><spring:message code="dataintegrityworkflow.check.name"/></td>
-                        <td> <c:out value="${check.integrityCheck.name}"/></td>
+                        <td> <c:out value="${checkkey.integrityCheck.name}"/></td>
                     </tr>
                     <tr>
                         <td width="200"><spring:message code="dataintegrityworkflow.check.key"/></td>
-                        <td><input type="text" name="keyVal" value="${check.integrityCheckKey.keyVal}"  size="50" /></td>
+                        <td><input type="text" size="12" name="keyVal" value="${checkkey.keyVal}"  size="50" /></td>
                     </tr>
                     <tr>
+                        <td> </td>
                         <td>
                             <input type=hidden name=save value="save">
                             <input type="submit" value="<spring:message code="general.save"/>" />

@@ -21,10 +21,9 @@ import org.openmrs.module.dataintegrityworkflow.DataIntegrityWorkflowService;
 import org.openmrs.module.dataintegrityworkflow.IntegrityWorkflowRecord;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author: harsz89
@@ -46,9 +45,19 @@ public class ViewAssignedRecordsFormController extends SimpleFormController {
     protected Map referenceData(HttpServletRequest req) throws Exception {
         String assignee=req.getParameter("assignee");
         String checkId=req.getParameter("checkId");
+        String fromDate=req.getParameter("fromDate");
+        String toDate=req.getParameter("toDate");
+        String stage=req.getParameter("status");
+        String status=req.getParameter("status");
+        DateFormat formatter ;
+        Date fromDateFormatted;
+        Date toDateFormatted;
+        formatter = new SimpleDateFormat("dd/MM/yy");
+        fromDateFormatted = formatter.parse(fromDate);
+        toDateFormatted = formatter.parse(toDate);
         Map<String,Object> modelMap=new HashMap<String, Object>();
         User user;
-        List<IntegrityWorkflowRecord> records;
+        List<IntegrityWorkflowRecord> records = null;
         if(assignee!=null) {
             user=Context.getUserService().getUserByUsername(assignee);
             modelMap.put("assignedUser",user);
@@ -59,6 +68,8 @@ public class ViewAssignedRecordsFormController extends SimpleFormController {
 
         if(checkId==null) {
             records=dataIntegrityWorkflowService.getAssignedIntegrityWorkflowRecordsOfCurrentUser(user);
+        } else if(checkId!=null && fromDate!=null && toDate!=null && status!=null && stage!=null){
+            records=dataIntegrityWorkflowService.getResultsForCustomQuery(status,stage,fromDateFormatted,toDateFormatted,user,checkId);
         } else {
             records=dataIntegrityWorkflowService.getAssignedIntegrityWorkflowRecordsOfSpecifiedCheckAndCurrentUser(user,Integer.parseInt(checkId));
             modelMap.put("check",dataIntegrityWorkflowService.getIntegrityCheck(Integer.parseInt(checkId)));

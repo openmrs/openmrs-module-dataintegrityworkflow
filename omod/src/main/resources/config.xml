@@ -54,7 +54,18 @@
         <defaultValue>Workflow stage name is empty</defaultValue>
         <description>What message should be sent to the user once feedback is successfully submitted</description>
     </globalProperty>
-	
+
+    <globalProperty>
+        <property>dataintegrityworkflow.actionServerUrl</property> <!-- Must start with `moduleId.` -->
+        <defaultValue></defaultValue>
+        <description>
+            URL for the production server to be used for correction. The Data
+            Integrity Workflow Repair Server URL should have the format
+            "http[s]://localhost:8080/openmrs". Remember, if left empty it uses
+            this server's URL.
+        </description>
+    </globalProperty>
+
 	<!--
 	<dwr>
 		<allow>

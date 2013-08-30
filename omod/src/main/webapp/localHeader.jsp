@@ -19,6 +19,11 @@
             <spring:message code="dataintegrityworkflow.stage.link"/>
         </a>
         </li>
+        <li <c:if test='<%= request.getRequestURI().contains("viewCheckKeyForm") %>'>class="active"</c:if>>
+        <a href="${pageContext.request.contextPath}/module/dataintegrityworkflow/viewCheckKey.form">
+            <spring:message code="dataintegrityworkflow.change.link"/>
+        </a>
+        </li>
 	</openmrs:hasPrivilege>
 	<openmrs:hasPrivilege privilege="View Record Assignments">
 		<li <c:if test='<%= request.getRequestURI().contains("viewAssignedRecords") %>'>class="active"</c:if>>

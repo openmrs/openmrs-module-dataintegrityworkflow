@@ -59,7 +59,7 @@ public class WorkflowStageFormController extends SimpleFormController{
     }
 
     protected Map referenceData(HttpServletRequest req) throws Exception {
-        String workflowId=req.getParameter("workflowStageId");
+        String workflowId=req.getParameter("workflowId");
         DataIntegrityWorkflowService integrityWorkflowService=getDataIntegrityWorkflowService();
         Map<String,Object> modelMap=new HashMap<String,Object>();
         WorkflowStage workflowStage=integrityWorkflowService.getWorkflowStage(Integer.parseInt(workflowId));
