@@ -33,7 +33,7 @@
     <bean id="changeCheckKey" class="org.openmrs.module.dataintegrityworkflow.web.controller.ChangeIntegrityCheckKeyFormController">
         <property name="commandName"><value>helloWorldObject</value></property>
         <property name="formView"><value>/module/dataintegrityworkflow/changeCheckKey</value></property>
-        <property name="successView"><value>changeCheckKey.form</value></property>
+        <property name="successView"><value>viewCheckKey.form</value></property>
     </bean>
 
     <bean id="addWorkflowStageForm" class="org.openmrs.module.dataintegrityworkflow.web.controller.AddWorkflowStageFormController">

@@ -76,6 +76,7 @@
 </style>
 <script>
     var $j = jQuery.noConflict();
+    var resultsTable;
     $j(function() {
         var availableTags = ["default"
                 <c:forEach items="${users}" var="user">
@@ -99,7 +100,7 @@
             $j( "#toDate" ).datepicker();
         });
 
-        $j('#table').dataTable( {
+        var results=$j('#table').dataTable( {
             "bFilter": true,
             "iDisplayLength": 15,
             "bProcessing": true,
@@ -140,6 +141,9 @@
                     this.checked = false;
                 });
             }
+            $('#viewVoided').prop('checked', false);
+            $('#viewIgnored').prop('checked', false);
+
         });
 
         $j("#unassignButton").mouseover(function() {
@@ -149,6 +153,8 @@
         $j("#unassignButton").mouseout(function() {
             $j(this).removeClass('ui-state-hover').addClass('ui-state-default');
         });
+
+        $j("#table").dataTable().fnStandingRedraw();
     } );;
 
     function showDiv(action)
@@ -292,9 +298,9 @@
     </ul>
     <div id="integrityResultsTab">
         <div id="recordTableFilters">
-            <input type="checkbox" id="viewVoided"> </input>
+            <input type="checkbox" id="viewVoided" name="viewVoided"> </input>
             <label for="viewVoided">View Voided Records</label>
-            <input type="checkbox" id="viewIgnored"> </input>
+            <input type="checkbox" id="viewIgnored" name="viewIgnored"> </input>
             <label for="viewIgnored">View Ignored Records</label>
         </div>
         <form id="workflowRecords" method="post">
@@ -308,7 +314,7 @@
                     <th width="300"><spring:message code="dataintegrityworkflow.status"/></th>
                     <th width="300"><spring:message code="dataintegrityworkflow.assignee"/></th>
                     <th width="300"><spring:message code="dataintegrityworkflow.stage"/></th>
-                    <th width="350"><spring:message code="dataintegrityworkflow.lastupdated"/></th>
+                    <th width="450"><spring:message code="dataintegrityworkflow.lastupdated"/></th>
                     <th width="300"><spring:message code="dataintegrityworkflow.history"/></th>
                 </tr>
                 </thead>
@@ -526,11 +532,17 @@
                                 <option value="${user}">${user}</option>
                             </c:forEach>
                         </select>
+                        <script>
+                            $j(function() {
+                                $j( "#fromDate").datepicker();
+                                $j( "#toDate").datepicker();
+                            });
+                        </script>
                         from
-                        <input type="text" name="fromDate" id="fromDate" size="11" class="hasDatepicker">
+                        <input type="text" name="fromDate" id="fromDate" size="11">
                         to
-                        <input type="text" name="toDate" id="toDate" size="11" class="hasDatepicker">
-
+                        <input type="text" name="toDate" id="toDate" size="11">
+                        <p>Date: <input type="text" id="datepicker" /></p>
                         <button type="button" id="queryButton" onclick="customQuery()">Submit</button>
                     </tr>
                 </form>
