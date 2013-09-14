@@ -8,7 +8,7 @@
 <openmrs:htmlInclude file="/moduleResources/dataintegrityworkflow/js/module.js"/>
 <script>
     var $j = jQuery.noConflict();
-
+    var resultsTable
     $j(document).ready(function() {
 
         $j('#table').dataTable( {
