@@ -542,7 +542,7 @@
                         <input type="text" name="fromDate" id="fromDate" size="11">
                         to
                         <input type="text" name="toDate" id="toDate" size="11">
-                        <p>Date: <input type="text" id="datepicker" /></p>
+
                         <button type="button" id="queryButton" onclick="customQuery()">Submit</button>
                     </tr>
                 </form>
