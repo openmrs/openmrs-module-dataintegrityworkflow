@@ -47,7 +47,7 @@ public class ChangeIntegrityCheckKeyFormController extends SimpleFormController 
         IntegrityCheckKey integrityCheckKey=dataIntegrityWorkflowService.getIntegrityCheckKey(integrityCheck);
         integrityCheckKey.setKeyVal(key);
         dataIntegrityWorkflowService.updateCheckKey(integrityCheckKey);
-        return new ModelAndView(new RedirectView(getSuccessView()+"?checkId="+checkId));
+        return new ModelAndView(new RedirectView(getSuccessView()));
     }
 
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
