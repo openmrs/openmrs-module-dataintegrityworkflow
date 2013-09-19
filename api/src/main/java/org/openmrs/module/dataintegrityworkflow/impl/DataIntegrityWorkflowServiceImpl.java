@@ -607,11 +607,13 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
         int stageId=Integer.parseInt(stage.split("-")[1]);
         IntegrityWorkflowRecordWithCheckResult integrityWorkflowRecordWithCheckResult;
         for(IntegrityWorkflowRecord integrityWorkflowRecord:recordList) {
-            if(integrityWorkflowRecord.getCurrentAssignee().getCurrentIntegrityRecordAssignment().getCurrentStage().getWorkflowStageId()==stageId){
-                integrityWorkflowRecordWithCheckResult=new IntegrityWorkflowRecordWithCheckResult();
-                integrityWorkflowRecordWithCheckResult.setIntegrityWorkflowRecord(integrityWorkflowRecord);
-                integrityWorkflowRecordWithCheckResult.setIntegrityCheckResult(integrityWorkflowRecord.getIntegrityCheckResult());
-                integrityWorkflowRecordWithCheckResultList.add(integrityWorkflowRecordWithCheckResult);
+            if(integrityWorkflowRecord.getCurrentAssignee()!=null) {
+                if(integrityWorkflowRecord.getCurrentAssignee().getCurrentIntegrityRecordAssignment().getCurrentStage().getWorkflowStageId()==stageId){
+                    integrityWorkflowRecordWithCheckResult=new IntegrityWorkflowRecordWithCheckResult();
+                    integrityWorkflowRecordWithCheckResult.setIntegrityWorkflowRecord(integrityWorkflowRecord);
+                    integrityWorkflowRecordWithCheckResult.setIntegrityCheckResult(integrityWorkflowRecord.getIntegrityCheckResult());
+                    integrityWorkflowRecordWithCheckResultList.add(integrityWorkflowRecordWithCheckResult);
+                }
             }
         }
         return integrityWorkflowRecordWithCheckResultList;
@@ -692,7 +694,7 @@ public class DataIntegrityWorkflowServiceImpl implements DataIntegrityWorkflowSe
                     }
                     if(lastChange!=null) {
                         if(fromDate.compareTo(lastChange.getChangeDate())<=0 && toDate.compareTo(lastChange.getChangeDate())>=0) {
-                         filteredList.add(integrityWorkflowRecord);
+                            filteredList.add(integrityWorkflowRecord);
                         }
                     }
                 }
