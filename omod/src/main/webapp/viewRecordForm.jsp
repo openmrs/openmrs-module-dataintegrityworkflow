@@ -97,6 +97,8 @@
                 "Assign": function() {
                         var assigneeId=$j('#assigneeId').val();
                         if(assigneeId!=""){
+                            var input2 = $j("<input>").attr("type", "hidden").attr("name", "assigneeId").val(assigneeId);
+                            $j('form#assignee-change').append($j(input2));
                             $j("#assignee-change").submit();
                             $j( this ).dialog( "close" );
                         } else {
@@ -170,7 +172,7 @@
 
 <b class="boxHeader"><spring:message code="dataintegrityworkflow.record.basic"/></b>
 <div class="box" >
-    <form method="post">
+    <form method="post" id="recorddetails">
         <input type=hidden name=recordId value=<c:out value="${recordId}"/> >
         <input type=hidden name=checkId value=<c:out value="${checkId}"/> >
         <input type=hidden name=resultId value=<c:out value="${record.integrityCheckResult.integrityCheckResultId}"/> >
